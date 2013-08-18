@@ -29,9 +29,12 @@ body {
 
 .g-body .text-menu {
   position: absolute;
-  left: -999px;
-  top: -999px;
   color: #fff;
   margin-top: -20px;
   margin-left: -115px;
+}
+
+.text-menu.hide {
+  left: -999px;
+  top: -999px;
 }

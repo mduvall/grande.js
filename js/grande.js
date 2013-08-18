@@ -18,17 +18,9 @@
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
 
-      node.onmousedown = function(event) {
+      node.onmousedown = node.onkeyup = node.onmouseup = function(event) {
         triggerTextSelection();
       };
-
-      node.onkeyup = function(event) {
-        triggerTextSelection();
-      };
-
-      node.onmouseup = function(event) {
-        triggerTextSelection();
-      }
     }
   };
 
@@ -37,18 +29,25 @@
           range,
           clientRectBounds;
 
+      // The selection is collapsed, push the menu out of the way
       if (selectedText.isCollapsed) {
-        return;
+        console.log('setting collpased stat');
+        setTextMenuPosition(-999, -999);
+      } else {
+        range = selectedText.getRangeAt(0);
+        clientRectBounds = range.getBoundingClientRect();
+        setTextMenuPosition(
+          clientRectBounds.top - 5 + root.pageYOffset,
+          (clientRectBounds.left + clientRectBounds.right) / 2
+        );
       }
 
-      range = selectedText.getRangeAt(0);
-      clientRectBounds = range.getBoundingClientRect();
-
-      textMenu.style.top = clientRectBounds.top - 5 + root.pageYOffset + "px";
-      textMenu.style.left = (clientRectBounds.left + clientRectBounds.right) / 2 + "px";
-
-      console.log(textMenu);
   };
+
+  function setTextMenuPosition(top, left) {
+    textMenu.style.top = top + "px";
+    textMenu.style.left = left + "px";
+  }
 
   root.grande = grande;
 }).call(this);
