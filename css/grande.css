@@ -1,29 +1,37 @@
 body {
-    font-family: Georgia, serif;
-    min-width: 750px;
-    width: 100%;
-    color: #333332;
+  font-family: Georgia, serif;
+  min-width: 750px;
+  width: 100%;
+  color: #333332;
 }
 
 .g-body header, .g-body article {
-    outline-style: none;
+  outline-style: none;
 }
 
 .g-body header {
-	font-weight: bold;
-	font-size: 52px;
+  font-weight: bold;
+  font-size: 52px;
 }
 
 .g-body section {
-    max-width: 750px;
-    margin: auto;
+  max-width: 750px;
+  margin: auto;
 }
 
 .g-body blockquote {
-    font-weight: 400;
-    font-style: italic;
-    border-left:6px solid #e67e22;
-    padding-left: 20px;
-    margin-left: -26px;
+  font-weight: 400;
+  font-style: italic;
+  border-left:6px solid #e67e22;
+  padding-left: 20px;
+  margin-left: -26px;
 }
 
+.g-body .text-menu {
+  position: absolute;
+  left: -999px;
+  top: -999px;
+  color: #fff;
+  margin-top: -20px;
+  margin-left: -115px;
+}
