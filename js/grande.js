@@ -46,20 +46,45 @@
       case /bold/.test(className):
         document.execCommand('bold', false);
         break;
+
       case /italic/.test(className):
         document.execCommand('italic', false);
         break;
+
       case /header1/.test(className):
         break;
+
       case /header2/.test(className):
         break;
+
       case /quote/.test(className):
+        if (hasParent(window.getSelection().focusNode, "blockquote")) {
+          document.execCommand('formatBlock', false, 'p');
+          document.execCommand('outdent');
+        } else {
+          document.execCommand('formatBlock', false, 'blockquote');
+        }
         break;
+
       case /url/.test(className):
         break;
+
       default:
         // no default
     }
+
+    triggerTextSelection();
+  }
+
+  function hasParent(node, nodeType) {
+    while (node.parentNode) {
+      if (node.nodeName.toLowerCase() === nodeType) {
+        return true;
+      }
+      node = node.parentNode;
+    }
+
+    return false;
   }
 
   function triggerTextSelection() {
