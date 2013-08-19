@@ -7,6 +7,7 @@
       grande = {
         bind: function() {
             bindTextSelectionEvents();
+            bindTextStylingEvents();
         },
       };
 
@@ -17,12 +18,49 @@
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
-
-      node.onmousedown = node.onkeyup = node.onmouseup = function(event) {
-        triggerTextSelection();
-      };
+      node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
     }
   };
+
+  function bindTextStylingEvents() {
+    var textMenuButtons = document.querySelectorAll(".g-body .text-menu button"),
+        i,
+        len,
+        node;
+
+    for (i = 0, len = textMenuButtons.length; i < len; i++) {
+      node = textMenuButtons[i];
+
+      (function(n) {
+        n.onmousedown = function(event) {
+          triggerTextStyling(n);
+        }
+      }(node));
+    }
+  }
+
+  function triggerTextStyling(node) {
+    className = node.className;
+
+    switch (true) {
+      case /bold/.test(className):
+        document.execCommand('bold', false);
+        break;
+      case /italic/.test(className):
+        document.execCommand('italic', false);
+        break;
+      case /header1/.test(className):
+        break;
+      case /header2/.test(className):
+        break;
+      case /quote/.test(className):
+        break;
+      case /url/.test(className):
+        break;
+      default:
+        // no default
+    }
+  }
 
   function triggerTextSelection() {
       var selectedText = root.getSelection(),
@@ -31,11 +69,11 @@
 
       // The selection is collapsed, push the menu out of the way
       if (selectedText.isCollapsed) {
-        console.log('setting collpased stat');
         setTextMenuPosition(-999, -999);
       } else {
         range = selectedText.getRangeAt(0);
         clientRectBounds = range.getBoundingClientRect();
+
         setTextMenuPosition(
           clientRectBounds.top - 5 + root.pageYOffset,
           (clientRectBounds.left + clientRectBounds.right) / 2
