@@ -44,26 +44,23 @@
 
     switch (true) {
       case /bold/.test(className):
-        document.execCommand('bold', false);
+        document.execCommand("bold", false);
         break;
 
       case /italic/.test(className):
-        document.execCommand('italic', false);
+        document.execCommand("italic", false);
         break;
 
       case /header1/.test(className):
+        toggleFormatBlock("h1");
         break;
 
       case /header2/.test(className):
+        toggleFormatBlock("h2");
         break;
 
       case /quote/.test(className):
-        if (hasParent(window.getSelection().focusNode, "blockquote")) {
-          document.execCommand('formatBlock', false, 'p');
-          document.execCommand('outdent');
-        } else {
-          document.execCommand('formatBlock', false, 'blockquote');
-        }
+        toggleFormatBlock("blockquote");
         break;
 
       case /url/.test(className):
@@ -73,7 +70,21 @@
         // no default
     }
 
+    toggleActiveState(node);
     triggerTextSelection();
+  }
+
+  function toggleFormatBlock(tag) {
+    if (hasParent(window.getSelection().focusNode, tag)) {
+      document.execCommand("formatBlock", false, "p");
+      document.execCommand("outdent");
+    } else {
+      document.execCommand("formatBlock", false, tag);
+    }
+  }
+
+  function toggleActiveState(node) {
+    node.className = node.className + " active";
   }
 
   function hasParent(node, nodeType) {

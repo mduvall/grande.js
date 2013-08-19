@@ -61,9 +61,8 @@ body {
   margin-top: -5px;
 }
 
-.text-menu.active {
-  opacity: 1;
-  margin-top: 0px;
+.text-menu .active {
+  color: #e67e22;
 }
 
 .text-menu button {
