@@ -15,6 +15,11 @@ body {
   outline-style: none;
 }
 
+/* Override webkit's <article> default */
+.g-body h1 {
+  font-size: 2em;
+}
+
 .g-body header {
   font-weight: bold;
   font-size: 52px;

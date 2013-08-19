@@ -1,7 +1,7 @@
 (function() {
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
-      editableNodes = document.querySelectorAll(".g-body header, .g-body article"),
+      editableNodes = document.querySelectorAll(".g-body article"),
       textMenu = document.querySelectorAll(".g-body .text-menu")[0],
 
       grande = {
@@ -22,7 +22,7 @@
     }
   };
 
-  function bindTextStylingEvents() {
+  function iterateTextMenuButtons(callback) {
     var textMenuButtons = document.querySelectorAll(".g-body .text-menu button"),
         i,
         len,
@@ -32,15 +32,79 @@
       node = textMenuButtons[i];
 
       (function(n) {
-        n.onmousedown = function(event) {
-          triggerTextStyling(n);
-        }
-      }(node));
+        callback(n);
+      })(node);
     }
-  }
+  };
+
+  function bindTextStylingEvents() {
+    iterateTextMenuButtons(function(node) {
+      node.onmousedown = function(event) {
+        triggerTextStyling(node);
+      }
+    })
+  };
+
+  function reloadMenuState() {
+    var className;
+
+    iterateTextMenuButtons(function(node) {
+      className = node.className;
+
+      switch (true) {
+        case /bold/.test(className):
+          // TODO: This is a funky case where contenteditable will hack the font-weight
+          // instead...need to look out for that as well
+          if (hasParent(window.getSelection().focusNode, "b")) {
+            node.className = "bold active";
+          } else {
+            node.className = "bold";
+          }
+          break;
+
+        case /italic/.test(className):
+          if (hasParent(window.getSelection().focusNode, "i")) {
+            node.className = "italic active";
+          } else {
+            node.className = "italic";
+          }
+          break;
+
+        case /header1/.test(className):
+          if (hasParent(window.getSelection().focusNode, "h1")) {
+            node.className = "header1 active";
+          } else {
+            node.className = "header1";
+          }
+          break;
+
+        case /header2/.test(className):
+          if (hasParent(window.getSelection().focusNode, "h2")) {
+            node.className = "header2 active";
+          } else {
+            node.className = "header2";
+          }
+          break;
+
+        case /quote/.test(className):
+          if (hasParent(window.getSelection().focusNode, "blockquote")) {
+            node.className = "blockquote active";
+          } else {
+            node.className = "blockquote";
+          }
+          break;
+
+        case /url/.test(className):
+          break;
+
+        default:
+          // no default
+      }
+    });
+  };
 
   function triggerTextStyling(node) {
-    className = node.className;
+    var className = node.className;
 
     switch (true) {
       case /bold/.test(className):
@@ -70,9 +134,8 @@
         // no default
     }
 
-    toggleActiveState(node);
     triggerTextSelection();
-  }
+  };
 
   function toggleFormatBlock(tag) {
     if (hasParent(window.getSelection().focusNode, tag)) {
@@ -81,11 +144,7 @@
     } else {
       document.execCommand("formatBlock", false, tag);
     }
-  }
-
-  function toggleActiveState(node) {
-    node.className = node.className + " active";
-  }
+  };
 
   function hasParent(node, nodeType) {
     while (node.parentNode) {
@@ -96,7 +155,7 @@
     }
 
     return false;
-  }
+  };
 
   function triggerTextSelection() {
       var selectedText = root.getSelection(),
@@ -110,6 +169,8 @@
         range = selectedText.getRangeAt(0);
         clientRectBounds = range.getBoundingClientRect();
 
+        // Every time we show the menu, reload the state
+        reloadMenuState();
         setTextMenuPosition(
           clientRectBounds.top - 5 + root.pageYOffset,
           (clientRectBounds.left + clientRectBounds.right) / 2
@@ -121,7 +182,7 @@
   function setTextMenuPosition(top, left) {
     textMenu.style.top = top + "px";
     textMenu.style.left = left + "px";
-  }
+  };
 
   root.grande = grande;
 }).call(this);
