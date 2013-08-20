@@ -9,6 +9,7 @@ body {
   min-width: 750px;
   width: 100%;
   color: #333332;
+  padding-top: 50px;
 }
 
 .g-body header, .g-body article {
