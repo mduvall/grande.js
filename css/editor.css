@@ -1,0 +1,35 @@
+body {
+  font-family: Georgia, serif;
+  min-width: 750px;
+  width: 100%;
+  color: #333332;
+  padding-top: 50px;
+}
+
+.g-body header, .g-body article {
+  outline-style: none;
+}
+
+/* Override webkit's <article> default */
+.g-body h1 {
+  font-size: 2em;
+}
+
+.g-body header {
+  font-weight: bold;
+  font-size: 52px;
+}
+
+.g-body section {
+  max-width: 750px;
+  margin: auto;
+}
+
+.g-body blockquote {
+  font-weight: 400;
+  font-style: italic;
+  border-left:6px solid #e67e22;
+  padding-left: 20px;
+  margin-left: -26px;
+}
+
