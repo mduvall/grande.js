@@ -6,8 +6,8 @@
 
       grande = {
         bind: function() {
-            bindTextSelectionEvents();
-            bindTextStylingEvents();
+          bindTextSelectionEvents();
+          bindTextStylingEvents();
         },
       };
 
@@ -22,6 +22,9 @@
         triggerTextSelection(event);
       }, 1);
     };
+
+    // Handle window resize events
+    root.onresize = triggerTextSelection;
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
