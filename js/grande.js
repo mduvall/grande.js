@@ -162,14 +162,20 @@
 
   function triggerUrlBlur(event) {
     var url = urlInput.value;
-    if (!url.match("^(http|https)://")) {
-      url = "http://" + url;
-    }
 
     optionsNode.className = "options";
     window.getSelection().addRange(previouslySelectedText);
 
     document.execCommand("unlink", false);
+
+    if (url === "") {
+      return false;
+    }
+
+    if (!url.match("^(http|https)://")) {
+      url = "http://" + url;
+    }
+
     document.execCommand("createLink", false, url);
 
     urlInput.value = "";
