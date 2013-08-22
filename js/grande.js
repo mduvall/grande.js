@@ -3,6 +3,9 @@
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
       textMenu = document.querySelectorAll(".g-body .text-menu")[0],
+      optionsNode = document.querySelectorAll(".g-body .text-menu .options")[0],
+      urlInput = document.querySelectorAll(".g-body .text-menu .url-input")[0],
+      previouslySelectedText,
 
       grande = {
         bind: function() {
@@ -25,6 +28,9 @@
 
     // Handle window resize events
     root.onresize = triggerTextSelection;
+
+    urlInput.onblur = triggerUrlBlur;
+    urlInput.onkeydown = triggerUrlSet;
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
@@ -98,13 +104,18 @@
 
         case /quote/.test(className):
           if (hasParentWithTag(window.getSelection().focusNode, "blockquote")) {
-            node.className = "blockquote active";
+            node.className = "quote active";
           } else {
-            node.className = "blockquote";
+            node.className = "quote";
           }
           break;
 
         case /url/.test(className):
+          if (hasParentWithTag(window.getSelection().focusNode, "a")) {
+            node.className = "url active";
+          } else {
+            node.className = "url";
+          }
           break;
 
         default:
@@ -138,6 +149,8 @@
         break;
 
       case /url/.test(className):
+        toggleUrlInput();
+        optionsNode.className = "options url-mode";
         break;
 
       default:
@@ -145,6 +158,30 @@
     }
 
     triggerTextSelection();
+  }
+
+  function triggerUrlBlur(event) {
+    var url = urlInput.value;
+    if (!url.match("^(http|https)://")) {
+      url = "http://" + url;
+    }
+
+    optionsNode.className = "options";
+    window.getSelection().addRange(previouslySelectedText);
+
+    document.execCommand("unlink", false);
+    document.execCommand("createLink", false, url);
+
+    urlInput.value = "";
+  }
+
+  function triggerUrlSet(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      urlInput.blur();
+    }
   }
 
   function toggleFormatBlock(tag) {
@@ -156,9 +193,25 @@
     }
   }
 
-  function traverseParents(node, condition) {
+  function toggleUrlInput() {
+    setTimeout(function() {
+      var url = getParentHref(window.getSelection().focusNode);
+
+      if (typeof url !== "undefined") {
+        urlInput.value = url;
+      } else {
+        document.execCommand("createLink", false, "/");
+      }
+
+      previouslySelectedText = window.getSelection().getRangeAt(0);
+
+      urlInput.focus();
+    }, 150);
+  }
+
+  function hasParentWithTag(node, nodeType) {
     while (node.parentNode) {
-      if (condition(node)) {
+      if (node.nodeName.toLowerCase() === nodeType) {
         return true;
       }
       node = node.parentNode;
@@ -167,12 +220,14 @@
     return false;
   }
 
-  function hasParentWithTag(node, nodeType) {
-    return traverseParents(node,
-      function(n) {
-        return n.nodeName.toLowerCase() === nodeType;
+  function getParentHref(node) {
+    while (node.parentNode) {
+      if (typeof node.href !== "undefined") {
+        return node.href;
       }
-    );
+
+      node = node.parentNode;
+    }
   }
 
   function triggerTextSelection() {

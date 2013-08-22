@@ -6,7 +6,7 @@ body {
   padding-top: 50px;
 }
 
-.g-body header, .g-body article {
+.g-body article {
   outline-style: none;
 }
 
@@ -33,3 +33,7 @@ body {
   margin-left: -26px;
 }
 
+.g-body a {
+  text-decoration: underline;
+  color: #333332;
+}

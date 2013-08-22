@@ -17,7 +17,7 @@
   margin-left: -115px;
 }
 
-.useicons {
+.url {
   font-size: 16px !important;
   font-family: 'icomoon' !important;
 }
@@ -73,11 +73,15 @@
 }
 
 .options.url-mode {
-  width: 275px;
-  margin-left: -137px;
+  width: 176px;
 }
 
-.options.url-mode .bold, .options.url-mode .italic, .options.url-mode .quote {
+.options.url-mode .header1,
+.options.url-mode .header2,
+.options.url-mode .bold,
+.options.url-mode .italic,
+.options.url-mode .quote,
+.options.url-mode .url {
   width: 0px;
   overflow: hidden;
   margin-right: 0px;
@@ -105,7 +109,9 @@
   border-left: 2px solid transparent;
   padding-right: 5px;
   padding-left: 5px;
-  width: 236px;
+  width: 155px;
+  background: transparent;
+  color: #fff;
 }
 
 .options input {
