@@ -12,6 +12,9 @@
           bindTextSelectionEvents();
           bindTextStylingEvents();
         },
+        select: function() {
+          triggerTextSelection();
+        }
       };
 
   function bindTextSelectionEvents() {
