@@ -40,14 +40,6 @@
     <script type="text/javascript" src="js/grande.js"></script>
     <script type="text/javascript">
       grande.bind();
-      setTimeout(function() {
-        var selection = window.getSelection(),
-            range = document.createRange(),
-            headerNode = document.querySelectorAll('span.jack')[0].firstChild;
-        range.selectNode(headerNode);
-        selection.addRange(range);
-        grande.select();
-      }, 1000);
     </script>
   </body>
 </html>
