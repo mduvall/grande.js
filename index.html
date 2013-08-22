@@ -21,7 +21,7 @@
             <button class="header2">h2</button>
             <button class="quote">&rdquo;</button>
             <button class="url useicons">&#xe001;</button>
-            <input class="url-input" type="text" placeholder="Type or Paste URL here"/>
+            <input class="url-input" type="text" placeholder="Paste or type a link"/>
           </span>
         </span>
       </div>
@@ -30,15 +30,21 @@
     <section>
       <article contenteditable="true" class="content">
         <h1>Welcome, this is grande.js</h1>
-        <blockquote>"Make every detail perfect and limit the number of details to perfect." - Jack Dorsey</blockquote>
+        <blockquote>"Make every detail perfect and limit the number of details to perfect." - <span class="jack">Jack Dorsey</span></blockquote>
         <p>Style your text to how you <b>think</b> and put the <i>feeling</i> into your words. Just select any text and choose how you want it to look from the menu.</p>
 
         Let your users express themselves. Take a look at the project on Github <a href="github.com/mduvall/grande.js">here</a>.
       </article>
     </section>
+
     <script type="text/javascript" src="js/grande.js"></script>
     <script type="text/javascript">
       grande.bind();
+      var selection = window.getSelection(),
+          range = document.createRange(),
+          headerNode = document.querySelectorAll('span.jack')[0].firstChild;
+      range.selectNode(headerNode);
+      selection.addRange(range);
     </script>
   </body>
 </html>

@@ -61,17 +61,22 @@
     });
   }
 
+  function getFocusNode() {
+    return root.getSelection().focusNode;
+  }
+
   function reloadMenuState() {
     var className;
 
     iterateTextMenuButtons(function(node) {
       className = node.className;
+      var focusNode = getFocusNode();
 
       switch (true) {
         case /bold/.test(className):
           // TODO: This is a funky case where contenteditable will hack the font-weight
           // instead...need to look out for that as well
-          if (hasParentWithTag(window.getSelection().focusNode, "b")) {
+          if (hasParentWithTag(focusNode, "b")) {
             node.className = "bold active";
           } else {
             node.className = "bold";
@@ -79,7 +84,7 @@
           break;
 
         case /italic/.test(className):
-          if (hasParentWithTag(window.getSelection().focusNode, "i")) {
+          if (hasParentWithTag(focusNode, "i")) {
             node.className = "italic active";
           } else {
             node.className = "italic";
@@ -87,7 +92,7 @@
           break;
 
         case /header1/.test(className):
-          if (hasParentWithTag(window.getSelection().focusNode, "h1")) {
+          if (hasParentWithTag(focusNode, "h1")) {
             node.className = "header1 active";
           } else {
             node.className = "header1";
@@ -95,7 +100,7 @@
           break;
 
         case /header2/.test(className):
-          if (hasParentWithTag(window.getSelection().focusNode, "h2")) {
+          if (hasParentWithTag(focusNode, "h2")) {
             node.className = "header2 active";
           } else {
             node.className = "header2";
@@ -103,7 +108,7 @@
           break;
 
         case /quote/.test(className):
-          if (hasParentWithTag(window.getSelection().focusNode, "blockquote")) {
+          if (hasParentWithTag(focusNode, "blockquote")) {
             node.className = "quote active";
           } else {
             node.className = "quote";
@@ -111,7 +116,7 @@
           break;
 
         case /url/.test(className):
-          if (hasParentWithTag(window.getSelection().focusNode, "a")) {
+          if (hasParentWithTag(focusNode, "a")) {
             node.className = "url active";
           } else {
             node.className = "url";
@@ -191,7 +196,7 @@
   }
 
   function toggleFormatBlock(tag) {
-    if (hasParentWithTag(window.getSelection().focusNode, tag)) {
+    if (hasParentWithTag(getFocusNode(), tag)) {
       document.execCommand("formatBlock", false, "p");
       document.execCommand("outdent");
     } else {
@@ -201,7 +206,7 @@
 
   function toggleUrlInput() {
     setTimeout(function() {
-      var url = getParentHref(window.getSelection().focusNode);
+      var url = getParentHref(getFocusNode());
 
       if (typeof url !== "undefined") {
         urlInput.value = url;
