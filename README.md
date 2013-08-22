@@ -1,7 +1,7 @@
 grande.js
 =========
 
-It's a Medium at Starbucks. This is a small Javascript library that implements features from Medium's editing experience. Take a look [here](http://mattduvall.com/grande.js/).
+This is a small Javascript library that implements features from Medium's editing experience. Take a look [here](http://mattduvall.com/grande.js/).
 
 How to get started
 ------------------
