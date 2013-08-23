@@ -119,6 +119,7 @@
         switch(tag) {
           case "b":
           case "i":
+            toggleSurroundRange(tag);
             document.execCommand(tagClass, false);
             return;
 
@@ -168,6 +169,22 @@
 
       urlInput.blur();
     }
+  }
+
+  function toggleSurroundRange(tag) {
+    var selectedRange = window.getSelection().getRangeAt(0),
+        surroundNode;
+
+    switch(tag) {
+      case "b":
+        surroundNode = document.createElement("strong");
+        break;
+      case "i":
+        surroundNode = document.createElement("em");
+        break;
+    }
+
+    selectedRange.surroundContents(surroundNode);
   }
 
   function toggleFormatBlock(tag) {
