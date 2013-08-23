@@ -28,3 +28,10 @@ Questions
 ---------
 ### This is very similar to Zenpen, why?
 First off, major props to @tholman for the inspirational script. grande.js is a spiritual cousin of the fantastic plugin and aims to have feature parity with Medium. It adds multiple styles and will be diverging from the vision of being an in-browser editing experience to being a *provider* of the in-browser editing experience. grande.js will be providing the foundation for your website to have a wonderful editing experience.
+
+Roadmap
+-------
+
+- Lists (ul and ol)
+- Images (figure)
+- execCommand to support <strong> and <em>
