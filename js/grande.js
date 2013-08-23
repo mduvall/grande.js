@@ -5,6 +5,7 @@
       textMenu = document.querySelectorAll(".g-body .text-menu")[0],
       optionsNode = document.querySelectorAll(".g-body .text-menu .options")[0],
       urlInput = document.querySelectorAll(".g-body .text-menu .url-input")[0],
+
       previouslySelectedText,
 
       grande = {
@@ -15,6 +16,15 @@
         select: function() {
           triggerTextSelection();
         }
+      },
+
+      tagClassMap = {
+        "b": "bold",
+        "i": "italic",
+        "h1": "header1",
+        "h2": "header2",
+        "a": "url",
+        "blockquote": "quote"
       };
 
   function bindTextSelectionEvents() {
@@ -22,7 +32,6 @@
         len,
         node;
 
-    document.onmousedown = triggerTextSelection;
     document.onmouseup = function(event) {
       setTimeout(function() {
         triggerTextSelection(event);
@@ -69,100 +78,60 @@
   }
 
   function reloadMenuState() {
-    var className;
+    var className,
+        focusNode = getFocusNode(),
+        tagClass,
+        reTag;
 
     iterateTextMenuButtons(function(node) {
       className = node.className;
-      var focusNode = getFocusNode();
 
-      switch (true) {
-        case /bold/.test(className):
-          // TODO: This is a funky case where contenteditable will hack the font-weight
-          // instead...need to look out for that as well
-          if (hasParentWithTag(focusNode, "b")) {
-            node.className = "bold active";
+      for (var tag in tagClassMap) {
+        tagClass = tagClassMap[tag];
+        reTag = new RegExp(tagClass);
+
+        if (reTag.test(className)) {
+          if (hasParentWithTag(focusNode, tag)) {
+            node.className = tagClass + " active";
           } else {
-            node.className = "bold";
+            node.className = tagClass;
           }
-          break;
 
-        case /italic/.test(className):
-          if (hasParentWithTag(focusNode, "i")) {
-            node.className = "italic active";
-          } else {
-            node.className = "italic";
-          }
           break;
-
-        case /header1/.test(className):
-          if (hasParentWithTag(focusNode, "h1")) {
-            node.className = "header1 active";
-          } else {
-            node.className = "header1";
-          }
-          break;
-
-        case /header2/.test(className):
-          if (hasParentWithTag(focusNode, "h2")) {
-            node.className = "header2 active";
-          } else {
-            node.className = "header2";
-          }
-          break;
-
-        case /quote/.test(className):
-          if (hasParentWithTag(focusNode, "blockquote")) {
-            node.className = "quote active";
-          } else {
-            node.className = "quote";
-          }
-          break;
-
-        case /url/.test(className):
-          if (hasParentWithTag(focusNode, "a")) {
-            node.className = "url active";
-          } else {
-            node.className = "url";
-          }
-          break;
-
-        default:
-          // no default
+        }
       }
     });
   }
 
   function triggerTextStyling(node) {
-    var className = node.className;
+    var className = node.className,
+        tagClass,
+        reTag;
 
-    switch (true) {
-      case /bold/.test(className):
-        document.execCommand("bold", false);
-        break;
+    for (var tag in tagClassMap) {
+      tagClass = tagClassMap[tag];
+      reTag = new RegExp(tagClass);
 
-      case /italic/.test(className):
-        document.execCommand("italic", false);
-        break;
+      if (reTag.test(className)) {
+        switch(tag) {
+          case "b":
+          case "i":
+            document.execCommand(tagClass, false);
+            return;
 
-      case /header1/.test(className):
-        toggleFormatBlock("h1");
-        break;
+          case "h1":
+          case "h2":
+          case "h3":
+          case "blockquote":
+            toggleFormatBlock(tag);
+            return;
 
-      case /header2/.test(className):
-        toggleFormatBlock("h2");
-        break;
-
-      case /quote/.test(className):
-        toggleFormatBlock("blockquote");
-        break;
-
-      case /url/.test(className):
-        toggleUrlInput();
-        optionsNode.className = "options url-mode";
-        break;
-
-      default:
-        // no default
+          case "a":
+            toggleUrlInput();
+            optionsNode.className = "options url-mode";
+            return;
+        }
+      }
     }
 
     triggerTextSelection();
