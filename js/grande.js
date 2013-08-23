@@ -32,6 +32,9 @@
         len,
         node;
 
+    // Trigger on both mousedown and mouseup so that the click on the menu
+    // feels more instantaneously active
+    document.onmousedown = triggerTextSelection;
     document.onmouseup = function(event) {
       setTimeout(function() {
         triggerTextSelection(event);
