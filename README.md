@@ -6,6 +6,13 @@ This is a small Javascript library that implements features from Medium's editin
 How to get started
 ------------------
 
+### Installation
+Bower is the preferred way to install `grande.js`, it is available as `grande` in the Bower package repository.
+
+Simply `bower install grande`
+
+### Usage
+
 See the `index.html` in this repository for a functional example using the library.
 
 To get up and running simply...
