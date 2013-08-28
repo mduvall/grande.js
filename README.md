@@ -34,4 +34,4 @@ Roadmap
 
 - Lists (ul and ol)
 - Images (figure)
-- execCommand to support <strong> and <em>
+- execCommand to support `<strong>` and `<em>`
