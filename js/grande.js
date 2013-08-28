@@ -50,6 +50,7 @@
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
       node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
+      node.addEventListener('keyup', triggerTextParse, false);
     }
   }
 
@@ -104,6 +105,55 @@
         }
       }
     });
+  }
+  
+  function triggerTextParse(){
+  	var sel = window.getSelection();
+  	if (!sel.isCollapsed) return;
+  	
+  	var textProp = (sel.anchorNode.nodeType === 3) ? 'data' : 'innerText',
+  		subject = sel.anchorNode[textProp],
+  		insertedNode;
+  	
+  	//ul
+  	if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li'){
+  		document.execCommand('insertUnorderedList');
+  		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
+  		
+  		var insertedNode = sel.anchorNode;
+		while (insertedNode = insertedNode.parentNode){
+			if (insertedNode.nodeName.toLowerCase() === 'ul') break;
+		}
+  	}
+  	
+  	//ol
+  	if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li'){
+  		document.execCommand('insertOrderedList');
+  		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
+  		
+  		var insertedNode = sel.anchorNode;
+		while (insertedNode = insertedNode.parentNode){
+			if (insertedNode.nodeName.toLowerCase() === 'ol') break;
+		}
+  	}
+  	
+  	//unwrap nodes
+  	var unwrap = (	insertedNode && 
+  					['ul', 'ol'].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 && 
+  					['p', 'div'].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0);
+  	
+  	if (unwrap){
+		var node = sel.anchorNode;
+		var parent = insertedNode.parentNode;
+		insertedNode.parentNode.parentNode.insertBefore(insertedNode, insertedNode.parentNode);
+		parent.parentNode.removeChild(parent);
+		
+		var range = document.createRange();
+		range.setStart(node, 0);
+		range.setEnd(node, 0);
+		sel.removeAllRanges();
+		sel.addRange(range);
+  	}
   }
 
   function triggerTextStyling(node) {
