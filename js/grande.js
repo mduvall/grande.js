@@ -106,54 +106,69 @@
       }
     });
   }
-  
+
   function triggerTextParse(){
-  	var sel = window.getSelection();
-  	if (!sel.isCollapsed) return;
-  	
-  	var textProp = (sel.anchorNode.nodeType === 3) ? 'data' : 'innerText',
-  		subject = sel.anchorNode[textProp],
-  		insertedNode;
-  	
-  	//ul
-  	if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li'){
-  		document.execCommand('insertUnorderedList');
-  		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
-  		
-  		var insertedNode = sel.anchorNode;
-		while (insertedNode = insertedNode.parentNode){
-			if (insertedNode.nodeName.toLowerCase() === 'ul') break;
-		}
-  	}
-  	
-  	//ol
-  	if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li'){
-  		document.execCommand('insertOrderedList');
-  		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
-  		
-  		var insertedNode = sel.anchorNode;
-		while (insertedNode = insertedNode.parentNode){
-			if (insertedNode.nodeName.toLowerCase() === 'ol') break;
-		}
-  	}
-  	
-  	//unwrap nodes
-  	var unwrap = (	insertedNode && 
-  					['ul', 'ol'].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 && 
-  					['p', 'div'].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0);
-  	
-  	if (unwrap){
-		var node = sel.anchorNode;
-		var parent = insertedNode.parentNode;
-		insertedNode.parentNode.parentNode.insertBefore(insertedNode, insertedNode.parentNode);
-		parent.parentNode.removeChild(parent);
-		
-		var range = document.createRange();
-		range.setStart(node, 0);
-		range.setEnd(node, 0);
-		sel.removeAllRanges();
-		sel.addRange(range);
-  	}
+    var sel = window.getSelection(),
+        textProp,
+        subject,
+        insertedNode,
+        unwrap,
+        node,
+        parent,
+        range;
+
+    if (!sel.isCollapsed) {
+      return;
+    }
+
+    textProp = (sel.anchorNode.nodeType === 3) ? 'data' : 'innerText';
+    subject = sel.anchorNode[textProp];
+
+    //ul
+    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li') {
+      document.execCommand('insertUnorderedList');
+      sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
+
+      insertedNode = sel.anchorNode;
+      while (insertedNode.parentNode) {
+        if (insertedNode.nodeName.toLowerCase() === 'ul') {
+          break;
+        }
+        insertedNode = insertedNode.parentNode;
+      }
+    }
+
+    //ol
+    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li'){
+      document.execCommand('insertOrderedList');
+      sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
+
+      insertedNode = sel.anchorNode;
+      while (insertedNode.parentNode) {
+        if (insertedNode.nodeName.toLowerCase() === 'ol') {
+          break;
+        }
+        insertedNode = insertedNode.parentNode;
+      }
+    }
+
+    //unwrap nodes
+    unwrap = insertedNode &&
+            ['ul', 'ol'].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
+            ['p', 'div'].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
+
+    if (unwrap) {
+      node = sel.anchorNode;
+      parent = insertedNode.parentNode;
+      insertedNode.parentNode.parentNode.insertBefore(insertedNode, insertedNode.parentNode);
+      parent.parentNode.removeChild(parent);
+
+      range = document.createRange();
+      range.setStart(node, 0);
+      range.setEnd(node, 0);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   }
 
   function triggerTextStyling(node) {
