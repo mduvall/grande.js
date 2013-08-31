@@ -6,6 +6,13 @@ This is a small Javascript library that implements features from Medium's editin
 How to get started
 ------------------
 
+### Installation
+Bower is the preferred way to install `grande.js`, it is available as `grande` in the Bower package repository.
+
+Simply `bower install grande`
+
+### Usage
+
 See the `index.html` in this repository for a functional example using the library.
 
 To get up and running simply...
@@ -28,3 +35,10 @@ Questions
 ---------
 ### This is very similar to Zenpen, why?
 First off, major props to @tholman for the inspirational script. grande.js is a spiritual cousin of the fantastic plugin and aims to have feature parity with Medium. It adds multiple styles and will be diverging from the vision of being an in-browser editing experience to being a *provider* of the in-browser editing experience. grande.js will be providing the foundation for your website to have a wonderful editing experience.
+
+Roadmap
+-------
+
+- Lists (ul and ol)
+- Images (figure)
+- execCommand to support `<strong>` and `<em>`
