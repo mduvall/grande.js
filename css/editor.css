@@ -11,6 +11,14 @@ body {
   padding-top: 50px;
 }
 
+.g-body h1,
+.g-body p,
+.g-body blockquote,
+.g-body ol,
+.g-body ul {
+  margin-bottom: 15px;
+}
+
 .g-body article {
   outline-style: none;
 }
@@ -43,11 +51,11 @@ body {
   color: #333332;
 }
 
-
 .g-body ol, .g-body ul {
   list-style: none;
   list-style-image: none;
-  margin: 0;
+  margin-left: 0;
+  margin-top: 0;
   padding-left: 0;
 }
 
