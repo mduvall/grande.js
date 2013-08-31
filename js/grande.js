@@ -40,6 +40,7 @@
         triggerTextSelection(event);
       }, 1);
     };
+    document.onkeyup = triggerTextParse;
 
     // Handle window resize events
     root.onresize = triggerTextSelection;
@@ -50,7 +51,6 @@
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
       node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
-      node.addEventListener('keyup', triggerTextParse, false);
     }
   }
 
@@ -107,7 +107,7 @@
     });
   }
 
-  function triggerTextParse() {
+  function triggerTextParse(event) {
     var sel = window.getSelection(),
         textProp,
         subject,
@@ -117,14 +117,20 @@
         parent,
         range;
 
-    if (!sel.isCollapsed) {
+    // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
+    if (!sel.isCollapsed || sel.anchorNode.nodeName === "ARTICLE") {
       return;
     }
 
-    textProp = (sel.anchorNode.nodeType === 3) ? 'data' : 'innerText';
+    if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
+      textProp = "data";
+    } else {
+      textProp = "innerText";
+    }
+
     subject = sel.anchorNode[textProp];
 
-    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li') {
+    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
       document.execCommand('insertUnorderedList');
       sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
 
@@ -137,7 +143,7 @@
       }
     }
 
-    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li') {
+    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
       document.execCommand('insertOrderedList');
       sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
 
@@ -297,7 +303,6 @@
           (clientRectBounds.left + clientRectBounds.right) / 2
         );
       }
-
   }
 
   function setTextMenuPosition(top, left) {
