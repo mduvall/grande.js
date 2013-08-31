@@ -1,9 +1,22 @@
+@font-face {
+  font-family: medium-icons;
+  src: url("fonts/medium-icons.woff");
+}
+
 body {
   font-family: Georgia, serif;
   min-width: 750px;
   width: 100%;
   color: #333332;
   padding-top: 50px;
+}
+
+.g-body h1,
+.g-body p,
+.g-body blockquote,
+.g-body ol,
+.g-body ul {
+  margin-bottom: 15px;
 }
 
 .g-body article {
@@ -36,4 +49,35 @@ body {
 .g-body a {
   text-decoration: underline;
   color: #333332;
+}
+
+.g-body ol, .g-body ul {
+  list-style: none;
+  list-style-image: none;
+  margin-left: 0;
+  margin-top: 0;
+  padding-left: 0;
+}
+
+.g-body ol li:before,
+.g-body ul li:before {
+  width: 20px;
+  display: inline-block;
+}
+
+.g-body ol {
+  counter-reset: post;
+}
+
+.g-body ol li:before {
+  font-weight: bold;
+  counter-increment: post;
+  content: counter(post) ".";
+}
+
+.g-body ul li:before {
+  font-family: "medium-icons";
+  content: "\e028";
+  text-decoration: none;
+  font-size: 14px;
 }
