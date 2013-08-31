@@ -5,6 +5,7 @@
       textMenu = document.querySelectorAll(".g-body .text-menu")[0],
       optionsNode = document.querySelectorAll(".g-body .text-menu .options")[0],
       urlInput = document.querySelectorAll(".g-body .text-menu .url-input")[0],
+      isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
 
       previouslySelectedText,
 
@@ -124,6 +125,8 @@
 
     if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
       textProp = "data";
+    } else if (isFirefox) {
+      textProp = "textContent";
     } else {
       textProp = "innerText";
     }
