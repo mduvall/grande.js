@@ -119,7 +119,7 @@
         range;
 
     // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
-    if (!sel.isCollapsed || sel.anchorNode.nodeName === "ARTICLE") {
+    if (!sel.isCollapsed || !sel.anchorNode || sel.anchorNode.nodeName === "ARTICLE") {
       return;
     }
 
