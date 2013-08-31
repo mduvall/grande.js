@@ -107,7 +107,7 @@
     });
   }
 
-  function triggerTextParse(){
+  function triggerTextParse() {
     var sel = window.getSelection(),
         textProp,
         subject,
@@ -124,7 +124,6 @@
     textProp = (sel.anchorNode.nodeType === 3) ? 'data' : 'innerText';
     subject = sel.anchorNode[textProp];
 
-    //ul
     if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li') {
       document.execCommand('insertUnorderedList');
       sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
@@ -138,8 +137,7 @@
       }
     }
 
-    //ol
-    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li'){
+    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName.toLocaleLowerCase() !== 'li') {
       document.execCommand('insertOrderedList');
       sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
 
@@ -152,7 +150,6 @@
       }
     }
 
-    //unwrap nodes
     unwrap = insertedNode &&
             ['ul', 'ol'].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
             ['p', 'div'].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
