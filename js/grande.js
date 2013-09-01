@@ -264,7 +264,6 @@
     } else {
       node.className += ' ' + tag
     }
-
   }
 
   function toggleUrlInput() {
