@@ -28,6 +28,21 @@ body {
   font-size: 2em;
 }
 
+.g-body .h1 {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.g-body .h2 {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.g-body .h3 {
+  font-weight: bold;
+  font-size: 1.17em;
+}
+
 .g-body header {
   font-weight: bold;
   font-size: 52px;

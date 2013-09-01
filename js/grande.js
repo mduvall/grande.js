@@ -85,6 +85,7 @@
   function reloadMenuState() {
     var className,
         focusNode = getFocusNode(),
+        elemClass = focusNode.parentNode.className,
         tagClass,
         reTag;
 
@@ -96,7 +97,7 @@
         reTag = new RegExp(tagClass);
 
         if (reTag.test(className)) {
-          if (hasParentWithTag(focusNode, tag)) {
+          if (hasParentWithTag(focusNode, tag) || elemClass.match(tag)) {
             node.className = tagClass + " active";
           } else {
             node.className = tagClass;
@@ -189,17 +190,23 @@
       if (reTag.test(className)) {
         switch(tag) {
           case "b":
+            document.execCommand(tagClass, false);
+            return;
           case "i":
             document.execCommand(tagClass, false);
             return;
-
           case "h1":
+            toggleFormatHeading(tag);
+            return;
           case "h2":
+            toggleFormatHeading(tag);
+            return;
           case "h3":
+            toggleFormatHeading(tag);
+            return;
           case "blockquote":
             toggleFormatBlock(tag);
             return;
-
           case "a":
             toggleUrlInput();
             optionsNode.className = "options url-mode";
@@ -248,6 +255,16 @@
     } else {
       document.execCommand("formatBlock", false, tag);
     }
+  }
+
+  function toggleFormatHeading(tag) {
+    node = getFocusNode().parentNode
+    if (node.className.match(tag)) {
+      node.className = node.className.replace(new RegExp('\\b' + tag + '\\b'), '')
+    } else {
+      node.className += ' ' + tag
+    }
+
   }
 
   function toggleUrlInput() {
