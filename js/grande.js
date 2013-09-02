@@ -314,4 +314,9 @@
   }
 
   root.grande = grande;
+
+  if (typeof root.sinon !== "undefined") {
+    root.bindTextSelectionEvents = bindTextSelectionEvents;
+  }
+
 }).call(this);
