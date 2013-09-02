@@ -1,7 +1,31 @@
 (function() {
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
-      editableNodes = document.querySelectorAll(".g-body article"),
+      div = document.createElement("div"),
+      html = "<div class='text-menu hide'>    \
+                <div class='options'>         \
+                  <span class='no-overflow'>  \
+                    <span class='ui-inputs'>  \
+                      <button class='bold'>B</button> \
+                      <button class='italic'>i</button> \
+                      <button class='header1'>h1</button> \
+                      <button class='header2'>h2</button> \
+                      <button class='quote'>&rdquo;</button>  \
+                      <button class='url useicons'>&#xe001;</button>  \
+                      <input class='url-input' type='text' placeholder='Paste or type a link'/> \
+                    </span> \
+                  </span> \
+                </div>  \
+              </div>";
+
+  div.innerHTML = html;
+  
+  // If user hasn't provided a .text-menu, insert one into the DOM
+  if (!document.querySelector(".text-menu"))
+    document.body.appendChild(div);
+
+  
+  var editableNodes = document.querySelectorAll(".g-body article"),
       textMenu = document.querySelectorAll(".g-body .text-menu")[0],
       optionsNode = document.querySelectorAll(".g-body .text-menu .options")[0],
       urlInput = document.querySelectorAll(".g-body .text-menu .url-input")[0],
