@@ -13,7 +13,8 @@
     "istanbul": "~0.1.10",
     "sinon": "*",
     "grunt": "~0.4.1",
-    "qunitjs": "*"
+    "qunitjs": "*",
+    "grunt-qunit-istanbul": "*"
   },
   "keywords": [
     "ui",
