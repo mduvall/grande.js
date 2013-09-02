@@ -3,3 +3,4 @@ _SpecRunner.html
 bin/coverage
 node_modules/
 .DS_Store
+report/
