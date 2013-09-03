@@ -61,7 +61,7 @@ body {
 
 .g-body ol li:before,
 .g-body ul li:before {
-  width: 20px;
+  width: 30px;
   display: inline-block;
 }
 
