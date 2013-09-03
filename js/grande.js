@@ -257,6 +257,8 @@
     if (node.className.match(tag)) {
       node.className = node.className.replace(new RegExp('\\b' + tag + '\\b'), '').trim();
     } else {
+      // Remove existing class and trim
+      node.className = node.className.replace(new RegExp('\\b(h1|h2|h3)\\b'), '').trim();
       node.className += ' ' + tag;
     }
   }
