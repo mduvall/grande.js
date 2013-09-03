@@ -24,6 +24,7 @@
         "i": "italic",
         "h1": "header1",
         "h2": "header2",
+        "h3": "header3",
         "a": "url",
         "blockquote": "quote"
       };
@@ -85,6 +86,7 @@
   function reloadMenuState() {
     var className,
         focusNode = getFocusNode(),
+        elemClass = focusNode.parentNode.className,
         tagClass,
         reTag;
 
@@ -96,7 +98,7 @@
         reTag = new RegExp(tagClass);
 
         if (reTag.test(className)) {
-          if (hasParentWithTag(focusNode, tag)) {
+          if (hasParentWithTag(focusNode, tag) || elemClass.match(tag)) {
             node.className = tagClass + " active";
           } else {
             node.className = tagClass;
@@ -192,14 +194,14 @@
           case "i":
             document.execCommand(tagClass, false);
             return;
-
           case "h1":
           case "h2":
           case "h3":
+            toggleFormatHeading(tag);
+            return;
           case "blockquote":
             toggleFormatBlock(tag);
             return;
-
           case "a":
             toggleUrlInput();
             optionsNode.className = "options url-mode";
@@ -247,6 +249,17 @@
       document.execCommand("outdent");
     } else {
       document.execCommand("formatBlock", false, tag);
+    }
+  }
+
+  function toggleFormatHeading(tag) {
+    node = getFocusNode().parentNode;
+    if (node.className.match(tag)) {
+      node.className = node.className.replace(new RegExp('\\b' + tag + '\\b'), '').trim();
+    } else {
+      // Remove existing class and trim
+      node.className = node.className.replace(new RegExp('\\b(h1|h2|h3)\\b'), '').trim();
+      node.className += ' ' + tag;
     }
   }
 
