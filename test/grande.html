@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Grande tests</title>
+  <link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+    <div class="g-body">
+      <div class="text-menu hide">
+        <div class="options">
+          <span class="no-overflow">
+            <span class="ui-inputs">
+              <button class="bold">B</button>
+              <button class="italic">i</button>
+              <button class="header1">h1</button>
+              <button class="header2">h2</button>
+              <button class="quote">&rdquo;</button>
+              <button class="url useicons">&#xe001;</button>
+              <input class="url-input" type="text" placeholder="Paste or type a link"/>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <section>
+        <article contenteditable="true" class="content">
+        </article>
+      </section>
+    </div>
+  </div>
+  <script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+  <script src="lib/sinon.js"></script>
+  <script src="../js/grande.js"></script>
+  <script src="grande.js"></script>
+</body>
+</html>
