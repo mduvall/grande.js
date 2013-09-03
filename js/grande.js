@@ -24,6 +24,7 @@
         "i": "italic",
         "h1": "header1",
         "h2": "header2",
+        "h3": "header3",
         "a": "url",
         "blockquote": "quote"
       };
@@ -190,17 +191,11 @@
       if (reTag.test(className)) {
         switch(tag) {
           case "b":
-            document.execCommand(tagClass, false);
-            return;
           case "i":
             document.execCommand(tagClass, false);
             return;
           case "h1":
-            toggleFormatHeading(tag);
-            return;
           case "h2":
-            toggleFormatHeading(tag);
-            return;
           case "h3":
             toggleFormatHeading(tag);
             return;
@@ -258,11 +253,11 @@
   }
 
   function toggleFormatHeading(tag) {
-    node = getFocusNode().parentNode
+    node = getFocusNode().parentNode;
     if (node.className.match(tag)) {
-      node.className = node.className.replace(new RegExp('\\b' + tag + '\\b'), '')
+      node.className = node.className.replace(new RegExp('\\b' + tag + '\\b'), '').trim();
     } else {
-      node.className += ' ' + tag
+      node.className += ' ' + tag;
     }
   }
 
