@@ -19,7 +19,7 @@ See the `index.html` in this repository for a functional example using the libra
 
 To get up and running simply...
 
-1. Include the `div.text-menu` template and an `<article>` with `contenteditable`
+1. Include an `<article>` with `contenteditable`
 2. Include the `grande.js` file at the bottom of your `<body>`
 3. Bind the events on the `document` with `grande.init()`
 4. You are set!
@@ -40,7 +40,5 @@ First off, major props to @tholman for the inspirational script. grande.js is a 
 
 Roadmap
 -------
-
-- Lists (ul and ol)
 - Images (figure)
 - execCommand to support `<strong>` and `<em>`
