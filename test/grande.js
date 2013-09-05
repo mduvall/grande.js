@@ -64,11 +64,26 @@ test("it should bind to the windows resize event", function() {
     "window resize should be bound to a function");
 });
 
+test("it should attach the toolbar template to the DOM", function() {
+  equal(document.querySelectorAll(".text-menu").length, 0,
+    "text menu should not be defined on the dom");
+
+  grande.bind();
+
+  equal(document.querySelectorAll(".text-menu").length, 1,
+    "text menu should be defined on the dom");
+});
+
 
 function unbind() {
   document.onmousedown =
     document.onmouseup =
       document.onkeyup =
        window.onresize = null;
+
+  var menuEl = document.querySelectorAll(".text-menu");
+  if (menuEl.length) {
+    menuEl[0].parentNode.removeChild(menuEl[0]);
+  }
 }
 

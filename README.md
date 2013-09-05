@@ -42,3 +42,4 @@ Roadmap
 -------
 - Images (figure)
 - execCommand to support `<strong>` and `<em>`
+- Support for `<hr>`
