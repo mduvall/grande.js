@@ -81,3 +81,10 @@ body {
   text-decoration: none;
   font-size: 14px;
 }
+
+.g-body hr{
+  display: block;
+  width: 20%;
+  border: 1px solid rgb(222, 222, 220);
+  margin: 50px auto 40px;
+}

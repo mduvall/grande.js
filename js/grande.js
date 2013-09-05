@@ -69,7 +69,17 @@
         triggerTextSelection(event);
       }, 1);
     };
-    document.onkeyup = triggerTextParse;
+    
+    document.onkeyup = function(event){
+      var sel = window.getSelection();
+      
+      // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
+      if (sel.anchorNode && sel.anchorNode.nodeName !== "ARTICLE") {
+        triggerNodeAnalysis(event);
+        
+        if (sel.isCollapsed) triggerTextParse(event);
+      }
+    };
 
     // Handle window resize events
     root.onresize = triggerTextSelection;
@@ -124,7 +134,7 @@
         reTag = new RegExp(tagClass);
 
         if (reTag.test(className)) {
-          if (hasParentWithTag(focusNode, tag)) {
+          if (getParentOfType(focusNode, tag)) {
             node.className = tagClass + " active";
           } else {
             node.className = tagClass;
@@ -134,6 +144,25 @@
         }
       }
     });
+  }
+  
+  function triggerNodeAnalysis(event) {
+    console.log('analysis');
+    var sel = window.getSelection(),
+        anchorNode,
+        parentP,
+        hr;
+    
+    if (event.keyCode === 13) {
+      parentP = getParentOfType(sel.anchorNode, 'p');
+      	
+      if (sel.anchorNode.nodeName.toLowerCase() === 'p' || parentP) {
+        if (parentP.previousSibling.nodeName.toLowerCase() === 'p' && !parentP.previousSibling.textContent.length) {
+          hr = document.createElement('hr');
+          parentP.parentNode.replaceChild(hr, parentP.previousSibling);
+        }
+      }
+    }
   }
 
   function triggerTextParse(event) {
@@ -145,11 +174,6 @@
         node,
         parent,
         range;
-
-    // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
-    if (!sel.isCollapsed || !sel.anchorNode || sel.anchorNode.nodeName === "ARTICLE") {
-      return;
-    }
 
     if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
       textProp = "data";
@@ -165,26 +189,14 @@
       document.execCommand('insertUnorderedList');
       sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
 
-      insertedNode = sel.anchorNode;
-      while (insertedNode.parentNode) {
-        if (insertedNode.nodeName.toLowerCase() === 'ul') {
-          break;
-        }
-        insertedNode = insertedNode.parentNode;
-      }
+      insertedNode = getParentOfType(sel.anchorNode, 'ul');
     }
 
     if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
       document.execCommand('insertOrderedList');
       sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
 
-      insertedNode = sel.anchorNode;
-      while (insertedNode.parentNode) {
-        if (insertedNode.nodeName.toLowerCase() === 'ol') {
-          break;
-        }
-        insertedNode = insertedNode.parentNode;
-      }
+      insertedNode = getParentOfType(sel.anchorNode, 'ol');
     }
 
     unwrap = insertedNode &&
@@ -270,7 +282,7 @@
   }
 
   function toggleFormatBlock(tag) {
-    if (hasParentWithTag(getFocusNode(), tag)) {
+    if (getParentOfType(getFocusNode(), tag)) {
       document.execCommand("formatBlock", false, "p");
       document.execCommand("outdent");
     } else {
@@ -294,14 +306,14 @@
     }, 150);
   }
 
-  function hasParentWithTag(node, nodeType) {
+  function getParentOfType(node, nodeType){
     while (node.parentNode) {
       if (node.nodeName.toLowerCase() === nodeType) {
-        return true;
+        return node;
       }
       node = node.parentNode;
     }
-
+    
     return false;
   }
 
