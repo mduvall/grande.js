@@ -1,39 +1,16 @@
 (function() {
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
-      div = document.createElement("div"),
-      toolbarTemplate = "<div class='options'> \
-                  <span class='no-overflow'> \
-                    <span class='ui-inputs'> \
-                      <button class='bold'>B</button> \
-                      <button class='italic'>i</button> \
-                      <button class='header1'>h1</button> \
-                      <button class='header2'>h2</button> \
-                      <button class='quote'>&rdquo;</button> \
-                      <button class='url useicons'>&#xe001;</button> \
-                      <input class='url-input' type='text' placeholder='Paste or type a link'/> \
-                    </span> \
-                  </span> \
-                </div>";
-
-  div.className = "text-menu hide";
-  div.innerHTML = toolbarTemplate;
-
-  // If user hasn't provided a .text-menu, insert one into the DOM
-  if (!document.querySelector(".text-menu"))
-    document.body.appendChild(div);
-
-
-  var editableNodes = document.querySelectorAll(".g-body article"),
-      textMenu = document.querySelectorAll(".g-body .text-menu")[0],
-      optionsNode = document.querySelectorAll(".g-body .text-menu .options")[0],
-      urlInput = document.querySelectorAll(".g-body .text-menu .url-input")[0],
+      editableNodes = document.querySelectorAll(".g-body article"),
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
-
+      textMenu,
+      optionsNode,
+      urlInput,
       previouslySelectedText,
 
       grande = {
         bind: function() {
+          attachToolbarTemplate();
           bindTextSelectionEvents();
           bindTextStylingEvents();
         },
@@ -50,6 +27,34 @@
         "a": "url",
         "blockquote": "quote"
       };
+
+  function attachToolbarTemplate() {
+    var div = document.createElement("div"),
+        toolbarTemplate = "<div class='options'> \
+          <span class='no-overflow'> \
+            <span class='ui-inputs'> \
+              <button class='bold'>B</button> \
+              <button class='italic'>i</button> \
+              <button class='header1'>h1</button> \
+              <button class='header2'>h2</button> \
+              <button class='quote'>&rdquo;</button> \
+              <button class='url useicons'>&#xe001;</button> \
+              <input class='url-input' type='text' placeholder='Paste or type a link'/> \
+            </span> \
+          </span> \
+        </div>";
+
+    div.className = "text-menu hide";
+    div.innerHTML = toolbarTemplate;
+
+    if (document.querySelectorAll(".text-menu").length === 0) {
+      document.body.appendChild(div);
+    }
+
+    textMenu = document.querySelectorAll(".text-menu")[0];
+    optionsNode = document.querySelectorAll(".text-menu .options")[0];
+    urlInput = document.querySelectorAll(".text-menu .url-input")[0];
+  }
 
   function bindTextSelectionEvents() {
     var i,
@@ -79,7 +84,7 @@
   }
 
   function iterateTextMenuButtons(callback) {
-    var textMenuButtons = document.querySelectorAll(".g-body .text-menu button"),
+    var textMenuButtons = document.querySelectorAll(".text-menu button"),
         i,
         len,
         node;
