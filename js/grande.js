@@ -150,6 +150,16 @@
     return textProp;
   }
 
+  function insertListOnSelection(sel, textProp, listType) {
+    var execListCommand = listType === "ol" ? "insertOrderedList" : "insertUnorderedList",
+        nodeOffset = listType === "ol" ? 3 : 2;
+
+    document.execCommand(execListCommand);
+    sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(nodeOffset);
+
+    return getParentWithTag(sel.anchorNode, listType);
+  }
+
   function triggerTextParse(event) {
     var sel = window.getSelection(),
         textProp,
@@ -160,49 +170,30 @@
         parent,
         range;
 
-    textProp = getTextProp(sel.anchorNode);
-
     // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
     if (!sel.isCollapsed || !sel.anchorNode || sel.anchorNode.nodeName === "ARTICLE") {
       return;
     }
 
+    textProp = getTextProp(sel.anchorNode);
     subject = sel.anchorNode[textProp];
 
-    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
-      document.execCommand('insertUnorderedList');
-      sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
-
-      insertedNode = sel.anchorNode;
-      while (insertedNode.parentNode) {
-        if (insertedNode.nodeName.toLowerCase() === 'ul') {
-          break;
-        }
-        insertedNode = insertedNode.parentNode;
-      }
+    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
+      insertedNode = insertListOnSelection(sel, textProp, "ul");
     }
 
-    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
-      document.execCommand('insertOrderedList');
-      sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
-
-      insertedNode = sel.anchorNode;
-      while (insertedNode.parentNode) {
-        if (insertedNode.nodeName.toLowerCase() === 'ol') {
-          break;
-        }
-        insertedNode = insertedNode.parentNode;
-      }
+    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
+      insertedNode = insertListOnSelection(sel, textProp, "ol");
     }
 
     unwrap = insertedNode &&
-            ['ul', 'ol'].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
-            ['p', 'div'].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
+            ["ul", "ol"].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
+            ["p", "div"].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
 
     if (unwrap) {
       node = sel.anchorNode;
       parent = insertedNode.parentNode;
-      insertedNode.parentNode.parentNode.insertBefore(insertedNode, insertedNode.parentNode);
+      parent.parentNode.insertBefore(insertedNode, parent);
       parent.parentNode.removeChild(parent);
 
       range = document.createRange();
@@ -302,25 +293,32 @@
     }, 150);
   }
 
-  function hasParentWithTag(node, nodeType) {
+  function getParent(node, condition, returnCallback) {
     while (node.parentNode) {
-      if (node.nodeName.toLowerCase() === nodeType) {
-        return true;
+      if (condition(node)) {
+        return returnCallback(node);
       }
+
       node = node.parentNode;
     }
+  }
 
-    return false;
+  function getParentWithTag(node, nodeType) {
+    var checkNodeType = function(node) { return node.nodeName.toLowerCase() === nodeType; },
+        returnNode = function(node) { return node; };
+
+    return getParent(node, checkNodeType, returnNode);
+  }
+
+  function hasParentWithTag(node, nodeType) {
+    return !!getParentWithTag(node, nodeType);
   }
 
   function getParentHref(node) {
-    while (node.parentNode) {
-      if (typeof node.href !== "undefined") {
-        return node.href;
-      }
+    var checkHref = function(node) { return typeof node.href !== "undefined"; },
+        returnHref = function(node) { return node.href; };
 
-      node = node.parentNode;
-    }
+    return getParent(node, checkHref, returnHref);
   }
 
   function triggerTextSelection() {
