@@ -136,6 +136,20 @@
     });
   }
 
+  function getTextProp(el) {
+    var textProp;
+
+    if (el.nodeType === Node.TEXT_NODE) {
+      textProp = "data";
+    } else if (isFirefox) {
+      textProp = "textContent";
+    } else {
+      textProp = "innerText";
+    }
+
+    return textProp;
+  }
+
   function triggerTextParse(event) {
     var sel = window.getSelection(),
         textProp,
@@ -146,17 +160,11 @@
         parent,
         range;
 
+    textProp = getTextProp(sel.anchorNode);
+
     // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
     if (!sel.isCollapsed || !sel.anchorNode || sel.anchorNode.nodeName === "ARTICLE") {
       return;
-    }
-
-    if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
-      textProp = "data";
-    } else if (isFirefox) {
-      textProp = "textContent";
-    } else {
-      textProp = "innerText";
     }
 
     subject = sel.anchorNode[textProp];
