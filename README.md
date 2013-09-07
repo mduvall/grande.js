@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mduvall/grande.js.png)](https://travis-ci.org/mduvall/grande.js)
+
 grande.js
 =========
 
