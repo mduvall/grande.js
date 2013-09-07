@@ -17,5 +17,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks("grunt-qunit-istanbul");
+  // @TODO: add lint hook here as well for eslint
+  grunt.registerTask("travis", "qunit");
 };
 

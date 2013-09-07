@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/mduvall/grande.js"
   },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  },
   "dependencies": {
   },
   "devDependencies": {
