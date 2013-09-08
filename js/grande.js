@@ -70,6 +70,8 @@
       }, 1);
     };
 
+    document.onkeydown = preprocessKeyDown;
+
     document.onkeyup = function(event){
       var sel = window.getSelection();
 
@@ -148,19 +150,36 @@
     });
   }
 
+  function preprocessKeyDown(event) {
+    var sel = window.getSelection(),
+        prevSibling = sel.anchorNode.previousSibling;
+
+    if (event.keyCode === 13) {
+      // Stop enters from creating another <p> after a <hr> on enter
+      if (prevSibling && prevSibling.nodeName === "HR") {
+          event.preventDefault();
+      }
+    }
+  }
+
   function triggerNodeAnalysis(event) {
     var sel = window.getSelection(),
         anchorNode,
-        parentP,
-        hr;
-    if (event.keyCode === 13) {
-      parentP = getParentWithTag(sel.anchorNode, 'p');
+        hr,
+        prevSibling;
 
-      if (sel.anchorNode.nodeName.toLowerCase() === 'p' || parentP) {
-        if (parentP.previousSibling.nodeName.toLowerCase() === 'p' && !parentP.previousSibling.textContent.length) {
-          hr = document.createElement('hr');
-          parentP.parentNode.replaceChild(hr, parentP.previousSibling);
-        }
+    if (event.keyCode === 13) {
+      // Enters should replace it's parent <div> with a <p>
+      if (sel.anchorNode.nodeName === "DIV") {
+        toggleFormatBlock("p");
+      }
+
+      prevSibling = sel.anchorNode.previousSibling;
+
+      if (prevSibling.nodeName === "P" && !prevSibling.textContent.length) {
+        hr = document.createElement("hr");
+        hr.contentEditable = false;
+        sel.anchorNode.parentNode.replaceChild(hr, prevSibling);
       }
     }
   }
@@ -224,13 +243,16 @@
       parent = insertedNode.parentNode;
       parent.parentNode.insertBefore(insertedNode, parent);
       parent.parentNode.removeChild(parent);
-
-      range = document.createRange();
-      range.setStart(node, 0);
-      range.setEnd(node, 0);
-      sel.removeAllRanges();
-      sel.addRange(range);
+      moveCursorToBeginningOfSelection(sel, node);
     }
+  }
+
+  function moveCursorToBeginningOfSelection(selection, node) {
+    range = document.createRange();
+    range.setStart(node, 0);
+    range.setEnd(node, 0);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
   function triggerTextStyling(node) {
