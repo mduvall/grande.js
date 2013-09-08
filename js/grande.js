@@ -2,15 +2,15 @@
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
-      textMenu = document.querySelectorAll(".g-body .text-menu")[0],
-      optionsNode = document.querySelectorAll(".g-body .text-menu .options")[0],
-      urlInput = document.querySelectorAll(".g-body .text-menu .url-input")[0],
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
-
+      textMenu,
+      optionsNode,
+      urlInput,
       previouslySelectedText,
 
       grande = {
         bind: function() {
+          attachToolbarTemplate();
           bindTextSelectionEvents();
           bindTextStylingEvents();
         },
@@ -28,6 +28,34 @@
         "blockquote": "quote"
       };
 
+  function attachToolbarTemplate() {
+    var div = document.createElement("div"),
+        toolbarTemplate = "<div class='options'> \
+          <span class='no-overflow'> \
+            <span class='ui-inputs'> \
+              <button class='bold'>B</button> \
+              <button class='italic'>i</button> \
+              <button class='header1'>h1</button> \
+              <button class='header2'>h2</button> \
+              <button class='quote'>&rdquo;</button> \
+              <button class='url useicons'>&#xe001;</button> \
+              <input class='url-input' type='text' placeholder='Paste or type a link'/> \
+            </span> \
+          </span> \
+        </div>";
+
+    div.className = "text-menu hide";
+    div.innerHTML = toolbarTemplate;
+
+    if (document.querySelectorAll(".text-menu").length === 0) {
+      document.body.appendChild(div);
+    }
+
+    textMenu = document.querySelectorAll(".text-menu")[0];
+    optionsNode = document.querySelectorAll(".text-menu .options")[0];
+    urlInput = document.querySelectorAll(".text-menu .url-input")[0];
+  }
+
   function bindTextSelectionEvents() {
     var i,
         len,
@@ -41,7 +69,21 @@
         triggerTextSelection(event);
       }, 1);
     };
-    document.onkeyup = triggerTextParse;
+
+    document.onkeydown = preprocessKeyDown;
+
+    document.onkeyup = function(event){
+      var sel = window.getSelection();
+
+      // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
+      if (sel.anchorNode && sel.anchorNode.nodeName !== "ARTICLE") {
+        triggerNodeAnalysis(event);
+
+        if (sel.isCollapsed) {
+          triggerTextParse(event);
+        }
+      }
+    };
 
     // Handle window resize events
     root.onresize = triggerTextSelection;
@@ -56,7 +98,7 @@
   }
 
   function iterateTextMenuButtons(callback) {
-    var textMenuButtons = document.querySelectorAll(".g-body .text-menu button"),
+    var textMenuButtons = document.querySelectorAll(".text-menu button"),
         i,
         len,
         node;
@@ -108,6 +150,64 @@
     });
   }
 
+  function preprocessKeyDown(event) {
+    var sel = window.getSelection(),
+        prevSibling = sel.anchorNode.previousSibling;
+
+    if (event.keyCode === 13) {
+      // Stop enters from creating another <p> after a <hr> on enter
+      if (prevSibling && prevSibling.nodeName === "HR") {
+          event.preventDefault();
+      }
+    }
+  }
+
+  function triggerNodeAnalysis(event) {
+    var sel = window.getSelection(),
+        anchorNode,
+        hr,
+        prevSibling;
+
+    if (event.keyCode === 13) {
+      // Enters should replace it's parent <div> with a <p>
+      if (sel.anchorNode.nodeName === "DIV") {
+        toggleFormatBlock("p");
+      }
+
+      prevSibling = sel.anchorNode.previousSibling;
+
+      if (prevSibling.nodeName === "P" && !prevSibling.textContent.length) {
+        hr = document.createElement("hr");
+        hr.contentEditable = false;
+        sel.anchorNode.parentNode.replaceChild(hr, prevSibling);
+      }
+    }
+  }
+
+  function getTextProp(el) {
+    var textProp;
+
+    if (el.nodeType === Node.TEXT_NODE) {
+      textProp = "data";
+    } else if (isFirefox) {
+      textProp = "textContent";
+    } else {
+      textProp = "innerText";
+    }
+
+    return textProp;
+  }
+
+  function insertListOnSelection(sel, textProp, listType) {
+    var execListCommand = listType === "ol" ? "insertOrderedList" : "insertUnorderedList",
+        nodeOffset = listType === "ol" ? 3 : 2;
+
+    document.execCommand(execListCommand);
+    sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(nodeOffset);
+
+    return getParentWithTag(sel.anchorNode, listType);
+  }
+
   function triggerTextParse(event) {
     var sel = window.getSelection(),
         textProp,
@@ -123,58 +223,36 @@
       return;
     }
 
-    if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
-      textProp = "data";
-    } else if (isFirefox) {
-      textProp = "textContent";
-    } else {
-      textProp = "innerText";
-    }
-
+    textProp = getTextProp(sel.anchorNode);
     subject = sel.anchorNode[textProp];
 
-    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
-      document.execCommand('insertUnorderedList');
-      sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(2);
-
-      insertedNode = sel.anchorNode;
-      while (insertedNode.parentNode) {
-        if (insertedNode.nodeName.toLowerCase() === 'ul') {
-          break;
-        }
-        insertedNode = insertedNode.parentNode;
-      }
+    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
+      insertedNode = insertListOnSelection(sel, textProp, "ul");
     }
 
-    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== 'LI') {
-      document.execCommand('insertOrderedList');
-      sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(3);
-
-      insertedNode = sel.anchorNode;
-      while (insertedNode.parentNode) {
-        if (insertedNode.nodeName.toLowerCase() === 'ol') {
-          break;
-        }
-        insertedNode = insertedNode.parentNode;
-      }
+    if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
+      insertedNode = insertListOnSelection(sel, textProp, "ol");
     }
 
     unwrap = insertedNode &&
-            ['ul', 'ol'].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
-            ['p', 'div'].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
+            ["ul", "ol"].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
+            ["p", "div"].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
 
     if (unwrap) {
       node = sel.anchorNode;
       parent = insertedNode.parentNode;
-      insertedNode.parentNode.parentNode.insertBefore(insertedNode, insertedNode.parentNode);
+      parent.parentNode.insertBefore(insertedNode, parent);
       parent.parentNode.removeChild(parent);
-
-      range = document.createRange();
-      range.setStart(node, 0);
-      range.setEnd(node, 0);
-      sel.removeAllRanges();
-      sel.addRange(range);
+      moveCursorToBeginningOfSelection(sel, node);
     }
+  }
+
+  function moveCursorToBeginningOfSelection(selection, node) {
+    range = document.createRange();
+    range.setStart(node, 0);
+    range.setEnd(node, 0);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
   function triggerTextStyling(node) {
@@ -266,25 +344,32 @@
     }, 150);
   }
 
-  function hasParentWithTag(node, nodeType) {
+  function getParent(node, condition, returnCallback) {
     while (node.parentNode) {
-      if (node.nodeName.toLowerCase() === nodeType) {
-        return true;
+      if (condition(node)) {
+        return returnCallback(node);
       }
+
       node = node.parentNode;
     }
+  }
 
-    return false;
+  function getParentWithTag(node, nodeType) {
+    var checkNodeType = function(node) { return node.nodeName.toLowerCase() === nodeType; },
+        returnNode = function(node) { return node; };
+
+    return getParent(node, checkNodeType, returnNode);
+  }
+
+  function hasParentWithTag(node, nodeType) {
+    return !!getParentWithTag(node, nodeType);
   }
 
   function getParentHref(node) {
-    while (node.parentNode) {
-      if (typeof node.href !== "undefined") {
-        return node.href;
-      }
+    var checkHref = function(node) { return typeof node.href !== "undefined"; },
+        returnHref = function(node) { return node.href; };
 
-      node = node.parentNode;
-    }
+    return getParent(node, checkHref, returnHref);
   }
 
   function triggerTextSelection() {
@@ -314,4 +399,5 @@
   }
 
   root.grande = grande;
+
 }).call(this);

@@ -61,7 +61,7 @@ body {
 
 .g-body ol li:before,
 .g-body ul li:before {
-  width: 20px;
+  width: 30px;
   display: inline-block;
 }
 
@@ -80,4 +80,11 @@ body {
   content: "\e028";
   text-decoration: none;
   font-size: 14px;
+}
+
+.g-body hr {
+  display: block;
+  width: 20%;
+  margin: 30px auto 20px auto;
+  border: 1px solid #dededc;
 }

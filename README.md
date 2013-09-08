@@ -1,7 +1,11 @@
+[![Build Status](https://travis-ci.org/mduvall/grande.js.png)](https://travis-ci.org/mduvall/grande.js)
+
 grande.js
 =========
 
 This is a small Javascript library that implements features from Medium's editing experience. Take a look [here](http://mattduvall.com/grande.js/).
+
+![image](http://f.cl.ly/items/0G280f2t1s123H3k3O2z/Screen%20Shot%202013-08-31%20at%203.08.44%20PM.png)
 
 How to get started
 ------------------
@@ -17,7 +21,7 @@ See the `index.html` in this repository for a functional example using the libra
 
 To get up and running simply...
 
-1. Include the `div.text-menu` template and an `<article>` with `contenteditable`
+1. Include an `<article>` with `contenteditable`
 2. Include the `grande.js` file at the bottom of your `<body>`
 3. Bind the events on the `document` with `grande.init()`
 4. You are set!
@@ -29,7 +33,7 @@ There are two CSS files that come with the included demo:
 
 ![image](http://f.cl.ly/items/0O1M1R1g2w1P213C0S3Z/Screen%20Shot%202013-08-21%20at%2011.53.55%20PM.png)
 
-The following tag stylings are available: `<b>`, `<i>`, `<h1>`, `<h2>`, `<blockquote>`, `<a>`
+The following tag stylings are available: `<b>`, `<i>`, `<h1>`, `<h2>`, `<blockquote>`, `<a>`, `<ol>`, `<ul>`
 
 Questions
 ---------
@@ -38,7 +42,6 @@ First off, major props to @tholman for the inspirational script. grande.js is a 
 
 Roadmap
 -------
-
-- Lists (ul and ol)
 - Images (figure)
 - execCommand to support `<strong>` and `<em>`
+- Support for `<hr>`

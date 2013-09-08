@@ -1,0 +1,33 @@
+{
+  "name": "grande.js",
+  "version": "0.0.1",
+  "author": "Matt DuVall <matt@mattduvall.com>",
+  "description": "Open source implementation of Medium's UI features.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mduvall/grande.js"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "istanbul": "~0.1.10",
+    "sinon": "*",
+    "grunt": "~0.4.1",
+    "qunitjs": "*",
+    "grunt-qunit-istanbul": "*"
+  },
+  "keywords": [
+    "ui",
+    "medium",
+    "ux",
+    "design"
+  ],
+  "preferGlobal": true,
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/mduvall/grande.js/blob/master/LICENSE"
+  }
+}
