@@ -194,21 +194,16 @@
         hr;
 
     prevSibling = parentParagraph.previousSibling;
+    prevPrevSibling = prevSibling;
+    
+    while(prevPrevSibling = prevPrevSibling.previousSibling){
+    	if (prevPrevSibling.nodeType != Node.TEXT_NODE) break;
+    }
 
-    if (prevSibling.nodeName === "P" && !prevSibling.textContent.length) {
+    if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
       hr = document.createElement("hr");
       hr.contentEditable = false;
-
-      if (!parentParagraph.textContent.length) {
-        parentParagraph.parentNode.replaceChild(hr, prevSibling);
-        return;
-      }
-
-      // Insert before non-empty <p>
-      prevPrevSibling = parentParagraph.previousSibling.previousSibling;
-      if (prevPrevSibling.nodeName === "P" && !prevPrevSibling.textContent.length) {
-        parentParagraph.parentNode.replaceChild(hr, parentParagraph.previousSibling);
-      }
+      parentParagraph.parentNode.replaceChild(hr, prevSibling);
     }
   }
 
