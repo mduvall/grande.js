@@ -152,12 +152,18 @@
 
   function preprocessKeyDown(event) {
     var sel = window.getSelection(),
-        prevSibling = sel.anchorNode.previousSibling;
+        parentParagraph = getParentWithTag(sel.anchorNode, "p"),
+        p,
+        isHr;
 
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && parentParagraph) {
+      prevSibling = parentParagraph.previousSibling;
+      isHr = prevSibling && prevSibling.nodeName === "HR" &&
+        !parentParagraph.textContent.length;
+
       // Stop enters from creating another <p> after a <hr> on enter
-      if (prevSibling && prevSibling.nodeName === "HR") {
-          event.preventDefault();
+      if (isHr) {
+        event.preventDefault();
       }
     }
   }
@@ -165,21 +171,43 @@
   function triggerNodeAnalysis(event) {
     var sel = window.getSelection(),
         anchorNode,
-        hr,
-        prevSibling;
+        parentParagraph;
 
     if (event.keyCode === 13) {
+
       // Enters should replace it's parent <div> with a <p>
       if (sel.anchorNode.nodeName === "DIV") {
         toggleFormatBlock("p");
       }
 
-      prevSibling = sel.anchorNode.previousSibling;
+      parentParagraph = getParentWithTag(sel.anchorNode, "p");
 
-      if (prevSibling.nodeName === "P" && !prevSibling.textContent.length) {
-        hr = document.createElement("hr");
-        hr.contentEditable = false;
-        sel.anchorNode.parentNode.replaceChild(hr, prevSibling);
+      if (parentParagraph) {
+        insertHorizontalRule(parentParagraph);
+      }
+    }
+  }
+
+  function insertHorizontalRule(parentParagraph) {
+    var prevSibling,
+        prevPrevSibling,
+        hr;
+
+    prevSibling = parentParagraph.previousSibling;
+
+    if (prevSibling.nodeName === "P" && !prevSibling.textContent.length) {
+      hr = document.createElement("hr");
+      hr.contentEditable = false;
+
+      if (!parentParagraph.textContent.length) {
+        parentParagraph.parentNode.replaceChild(hr, prevSibling);
+        return;
+      }
+
+      // Insert before non-empty <p>
+      prevPrevSibling = parentParagraph.previousSibling.previousSibling;
+      if (prevPrevSibling.nodeName === "P" && !prevPrevSibling.textContent.length) {
+        parentParagraph.parentNode.replaceChild(hr, parentParagraph.previousSibling);
       }
     }
   }
