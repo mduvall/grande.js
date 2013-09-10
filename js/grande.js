@@ -307,7 +307,7 @@
       return false;
     }
 
-    if (!url.match("^(http|https)://")) {
+    if (!url.match("^(http://|https://|mailto:)")) {
       url = "http://" + url;
     }
 
