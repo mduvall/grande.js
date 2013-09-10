@@ -257,6 +257,8 @@
 
   function triggerTextStyling(node) {
     var className = node.className,
+        sel = window.getSelection(),
+        selNode = sel.anchorNode,
         tagClass,
         reTag;
 
@@ -267,6 +269,10 @@
       if (reTag.test(className)) {
         switch(tag) {
           case "b":
+            if (selNode && !hasParentWithTag(selNode, "h1") && !hasParentWithTag(selNode, "h2")) {
+              document.execCommand(tagClass, false);
+            }
+            return;
           case "i":
             document.execCommand(tagClass, false);
             return;
