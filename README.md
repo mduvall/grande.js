@@ -33,7 +33,7 @@ There are two CSS files that come with the included demo:
 
 ![image](http://f.cl.ly/items/0O1M1R1g2w1P213C0S3Z/Screen%20Shot%202013-08-21%20at%2011.53.55%20PM.png)
 
-The following tag stylings are available: `<b>`, `<i>`, `<h1>`, `<h2>`, `<blockquote>`, `<a>`, `<ol>`, `<ul>`
+The following tag stylings are available: `<b>`, `<i>`, `<h1>`, `<h2>`, `<blockquote>`, `<a>`, `<ol>`, `<ul>`, `<hr>`
 
 Questions
 ---------
@@ -44,4 +44,3 @@ Roadmap
 -------
 - Images (figure)
 - execCommand to support `<strong>` and `<em>`
-- Support for `<hr>`
