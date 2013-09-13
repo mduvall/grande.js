@@ -1,4 +1,6 @@
 (function() {
+  var EDGE = -999;
+
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
@@ -413,7 +415,8 @@
 
       // The selected text is collapsed, push the menu out of the way
       if (selectedText.isCollapsed) {
-        setTextMenuPosition(-999, -999);
+        setTextMenuPosition(EDGE, EDGE);
+        textMenu.className = "text-menu hide";
       } else {
         range = selectedText.getRangeAt(0);
         clientRectBounds = range.getBoundingClientRect();
@@ -430,6 +433,12 @@
   function setTextMenuPosition(top, left) {
     textMenu.style.top = top + "px";
     textMenu.style.left = left + "px";
+
+    if (top === EDGE) {
+      textMenu.className = "text-menu hide";
+    } else {
+      textMenu.className = "text-menu active";
+    }
   }
 
   root.grande = grande;
