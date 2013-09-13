@@ -217,11 +217,11 @@
 }
 
 .g-body .text-menu {
-  -webkit-transition: opacity 250ms, margin 250ms;
-  -moz-transition: opacity 250ms, margin 250ms;
-  -ms-transition: opacity 250ms, margin 250ms;
-  -o-transition: opacity 250ms, margin 250ms;
-  transition: opacity 250ms, margin 250ms;
+  -webkit-transition: opacity 180ms, margin 180ms;
+  -moz-transition: opacity 180ms, margin 180ms;
+  -ms-transition: opacity 180ms, margin 180ms;
+  -o-transition: opacity 180ms, margin 180ms;
+  transition: opacity 180ms, margin 180ms;
 
   position: absolute;
   color: #fff;
