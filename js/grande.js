@@ -9,7 +9,11 @@
       previouslySelectedText,
 
       grande = {
-        bind: function() {
+        bind: function(bindableNodes) {
+          if (bindableNodes) {
+            editableNodes = bindableNodes;
+          }
+
           attachToolbarTemplate();
           bindTextSelectionEvents();
           bindTextStylingEvents();
@@ -93,6 +97,7 @@
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
+      node.contentEditable = true;
       node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
     }
   }
