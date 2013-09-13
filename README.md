@@ -23,7 +23,7 @@ To get up and running simply...
 
 1. Include an `<article>` with `contenteditable`
 2. Include the `grande.js` file at the bottom of your `<body>`
-3. Bind the events on the `document` with `grande.init()`
+3. Bind the events on the `document` with `grande.init()` with an optional `NodeList` to bind to.
 4. You are set!
 
 There are two CSS files that come with the included demo:
@@ -44,3 +44,4 @@ Roadmap
 -------
 - Images (figure)
 - execCommand to support `<strong>` and `<em>`
+- CSS animations to match the `pop-upwards` on Medium
