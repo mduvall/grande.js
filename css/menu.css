@@ -46,7 +46,7 @@
     opacity:1
   }
   100% {
-    -webkit-transform:matrix(1,0,0,1,0,0);
+    -webkit-transform:matrix(1,0,0,1,1,1);
     -moz-transform:matrix(1,0,0,1,0,0);
     -o-transform:matrix(1,0,0,1,0,0);
     transform:matrix(1,0,0,1,0,0);
@@ -273,6 +273,13 @@
   width: 25px;
   border: 0px;
   outline: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .options {
