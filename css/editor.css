@@ -2,12 +2,17 @@
   font-family: medium-icons;
   src: url("fonts/medium-icons.woff");
 }
+.g-body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
 .g-body section {
   max-width: 750px;
   margin: auto;
 }
 .g-body article {
   outline-style: none;
+  font-size: 16px;
 }
 .g-body header {
   font-weight: bold;
@@ -22,7 +27,10 @@
 }
 .g-body article h1 {
   /* Override webkit's <article> default */
-  font-size: 2em;
+  font-size: 32px;
+}
+.g-body article h2 {
+  font-size: 24px;
 }
 .g-body article blockquote {
   font-weight: 400;
