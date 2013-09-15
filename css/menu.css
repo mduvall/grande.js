@@ -7,158 +7,27 @@
 @-webkit-keyframes pop-upwards {
   0% {
     -webkit-transform:matrix(0.97,0,0,1,0,12);
-    -moz-transform:matrix(0.97,0,0,1,0,12);
-    -o-transform:matrix(0.97,0,0,1,0,12);
     transform:matrix(0.97,0,0,1,0,12);
-    filter:alpha(opacity=0);
-    -khtml-opacity:0;
-    -moz-opacity:0;
     opacity:0
   }
   20% {
     -webkit-transform:matrix(0.99,0,0,1,0,2);
-    -moz-transform:matrix(0.99,0,0,1,0,2);
-    -o-transform:matrix(0.99,0,0,1,0,2);
     transform:matrix(0.99,0,0,1,0,2);
-    filter:alpha(opacity=70);
-    -khtml-opacity:.7;
-    -moz-opacity:.7;
     opacity:.7
   }
   40% {
     -webkit-transform:matrix(1,0,0,1,0,-1);
-    -moz-transform:matrix(1,0,0,1,0,-1);
-    -o-transform:matrix(1,0,0,1,0,-1);
     transform:matrix(1,0,0,1,0,-1);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
     opacity:1
   }
   70% {
     -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
     transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
     opacity:1
   }
   100% {
     -webkit-transform:matrix(1,0,0,1,1,1);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
     transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
-    opacity:1
-  }
-}
-
-@-moz-keyframes pop-upwards{
-  0% {
-    -webkit-transform:matrix(0.97,0,0,1,0,12);
-    -moz-transform:matrix(0.97,0,0,1,0,12);
-    -o-transform:matrix(0.97,0,0,1,0,12);
-    transform:matrix(0.97,0,0,1,0,12);
-    filter:alpha(opacity=0);
-    -khtml-opacity:0;
-    -moz-opacity:0;
-    opacity:0
-  }
-  20% {
-    -webkit-transform:matrix(0.99,0,0,1,0,2);
-    -moz-transform:matrix(0.99,0,0,1,0,2);
-    -o-transform:matrix(0.99,0,0,1,0,2);
-    transform:matrix(0.99,0,0,1,0,2);
-    filter:alpha(opacity=70);
-    -khtml-opacity:.7;
-    -moz-opacity:.7;
-    opacity:.7
-  }
-  40% {
-    -webkit-transform:matrix(1,0,0,1,0,-1);
-    -moz-transform:matrix(1,0,0,1,0,-1);
-    -o-transform:matrix(1,0,0,1,0,-1);
-    transform:matrix(1,0,0,1,0,-1);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
-    opacity:1
-  }
-  70% {
-    -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
-    transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
-    opacity:1
-  }
-  100% {
-    -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
-    transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
-    opacity:1
-  }
-}
-
-@-o-keyframes pop-upwards {
-  0% {
-    -webkit-transform:matrix(0.97,0,0,1,0,12);
-    -moz-transform:matrix(0.97,0,0,1,0,12);
-    -o-transform:matrix(0.97,0,0,1,0,12);
-    transform:matrix(0.97,0,0,1,0,12);
-    filter:alpha(opacity=0);
-    -khtml-opacity:0;
-    -moz-opacity:0;
-    opacity:0
-  }
-  20% {
-    -webkit-transform:matrix(0.99,0,0,1,0,2);
-    -moz-transform:matrix(0.99,0,0,1,0,2);
-    -o-transform:matrix(0.99,0,0,1,0,2);
-    transform:matrix(0.99,0,0,1,0,2);
-    filter:alpha(opacity=70);
-    -khtml-opacity:.7;
-    -moz-opacity:.7;
-    opacity:.7
-  }
-  40% {
-    -webkit-transform:matrix(1,0,0,1,0,-1);
-    -moz-transform:matrix(1,0,0,1,0,-1);
-    -o-transform:matrix(1,0,0,1,0,-1);
-    transform:matrix(1,0,0,1,0,-1);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
-    opacity:1
-  }
-  70% {
-    -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
-    transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
-    opacity:1
-  }
-  100% {
-    -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
-    transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
     opacity:1
   }
 }
@@ -166,61 +35,34 @@
 @keyframes pop-upwards{
   0% {
     -webkit-transform:matrix(0.97,0,0,1,0,12);
-    -moz-transform:matrix(0.97,0,0,1,0,12);
-    -o-transform:matrix(0.97,0,0,1,0,12);
     transform:matrix(0.97,0,0,1,0,12);
-    filter:alpha(opacity=0);
-    -khtml-opacity:0;
-    -moz-opacity:0;
     opacity:0
   }
   20% {
     -webkit-transform:matrix(0.99,0,0,1,0,2);
-    -moz-transform:matrix(0.99,0,0,1,0,2);
-    -o-transform:matrix(0.99,0,0,1,0,2);
     transform:matrix(0.99,0,0,1,0,2);
-    filter:alpha(opacity=70);
-    -khtml-opacity:.7;
-    -moz-opacity:.7;
     opacity:.7
   }
   40% {
     -webkit-transform:matrix(1,0,0,1,0,-1);
-    -moz-transform:matrix(1,0,0,1,0,-1);
-    -o-transform:matrix(1,0,0,1,0,-1);
     transform:matrix(1,0,0,1,0,-1);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
     opacity:1
   }
   70% {
     -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
     transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
     opacity:1
   }
   100% {
     -webkit-transform:matrix(1,0,0,1,0,0);
-    -moz-transform:matrix(1,0,0,1,0,0);
-    -o-transform:matrix(1,0,0,1,0,0);
     transform:matrix(1,0,0,1,0,0);
-    filter:alpha(opacity=100);
-    -khtml-opacity:1;
-    -moz-opacity:1;
     opacity:1
   }
 }
 
 .g-body .text-menu {
   -webkit-transition: opacity 180ms, margin 180ms;
-  -moz-transition: opacity 180ms, margin 180ms;
   -ms-transition: opacity 180ms, margin 180ms;
-  -o-transition: opacity 180ms, margin 180ms;
   transition: opacity 180ms, margin 180ms;
 
   position: absolute;
@@ -231,9 +73,7 @@
 
 .g-body .text-menu.active {
   -webkit-animation:pop-upwards 180ms forwards linear;
-  -moz-animation:pop-upwards 180ms forwards linear;
   -ms-animation:pop-upwards 180ms forwards linear;
-  -o-animation:pop-upwards 180ms forwards linear;
   animation:pop-upwards 180ms forwards linear;
 }
 
@@ -258,9 +98,7 @@
 
 .text-menu button {
   -webkit-transition: opacity 400ms;
-  -moz-transition: opacity 400ms;
   -ms-transition: opacity 400ms;
-  -o-transition: opacity 400ms;
   transition: opacity 400ms;
 
   font-family: inherit;
@@ -283,7 +121,8 @@
 }
 
 .options {
-  background-color: rgba(0,0,0,0.9);
+  background-color: #262625;
+  box-shadow: 0 0 2px #262625;
   position: absolute;
   border-radius: 5px;
   margin-left: 23px;
@@ -294,9 +133,7 @@
   height: 33px;
 
   -webkit-transition: all 300ms ease-in-out;
-  -moz-transition: all 300ms ease-in-out;
   -ms-transition: all 300ms ease-in-out;
-  -o-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
 }
 
