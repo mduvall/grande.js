@@ -2,91 +2,70 @@
   font-family: medium-icons;
   src: url("fonts/medium-icons.woff");
 }
-
-body {
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  font-family: Georgia, serif;
-  min-width: 750px;
-  width: 100%;
-  color: #333332;
-  padding-top: 50px;
-}
-
-.g-body h1,
-.g-body p,
-.g-body blockquote,
-.g-body ol,
-.g-body ul {
-  margin-bottom: 15px;
-}
-
-.g-body article {
-  outline-style: none;
-}
-
-/* Override webkit's <article> default */
-.g-body h1 {
-  font-size: 2em;
-}
-
-.g-body header {
-  font-weight: bold;
-  font-size: 52px;
-}
-
 .g-body section {
   max-width: 750px;
   margin: auto;
 }
-
-.g-body blockquote {
+.g-body article {
+  outline-style: none;
+}
+.g-body header {
+  font-weight: bold;
+  font-size: 52px;
+}
+.g-body article h1,
+.g-body article p,
+.g-body article blockquote,
+.g-body article ol,
+.g-body article ul {
+  margin-bottom: 15px;
+}
+.g-body article h1 {
+  /* Override webkit's <article> default */
+  font-size: 2em;
+}
+.g-body article blockquote {
   font-weight: 400;
   font-style: italic;
   border-left: 6px solid #60d778;
   padding-left: 20px;
   margin-left: -26px;
 }
-
-.g-body a {
+.g-body article a {
   text-decoration: underline;
-  color: #333332;
+  color: inherit;
 }
-
-.g-body ol, .g-body ul {
+.g-body article ol,
+.g-body article ul {
   list-style: none;
   list-style-image: none;
   margin-left: 0;
   margin-top: 0;
   padding-left: 0;
 }
-
-.g-body ol li:before,
-.g-body ul li:before {
+.g-body article ol li:before,
+.g-body article ul li:before {
   width: 30px;
   display: inline-block;
 }
-
-.g-body ol {
+.g-body article ol {
   counter-reset: post;
 }
-
-.g-body ol li:before {
+.g-body article ol li:before {
   font-weight: bold;
   counter-increment: post;
   content: counter(post) ".";
 }
-
-.g-body ul li:before {
+.g-body article ul li:before {
   font-family: "medium-icons";
   content: "\e028";
   text-decoration: none;
   font-size: 14px;
 }
-
-.g-body hr {
+.g-body article hr {
   display: block;
   width: 20%;
   margin: 30px auto 20px auto;
-  border: 1px solid #dededc;
+  border-top: 1px solid #dededc;
+  border-bottom: 1px solid #dededc;
 }
