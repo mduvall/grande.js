@@ -4,6 +4,8 @@
 }
 
 body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   font-family: Georgia, serif;
   min-width: 750px;
   width: 100%;
@@ -41,7 +43,7 @@ body {
 .g-body blockquote {
   font-weight: 400;
   font-style: italic;
-  border-left:6px solid #e67e22;
+  border-left: 6px solid #60d778;
   padding-left: 20px;
   margin-left: -26px;
 }
