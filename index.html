@@ -11,24 +11,9 @@
 
   <body class="g-body">
     <a href="https://github.com/mduvall/grande.js"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
-    <div class="text-menu hide">
-      <div class="options">
-        <span class="no-overflow">
-          <span class="ui-inputs">
-            <button class="bold">B</button>
-            <button class="italic">i</button>
-            <button class="header1">h1</button>
-            <button class="header2">h2</button>
-            <button class="quote">&rdquo;</button>
-            <button class="url useicons">&#xe001;</button>
-            <input class="url-input" type="text" placeholder="Paste or type a link"/>
-          </span>
-        </span>
-      </div>
-    </div>
 
     <section>
-      <article contenteditable="true" class="content">
+      <article class="content">
         <h1>Welcome, this is grande.js</h1>
         <blockquote>"Make every detail perfect and limit the number of details to perfect." - <span class="jack">Jack Dorsey</span></blockquote>
         <p>Style your text to how you <b>think</b> and put the <i>feeling</i> into your words. Just select any text and choose how you want it to look from the menu.</p>
@@ -40,14 +25,16 @@
           <li>Assign the most important tasks in your day by starting the line with "1. "</li>
           <li>What's on your mind today?</li>
         </ol>
-
+        <hr contenteditable="false">
+          <p><i>Two enters</i> to create a divider to separate your content.</p>
+        <hr contenteditable="false">
         <p>Let your users express themselves. Take a look at the project on Github <a href="github.com/mduvall/grande.js">here</a>.</p>
       </article>
     </section>
 
     <script type="text/javascript" src="js/grande.js"></script>
     <script type="text/javascript">
-      grande.bind();
+      grande.bind(document.querySelectorAll("article"));
     </script>
   </body>
 </html>

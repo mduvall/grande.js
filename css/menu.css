@@ -4,17 +4,77 @@
        url('icomoon/icomoon.eot');
 }
 
+@-webkit-keyframes pop-upwards {
+  0% {
+    -webkit-transform:matrix(0.97,0,0,1,0,12);
+    transform:matrix(0.97,0,0,1,0,12);
+    opacity:0
+  }
+  20% {
+    -webkit-transform:matrix(0.99,0,0,1,0,2);
+    transform:matrix(0.99,0,0,1,0,2);
+    opacity:.7
+  }
+  40% {
+    -webkit-transform:matrix(1,0,0,1,0,-1);
+    transform:matrix(1,0,0,1,0,-1);
+    opacity:1
+  }
+  70% {
+    -webkit-transform:matrix(1,0,0,1,0,0);
+    transform:matrix(1,0,0,1,0,0);
+    opacity:1
+  }
+  100% {
+    -webkit-transform:matrix(1,0,0,1,1,1);
+    transform:matrix(1,0,0,1,0,0);
+    opacity:1
+  }
+}
+
+@keyframes pop-upwards{
+  0% {
+    -webkit-transform:matrix(0.97,0,0,1,0,12);
+    transform:matrix(0.97,0,0,1,0,12);
+    opacity:0
+  }
+  20% {
+    -webkit-transform:matrix(0.99,0,0,1,0,2);
+    transform:matrix(0.99,0,0,1,0,2);
+    opacity:.7
+  }
+  40% {
+    -webkit-transform:matrix(1,0,0,1,0,-1);
+    transform:matrix(1,0,0,1,0,-1);
+    opacity:1
+  }
+  70% {
+    -webkit-transform:matrix(1,0,0,1,0,0);
+    transform:matrix(1,0,0,1,0,0);
+    opacity:1
+  }
+  100% {
+    -webkit-transform:matrix(1,0,0,1,0,0);
+    transform:matrix(1,0,0,1,0,0);
+    opacity:1
+  }
+}
+
 .g-body .text-menu {
-  -webkit-transition: opacity 250ms, margin 250ms;
-  -moz-transition: opacity 250ms, margin 250ms;
-  -ms-transition: opacity 250ms, margin 250ms;
-  -o-transition: opacity 250ms, margin 250ms;
-  transition: opacity 250ms, margin 250ms;
+  -webkit-transition: opacity 180ms, margin 180ms;
+  -ms-transition: opacity 180ms, margin 180ms;
+  transition: opacity 180ms, margin 180ms;
 
   position: absolute;
   color: #fff;
   margin-top: -20px;
   margin-left: -115px;
+}
+
+.g-body .text-menu.active {
+  -webkit-animation:pop-upwards 180ms forwards linear;
+  -ms-animation:pop-upwards 180ms forwards linear;
+  animation:pop-upwards 180ms forwards linear;
 }
 
 .url {
@@ -33,14 +93,12 @@
 }
 
 .text-menu .active {
-  color: #e67e22;
+  color: #60d778;
 }
 
 .text-menu button {
   -webkit-transition: opacity 400ms;
-  -moz-transition: opacity 400ms;
   -ms-transition: opacity 400ms;
-  -o-transition: opacity 400ms;
   transition: opacity 400ms;
 
   font-family: inherit;
@@ -53,10 +111,18 @@
   width: 25px;
   border: 0px;
   outline: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .options {
-  background-color: rgba(0,0,0,0.9);
+  background-color: #262625;
+  box-shadow: 0 0 2px #262625;
   position: absolute;
   border-radius: 5px;
   margin-left: 23px;
@@ -67,9 +133,7 @@
   height: 33px;
 
   -webkit-transition: all 300ms ease-in-out;
-  -moz-transition: all 300ms ease-in-out;
   -ms-transition: all 300ms ease-in-out;
-  -o-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
 }
 
