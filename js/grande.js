@@ -209,7 +209,7 @@
     prevPrevSibling = prevSibling;
     
     while(prevPrevSibling = prevPrevSibling.previousSibling){
-    	if (prevPrevSibling.nodeType != Node.TEXT_NODE) break;
+      if (prevPrevSibling.nodeType != Node.TEXT_NODE) break;
     }
 
     if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
@@ -249,6 +249,7 @@
         subject,
         insertedNode,
         unwrap,
+        wasMerged,
         node,
         parent,
         range;
@@ -269,16 +270,48 @@
       insertedNode = insertListOnSelection(sel, textProp, "ol");
     }
 
+    if (!insertedNode) {return;}
+
     unwrap = insertedNode &&
             ["ul", "ol"].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
-            ["p", "div"].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
+            ["p", "div"].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0 ||
+            ["h1", "h2", "h3"].indexOf(insertedNode.parentNode.nodeName.toLocaleLowerCase()) >= 0;
 
     if (unwrap) {
       node = sel.anchorNode;
       parent = insertedNode.parentNode;
       parent.parentNode.insertBefore(insertedNode, parent);
       parent.parentNode.removeChild(parent);
+      removeDefaultFormatting(getParentWithTag(node,'li'));
       moveCursorToBeginningOfSelection(sel, node);
+    }
+
+    wasMerged = (insertedNode.parentNode.nodeName === "ARTICLE");
+
+    if (wasMerged) {
+      removeDefaultFormatting(getParentWithTag(sel.focusNode,'li'));
+    }
+  }
+
+  function removeDefaultFormatting(wrappingNode) {
+    var children = wrappingNode.childNodes;
+    if (wrappingNode) {
+      for (var i = 0, len = children.length; i < len; i++) {
+        var child = children[i];
+        //remove styles left behind in element nodes
+        if (child.nodeType === 1) {
+          child.removeAttribute("style"); 
+        }
+        //remove spans we don't need
+        if (child.nodeName.toLowerCase() === "span") {
+          wrappingNode.insertBefore(child.childNodes[0],child);
+          wrappingNode.removeChild(child);
+        } 
+      }
+      //remove the last linebreak if present
+      if (wrappingNode.lastChild.nodeName.toLowerCase() === "br") {
+        wrappingNode.removeChild(wrappingNode.lastChild);
+      }
     }
   }
 
@@ -364,6 +397,10 @@
     if (hasParentWithTag(getFocusNode(), tag)) {
       document.execCommand("formatBlock", false, "p");
       document.execCommand("outdent");
+    } else if (hasParentWithTag(getFocusNode(),'li') && isHeadingTag(tag)) {
+      document.execCommand("formatBlock",false,tag);
+      document.execCommand("outdent");
+      removeDefaultFormatting( getParentHeading(window.getSelection().focusNode) );
     } else {
       document.execCommand("formatBlock", false, tag);
     }
@@ -395,6 +432,13 @@
     }
   }
 
+  function getParentHeading(node) {
+    var checkNodeType = function(node) { return  isHeadingTag(node.nodeName.toLowerCase()); },
+        returnNode = function(node) { return node; };
+
+    return getParent(node, checkNodeType, returnNode);
+  }
+
   function getParentWithTag(node, nodeType) {
     var checkNodeType = function(node) { return node.nodeName.toLowerCase() === nodeType; },
         returnNode = function(node) { return node; };
@@ -404,6 +448,10 @@
 
   function hasParentWithTag(node, nodeType) {
     return !!getParentWithTag(node, nodeType);
+  }
+
+  function isHeadingTag(tag) {
+    return /h1|h2|h3/.test(tag);
   }
 
   function getParentHref(node) {
