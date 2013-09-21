@@ -126,6 +126,7 @@
   -ms-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
 }
+
 .text-menu .options.url-mode {
   width: 176px;
 }

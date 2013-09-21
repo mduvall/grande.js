@@ -6,6 +6,10 @@
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+.g-body header {
+  font-weight: bold;
+  font-size: 52px;
+}
 .g-body section {
   max-width: 750px;
   margin: auto;
