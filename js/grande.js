@@ -125,8 +125,12 @@
   }
 
   function showImageTooltip(event, element) {
-    imageTooltip.style.left = event.x + "px";
-    imageTooltip.style.top = event.y + "px";
+    var editNode = editableNodes[0],
+        targetNode = event.target,
+        boundsTarget = targetNode.getBoundingClientRect();
+
+    imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
+    imageTooltip.style.top = (boundsTarget.top + root.pageYOffset) + "px";
   }
 
   function iterateTextMenuButtons(callback) {
