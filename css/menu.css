@@ -82,7 +82,11 @@
   font-family: 'icomoon' !important;
 }
 
-.text-menu.hide {
+.image-tooltip {
+  position: absolute;
+}
+
+.image-tooltip.hide, .text-menu.hide {
   left: -999px;
   top: -999px;
 }

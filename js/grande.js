@@ -12,6 +12,7 @@
       optionsNode,
       urlInput,
       previouslySelectedText,
+      imageTooltip;
 
       grande = {
         bind: function(bindableNodes, opts) {
@@ -53,15 +54,21 @@
               <input class='url-input' type='text' placeholder='Paste or type a link'/> \
             </span> \
           </span> \
-        </div>";
+        </div>",
+        imageTooltipTemplate = document.createElement("div");
+
+    imageTooltipTemplate.innerHTML = "<div>Insert image</div>";
+    imageTooltipTemplate.className = "image-tooltip hide";
 
     div.className = "text-menu hide";
     div.innerHTML = toolbarTemplate;
 
     if (document.querySelectorAll(".text-menu").length === 0) {
       document.body.appendChild(div);
+      document.body.appendChild(imageTooltipTemplate);
     }
 
+    imageTooltip = document.querySelectorAll(".image-tooltip")[0];
     textMenu = document.querySelectorAll(".text-menu")[0];
     optionsNode = document.querySelectorAll(".text-menu .options")[0];
     urlInput = document.querySelectorAll(".text-menu .url-input")[0];
@@ -106,7 +113,20 @@
       node = editableNodes[i];
       node.contentEditable = true;
       node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
+      node.onmouseover = triggerOverlayStyling;
     }
+  }
+
+  function triggerOverlayStyling(event) {
+    // Case where element is empty, allow image insertion here
+    if (event.target.textContent === "") {
+      showImageTooltip(event, event.target);
+    }
+  }
+
+  function showImageTooltip(event, element) {
+    imageTooltip.style.left = event.x + "px";
+    imageTooltip.style.top = event.y + "px";
   }
 
   function iterateTextMenuButtons(callback) {
