@@ -227,9 +227,11 @@
 
     prevSibling = parentParagraph.previousSibling;
     prevPrevSibling = prevSibling;
-    
-    while(prevPrevSibling = prevPrevSibling.previousSibling){
-    	if (prevPrevSibling.nodeType != Node.TEXT_NODE) break;
+
+    while(prevPrevSibling = prevPrevSibling.previousSibling) {
+      if (prevPrevSibling.nodeType != Node.TEXT_NODE) {
+        break;
+      }
     }
 
     if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
