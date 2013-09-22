@@ -118,19 +118,23 @@
   }
 
   function triggerOverlayStyling(event) {
-    // Case where element is empty, allow image insertion here
-    if (event.target.textContent === "") {
-      showImageTooltip(event, event.target);
-    }
+    toggleImageTooltip(event, event.target);
   }
 
-  function showImageTooltip(event, element) {
+  function toggleImageTooltip(event, element) {
     var editNode = editableNodes[0],
         targetNode = event.target,
         boundsTarget = targetNode.getBoundingClientRect();
 
-    imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
-    imageTooltip.style.top = (boundsTarget.top + root.pageYOffset) + "px";
+    // Case where element is empty, allow image insertion here
+    // TODO: refactor into setTextMenuPosition
+    if (event.target.textContent === "") {
+      imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
+      imageTooltip.style.top = (boundsTarget.top + root.pageYOffset) + "px";
+    } else {
+      imageTooltip.style.left = EDGE + "px";
+      imageTooltip.style.top = EDGE + "px";
+    }
   }
 
   function iterateTextMenuButtons(callback) {
