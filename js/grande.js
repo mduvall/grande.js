@@ -5,13 +5,16 @@
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
+      options = {
+        animate: true
+      },
       textMenu,
       optionsNode,
       urlInput,
       previouslySelectedText,
 
       grande = {
-        bind: function(bindableNodes) {
+        bind: function(bindableNodes, opts) {
           if (bindableNodes) {
             editableNodes = bindableNodes;
           }
@@ -19,6 +22,8 @@
           attachToolbarTemplate();
           bindTextSelectionEvents();
           bindTextStylingEvents();
+
+          options = opts || options;
         },
         select: function() {
           triggerTextSelection();
@@ -434,10 +439,12 @@
     textMenu.style.top = top + "px";
     textMenu.style.left = left + "px";
 
-    if (top === EDGE) {
-      textMenu.className = "text-menu hide";
-    } else {
-      textMenu.className = "text-menu active";
+    if (options.animate) {
+      if (top === EDGE) {
+        textMenu.className = "text-menu hide";
+      } else {
+        textMenu.className = "text-menu active";
+      }
     }
   }
 

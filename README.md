@@ -23,13 +23,25 @@ To get up and running simply...
 
 1. Include an `<article>` with `contenteditable`
 2. Include the `grande.js` file at the bottom of your `<body>`
-3. Bind the events on the `document` with `grande.init()` with an optional `NodeList` to bind to.
+3. Bind the events on the `document` with `grande.init()`
 4. You are set!
+
+### Included files
 
 There are two CSS files that come with the included demo:
 
 - `editor.css`: this file provides the style for the `contenteditable` elements on the page
 - `menu.css`: this file provides the toolbar styling to appear as it does below
+
+## Options to grande.bind
+
+The `bind` function currently accepts two parameters: bindableNodes and an options list.
+
+The calling code can pass in a `NodeList` as the first parameter that will bind to these elements and enable `contentEditable` on them, if nothing is passed in it defaults to elements that match the selector `.g-body article`.
+
+The second parameter is an `options` object that accepts the following keys:
+
+- `animate`: if true, this will trigger the CSS animations (defaults to true). Useful to turn to false if `subpixel-antialised` is needed in Safari.
 
 ![image](http://f.cl.ly/items/0O1M1R1g2w1P213C0S3Z/Screen%20Shot%202013-08-21%20at%2011.53.55%20PM.png)
 
