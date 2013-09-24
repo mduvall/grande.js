@@ -139,10 +139,10 @@
     // Compute top and bottom bounds for each child element
     for (i = 0, len = childrenNodes.length - 1; i < len; i++) {
       preNode = childrenNodes[i];
-      postNode = childrenNodes[i] || null;
+      postNode = childrenNodes[i+1] || null;
 
-      bottomBound = preNode.getBoundingClientRect().bottom - 20;
-      topBound = postNode.getBoundingClientRect().top + 20;
+      bottomBound = preNode.getBoundingClientRect().bottom - 5;
+      topBound = postNode.getBoundingClientRect().top;
 
       bounds.push({
         top: topBound,
@@ -158,7 +158,7 @@
       bound = bounds[i];
       if (coordY < bound.top && coordY > bound.bottom) {
         imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
-        imageTooltip.style.top = (bound.top - 20) + "px";
+        imageTooltip.style.top = (bound.top - 17) + "px";
         return;
       }
     }
