@@ -102,6 +102,7 @@
         }
       }
     };
+    document.onmousemove = triggerOverlayStyling;
 
     // Handle window resize events
     root.onresize = triggerTextSelection;
@@ -113,7 +114,6 @@
       node = editableNodes[i];
       node.contentEditable = true;
       node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
-      node.onmouseover = triggerOverlayStyling;
     }
   }
 
@@ -123,6 +123,7 @@
 
   function toggleImageTooltip(event, element) {
     var editNode = editableNodes[0],
+        childrenNodes = editNode.children,
         targetNode = event.target,
         boundsTarget = targetNode.getBoundingClientRect();
 
@@ -130,7 +131,7 @@
     // TODO: refactor into setTextMenuPosition
     if (event.target.textContent === "") {
       imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
-      imageTooltip.style.top = (boundsTarget.top + root.pageYOffset) + "px";
+      imageTooltip.style.top = (boundsTarget.top + root.pageYOffset - 20) + "px";
     } else {
       imageTooltip.style.left = EDGE + "px";
       imageTooltip.style.top = EDGE + "px";
