@@ -125,17 +125,46 @@
     var editNode = editableNodes[0],
         childrenNodes = editNode.children,
         targetNode = event.target,
-        boundsTarget = targetNode.getBoundingClientRect();
+        boundsTarget = editNode.getBoundingClientRect(),
+        bounds = [],
+        bound,
+        i,
+        len,
+        preNode,
+        postNode,
+        bottomBound,
+        topBound,
+        coordY;
 
-    // Case where element is empty, allow image insertion here
-    // TODO: refactor into setTextMenuPosition
-    if (event.target.textContent === "") {
-      imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
-      imageTooltip.style.top = (boundsTarget.top + root.pageYOffset - 20) + "px";
-    } else {
-      imageTooltip.style.left = EDGE + "px";
-      imageTooltip.style.top = EDGE + "px";
+    // Compute top and bottom bounds for each child element
+    for (i = 0, len = childrenNodes.length - 1; i < len; i++) {
+      preNode = childrenNodes[i];
+      postNode = childrenNodes[i] || null;
+
+      bottomBound = preNode.getBoundingClientRect().bottom - 20;
+      topBound = postNode.getBoundingClientRect().top + 20;
+
+      bounds.push({
+        top: topBound,
+        bottom: bottomBound,
+        index: i+1
+      });
     }
+
+    coordY = event.pageY - root.scrollY;
+
+    // Find if there is a range to insert the image tooltip between two elements
+    for (i = 0, len = bounds.length; i < len; i++) {
+      bound = bounds[i];
+      if (coordY < bound.top && coordY > bound.bottom) {
+        imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
+        imageTooltip.style.top = (bound.top - 20) + "px";
+        return;
+      }
+    }
+
+    imageTooltip.style.left = EDGE + "px";
+    imageTooltip.style.top = EDGE + "px";
   }
 
   function iterateTextMenuButtons(callback) {
