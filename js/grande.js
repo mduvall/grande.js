@@ -57,7 +57,8 @@
         </div>",
         imageTooltipTemplate = document.createElement("div");
 
-    imageTooltipTemplate.innerHTML = "<div>Insert image</div>";
+    imageTooltipTemplate.innerHTML = "<div class='pos-abs file-label'>Insert image</div> \
+                                        <input class='file-hidden pos-abs' type='file' id='files' name='files[]' accept='image/*' multiple/>";
     imageTooltipTemplate.className = "image-tooltip hide";
 
     div.className = "text-menu hide";
@@ -110,6 +111,8 @@
     urlInput.onblur = triggerUrlBlur;
     urlInput.onkeydown = triggerUrlSet;
 
+    imageTooltip.onmousedown = triggerFileUpload;
+
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
       node.contentEditable = true;
@@ -119,6 +122,10 @@
 
   function triggerOverlayStyling(event) {
     toggleImageTooltip(event, event.target);
+  }
+
+  function triggerFileUpload(event) {
+    var fileInput = imageTooltip.querySelectorAll('input')[0];
   }
 
   function toggleImageTooltip(event, element) {

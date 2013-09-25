@@ -60,6 +60,19 @@
   }
 }
 
+.g-body .pos-abs {
+  position: absolute;
+}
+
+.g-body .file-hidden {
+  opacity: 0;
+  width: 90px;
+}
+
+.g-body .file-label {
+  width: 90px;
+}
+
 .g-body .text-menu {
   -webkit-transition: opacity 180ms, margin 180ms;
   -ms-transition: opacity 180ms, margin 180ms;
