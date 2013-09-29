@@ -4,6 +4,7 @@
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
+      editNode = editableNodes[0], // TODO: cross el support for imageUpload
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
       options = {
         animate: true
@@ -12,6 +13,9 @@
       optionsNode,
       urlInput,
       previouslySelectedText,
+      imageTooltip,
+      imageInput,
+      imageBound;
 
       grande = {
         bind: function(bindableNodes, opts) {
@@ -53,15 +57,23 @@
               <input class='url-input' type='text' placeholder='Paste or type a link'/> \
             </span> \
           </span> \
-        </div>";
+        </div>",
+        imageTooltipTemplate = document.createElement("div");
+
+    imageTooltipTemplate.innerHTML = "<div class='pos-abs file-label'>Insert image</div> \
+                                        <input class='file-hidden pos-abs' type='file' id='files' name='files[]' accept='image/*' multiple/>";
+    imageTooltipTemplate.className = "image-tooltip hide";
 
     div.className = "text-menu hide";
     div.innerHTML = toolbarTemplate;
 
     if (document.querySelectorAll(".text-menu").length === 0) {
       document.body.appendChild(div);
+      document.body.appendChild(imageTooltipTemplate);
     }
 
+    imageInput = document.querySelectorAll(".file-label + input")[0];
+    imageTooltip = document.querySelectorAll(".image-tooltip")[0];
     textMenu = document.querySelectorAll(".text-menu")[0];
     optionsNode = document.querySelectorAll(".text-menu .options")[0];
     urlInput = document.querySelectorAll(".text-menu .url-input")[0];
@@ -102,11 +114,101 @@
     urlInput.onblur = triggerUrlBlur;
     urlInput.onkeydown = triggerUrlSet;
 
+    if (options.allowImages) {
+      imageTooltip.onmousedown = triggerImageUpload;
+      imageInput.onchange = uploadImage;
+      document.onmousemove = triggerOverlayStyling;
+    }
+
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
       node.contentEditable = true;
       node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
     }
+  }
+
+  function triggerOverlayStyling(event) {
+    toggleImageTooltip(event, event.target);
+  }
+
+  function triggerImageUpload(event) {
+    // Cache the bound that was originally clicked on before the image upload
+    var childrenNodes = editNode.children,
+        editBounds = editNode.getBoundingClientRect();
+
+    imageBound = getHorizontalBounds(childrenNodes, editBounds);
+  }
+
+  function uploadImage(event) {
+    // Only allow uploading of 1 image for now, this is the first file
+    var file = this.files[0],
+        reader = new FileReader(),
+        figEl;
+
+    reader.onload = (function(f) {
+      return function(e) {
+        figEl = document.createElement("figure");
+        figEl.innerHTML = "<img src=\"" + e.target.result + "\"/>";
+        editNode.insertBefore(figEl, imageBound.bottomElement);
+      };
+    }(file));
+
+    reader.readAsDataURL(file);
+  }
+
+  function toggleImageTooltip(event, element) {
+    var childrenNodes = editNode.children,
+        editBounds = editNode.getBoundingClientRect(),
+        bound = getHorizontalBounds(childrenNodes, editBounds);
+
+    if (bound) {
+      imageTooltip.style.left = (editBounds.left - 90 ) + "px";
+      imageTooltip.style.top = (bound.top - 17) + "px";
+    } else {
+      imageTooltip.style.left = EDGE + "px";
+      imageTooltip.style.top = EDGE + "px";
+    }
+  }
+
+  function getHorizontalBounds(nodes, target) {
+    var bounds = [],
+        bound,
+        i,
+        len,
+        preNode,
+        postNode,
+        bottomBound,
+        topBound,
+        coordY;
+
+    // Compute top and bottom bounds for each child element
+    for (i = 0, len = nodes.length - 1; i < len; i++) {
+      preNode = nodes[i];
+      postNode = nodes[i+1] || null;
+
+      bottomBound = preNode.getBoundingClientRect().bottom - 5;
+      topBound = postNode.getBoundingClientRect().top;
+
+      bounds.push({
+        top: topBound,
+        bottom: bottomBound,
+        topElement: preNode,
+        bottomElement: postNode,
+        index: i+1
+      });
+    }
+
+    coordY = event.pageY - root.scrollY;
+
+    // Find if there is a range to insert the image tooltip between two elements
+    for (i = 0, len = bounds.length; i < len; i++) {
+      bound = bounds[i];
+      if (coordY < bound.top && coordY > bound.bottom) {
+        return bound;
+      }
+    }
+
+    return null;
   }
 
   function iterateTextMenuButtons(callback) {
@@ -207,9 +309,11 @@
 
     prevSibling = parentParagraph.previousSibling;
     prevPrevSibling = prevSibling;
-    
-    while(prevPrevSibling = prevPrevSibling.previousSibling){
-    	if (prevPrevSibling.nodeType != Node.TEXT_NODE) break;
+
+    while(prevPrevSibling = prevPrevSibling.previousSibling) {
+      if (prevPrevSibling.nodeType != Node.TEXT_NODE) {
+        break;
+      }
     }
 
     if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
