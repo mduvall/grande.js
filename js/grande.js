@@ -151,9 +151,20 @@
   function toggleImageTooltip(event, element) {
     var editNode = editableNodes[0],
         childrenNodes = editNode.children,
-        targetNode = event.target,
-        boundsTarget = editNode.getBoundingClientRect(),
-        bounds = [],
+        editBounds = editNode.getBoundingClientRect(),
+        bound = getHorizontalBounds(childrenNodes, editBounds);
+
+    if (bound) {
+      imageTooltip.style.left = (editBounds.left - 90 ) + "px";
+      imageTooltip.style.top = (bound.top - 17) + "px";
+    } else {
+      imageTooltip.style.left = EDGE + "px";
+      imageTooltip.style.top = EDGE + "px";
+    }
+  }
+
+  function getHorizontalBounds(nodes, target) {
+    var bounds = [],
         bound,
         i,
         len,
@@ -164,9 +175,9 @@
         coordY;
 
     // Compute top and bottom bounds for each child element
-    for (i = 0, len = childrenNodes.length - 1; i < len; i++) {
-      preNode = childrenNodes[i];
-      postNode = childrenNodes[i+1] || null;
+    for (i = 0, len = nodes.length - 1; i < len; i++) {
+      preNode = nodes[i];
+      postNode = nodes[i+1] || null;
 
       bottomBound = preNode.getBoundingClientRect().bottom - 5;
       topBound = postNode.getBoundingClientRect().top;
@@ -174,6 +185,8 @@
       bounds.push({
         top: topBound,
         bottom: bottomBound,
+        topElement: preNode,
+        bottomElement: postNode,
         index: i+1
       });
     }
@@ -184,14 +197,11 @@
     for (i = 0, len = bounds.length; i < len; i++) {
       bound = bounds[i];
       if (coordY < bound.top && coordY > bound.bottom) {
-        imageTooltip.style.left = (boundsTarget.left - 90 ) + "px";
-        imageTooltip.style.top = (bound.top - 17) + "px";
-        return;
+        return bound;
       }
     }
 
-    imageTooltip.style.left = EDGE + "px";
-    imageTooltip.style.top = EDGE + "px";
+    return null;
   }
 
   function iterateTextMenuButtons(callback) {
