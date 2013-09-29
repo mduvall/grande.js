@@ -107,7 +107,6 @@
         }
       }
     };
-    document.onmousemove = triggerOverlayStyling;
 
     // Handle window resize events
     root.onresize = triggerTextSelection;
@@ -115,8 +114,11 @@
     urlInput.onblur = triggerUrlBlur;
     urlInput.onkeydown = triggerUrlSet;
 
-    imageTooltip.onmousedown = triggerImageUpload;
-    imageInput.onchange = uploadImage;
+    if (options.allowImages) {
+      imageTooltip.onmousedown = triggerImageUpload;
+      imageInput.onchange = uploadImage;
+      document.onmousemove = triggerOverlayStyling;
+    }
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
