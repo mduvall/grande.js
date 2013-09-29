@@ -12,7 +12,8 @@
       optionsNode,
       urlInput,
       previouslySelectedText,
-      imageTooltip;
+      imageTooltip,
+      imageInput;
 
       grande = {
         bind: function(bindableNodes, opts) {
@@ -69,6 +70,7 @@
       document.body.appendChild(imageTooltipTemplate);
     }
 
+    imageInput = document.querySelectorAll(".file-label + input")[0];
     imageTooltip = document.querySelectorAll(".image-tooltip")[0];
     textMenu = document.querySelectorAll(".text-menu")[0];
     optionsNode = document.querySelectorAll(".text-menu .options")[0];
@@ -112,6 +114,7 @@
     urlInput.onkeydown = triggerUrlSet;
 
     imageTooltip.onmousedown = triggerFileUpload;
+    imageInput.onchange = uploadImage;
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
@@ -126,6 +129,23 @@
 
   function triggerFileUpload(event) {
     var fileInput = imageTooltip.querySelectorAll('input')[0];
+  }
+
+  function uploadImage(event) {
+    // Only allow uploading of 1 image for now, this is the first file
+    var file = this.files[0],
+        reader = new FileReader(),
+        figEl;
+
+    reader.onload = (function(f) {
+      return function(e) {
+        figEl = document.createElement("figure");
+        figEl.innerHTML = "<img src=\"" + e.target.result + "\"/>";
+        document.body.appendChild(figEl);
+      };
+    }(file));
+
+    reader.readAsDataURL(file);
   }
 
   function toggleImageTooltip(event, element) {
