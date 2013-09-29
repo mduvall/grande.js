@@ -4,6 +4,7 @@
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
+      editNode = editableNodes[0], // TODO: cross el support for imageUpload
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
       options = {
         animate: true
@@ -13,7 +14,8 @@
       urlInput,
       previouslySelectedText,
       imageTooltip,
-      imageInput;
+      imageInput,
+      imageBound;
 
       grande = {
         bind: function(bindableNodes, opts) {
@@ -113,7 +115,7 @@
     urlInput.onblur = triggerUrlBlur;
     urlInput.onkeydown = triggerUrlSet;
 
-    imageTooltip.onmousedown = triggerFileUpload;
+    imageTooltip.onmousedown = triggerImageUpload;
     imageInput.onchange = uploadImage;
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
@@ -127,8 +129,12 @@
     toggleImageTooltip(event, event.target);
   }
 
-  function triggerFileUpload(event) {
-    var fileInput = imageTooltip.querySelectorAll('input')[0];
+  function triggerImageUpload(event) {
+    // Cache the bound that was originally clicked on before the image upload
+    var childrenNodes = editNode.children,
+        editBounds = editNode.getBoundingClientRect();
+
+    imageBound = getHorizontalBounds(childrenNodes, editBounds);
   }
 
   function uploadImage(event) {
@@ -141,7 +147,7 @@
       return function(e) {
         figEl = document.createElement("figure");
         figEl.innerHTML = "<img src=\"" + e.target.result + "\"/>";
-        document.body.appendChild(figEl);
+        editNode.insertBefore(figEl, imageBound.bottomElement);
       };
     }(file));
 
@@ -149,8 +155,7 @@
   }
 
   function toggleImageTooltip(event, element) {
-    var editNode = editableNodes[0],
-        childrenNodes = editNode.children,
+    var childrenNodes = editNode.children,
         editBounds = editNode.getBoundingClientRect(),
         bound = getHorizontalBounds(childrenNodes, editBounds);
 
