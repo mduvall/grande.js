@@ -23,11 +23,11 @@
             editableNodes = bindableNodes;
           }
 
+          options = opts || options;
+
           attachToolbarTemplate();
           bindTextSelectionEvents();
           bindTextStylingEvents();
-
-          options = opts || options;
         },
         select: function() {
           triggerTextSelection();
