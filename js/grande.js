@@ -58,7 +58,11 @@
             </span> \
           </span> \
         </div>",
-        imageTooltipTemplate = document.createElement("div");
+        imageTooltipTemplate = document.createElement("div"),
+        toolbarContainer = document.createElement("div");
+
+    toolbarContainer.className = "g-body";
+    document.body.appendChild(toolbarContainer);
 
     imageTooltipTemplate.innerHTML = "<div class='pos-abs file-label'>Insert image</div> \
                                         <input class='file-hidden pos-abs' type='file' id='files' name='files[]' accept='image/*' multiple/>";
@@ -68,8 +72,8 @@
     div.innerHTML = toolbarTemplate;
 
     if (document.querySelectorAll(".text-menu").length === 0) {
-      document.body.appendChild(div);
-      document.body.appendChild(imageTooltipTemplate);
+      toolbarContainer.appendChild(div);
+      toolbarContainer.appendChild(imageTooltipTemplate);
     }
 
     imageInput = document.querySelectorAll(".file-label + input")[0];
