@@ -488,7 +488,7 @@
       }
 
       previouslySelectedText = window.getSelection().getRangeAt(0);
-
+		console.log(previouslySelectedText); 
       urlInput.focus();
     }, 150);
   }
@@ -530,30 +530,31 @@
     return getParent(node, checkHref, returnHref);
   }
 
+  function isUrlInputActive() {
+	  var urlmode = textMenu.getElementsByClassName('url-mode');
+	  if(urlmode.length === 0) {return false;}
+	  else {return true;}
+  }
+
   function triggerTextSelection() {
       var selectedText = root.getSelection(),
           range,
           clientRectBounds;
 
-		if(isCurrentNodeEditable()) {	
-			// The selected text is collapsed, push the menu out of the way
-			if (selectedText.isCollapsed) {
-			  setTextMenuPosition(EDGE, EDGE);
-			  textMenu.className = "text-menu hide";
-			} else {
-			  range = selectedText.getRangeAt(0);
-			  clientRectBounds = range.getBoundingClientRect();
-
-			  // Every time we show the menu, reload the state
-			  reloadMenuState();
-			  setTextMenuPosition(
-				 clientRectBounds.top - 5 + root.pageYOffset,
-				 (clientRectBounds.left + clientRectBounds.right) / 2
-			  );
-			}
+		if((isCurrentNodeEditable() || isUrlInputActive()) && !selectedText.isCollapsed) {	
+			range = selectedText.getRangeAt(0);
+			clientRectBounds = range.getBoundingClientRect();
+	  
+			// Every time we show the menu, reload the state
+			reloadMenuState();
+			setTextMenuPosition(
+				clientRectBounds.top - 5 + root.pageYOffset,
+				(clientRectBounds.left + clientRectBounds.right) / 2
+			);
+	  
 		} else {
-		  setTextMenuPosition(EDGE, EDGE);
-		  textMenu.className = "text-menu hide";
+			setTextMenuPosition(EDGE, EDGE);
+			textMenu.className = "text-menu hide";
 		}
   }
 
