@@ -503,6 +503,15 @@
     }
   }
 
+  function isCurrentNodeEditable() {
+	  for(var i = 0; i < editableNodes.length; i++) {
+			if(document.activeElement === editableNodes[i]) {
+				return true;	
+			}		
+		}
+		return false;	
+  }
+
   function getParentWithTag(node, nodeType) {
     var checkNodeType = function(node) { return node.nodeName.toLowerCase() === nodeType; },
         returnNode = function(node) { return node; };
@@ -526,21 +535,26 @@
           range,
           clientRectBounds;
 
-      // The selected text is collapsed, push the menu out of the way
-      if (selectedText.isCollapsed) {
-        setTextMenuPosition(EDGE, EDGE);
-        textMenu.className = "text-menu hide";
-      } else {
-        range = selectedText.getRangeAt(0);
-        clientRectBounds = range.getBoundingClientRect();
+		if(isCurrentNodeEditable()) {	
+			// The selected text is collapsed, push the menu out of the way
+			if (selectedText.isCollapsed) {
+			  setTextMenuPosition(EDGE, EDGE);
+			  textMenu.className = "text-menu hide";
+			} else {
+			  range = selectedText.getRangeAt(0);
+			  clientRectBounds = range.getBoundingClientRect();
 
-        // Every time we show the menu, reload the state
-        reloadMenuState();
-        setTextMenuPosition(
-          clientRectBounds.top - 5 + root.pageYOffset,
-          (clientRectBounds.left + clientRectBounds.right) / 2
-        );
-      }
+			  // Every time we show the menu, reload the state
+			  reloadMenuState();
+			  setTextMenuPosition(
+				 clientRectBounds.top - 5 + root.pageYOffset,
+				 (clientRectBounds.left + clientRectBounds.right) / 2
+			  );
+			}
+		} else {
+		  setTextMenuPosition(EDGE, EDGE);
+		  textMenu.className = "text-menu hide";
+		}
   }
 
   function setTextMenuPosition(top, left) {
