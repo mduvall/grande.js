@@ -488,7 +488,6 @@
       }
 
       previouslySelectedText = window.getSelection().getRangeAt(0);
-		console.log(previouslySelectedText); 
       urlInput.focus();
     }, 150);
   }
@@ -504,12 +503,16 @@
   }
 
   function isCurrentNodeEditable() {
-	  for(var i = 0; i < editableNodes.length; i++) {
-			if(document.activeElement === editableNodes[i]) {
-				return true;	
-			}		
+    var i,
+        len;
+
+    for (i = 0, len = editableNodes.length; i < len; i++) {
+			if (document.activeElement === editableNodes[i]) {
+				return true;
+			}
 		}
-		return false;	
+
+		return false;
   }
 
   function getParentWithTag(node, nodeType) {
@@ -531,27 +534,24 @@
   }
 
   function isUrlInputActive() {
-	  var urlmode = textMenu.getElementsByClassName('url-mode');
-	  if(urlmode.length === 0) {return false;}
-	  else {return true;}
+    return !!textMenu.getElementsByClassName('url-mode').length;
   }
 
   function triggerTextSelection() {
-      var selectedText = root.getSelection(),
-          range,
-          clientRectBounds;
+    var selectedText = root.getSelection(),
+        range,
+        clientRectBounds;
 
-		if((isCurrentNodeEditable() || isUrlInputActive()) && !selectedText.isCollapsed) {	
+		if ((isCurrentNodeEditable() || isUrlInputActive()) && !selectedText.isCollapsed) {
 			range = selectedText.getRangeAt(0);
 			clientRectBounds = range.getBoundingClientRect();
-	  
+
 			// Every time we show the menu, reload the state
 			reloadMenuState();
 			setTextMenuPosition(
 				clientRectBounds.top - 5 + root.pageYOffset,
 				(clientRectBounds.left + clientRectBounds.right) / 2
 			);
-	  
 		} else {
 			setTextMenuPosition(EDGE, EDGE);
 			textMenu.className = "text-menu hide";
