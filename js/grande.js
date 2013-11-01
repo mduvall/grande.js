@@ -504,10 +504,22 @@
 
   function isCurrentNodeEditable() {
     var i,
-        len;
+        len,
+        activeEl = document.activeElement,
+        ancestorIsMenu = function(node) {
+          while (node.parentNode) {
+            if (/options/.test(node.className)) {
+              return true;
+            }
+
+            node = node.parentNode;
+          }
+
+          return false;
+        };
 
     for (i = 0, len = editableNodes.length; i < len; i++) {
-			if (document.activeElement === editableNodes[i]) {
+			if (activeEl === editableNodes[i] || ancestorIsMenu(activeEl)) {
 				return true;
 			}
 		}
