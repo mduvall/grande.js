@@ -488,6 +488,7 @@
       }
 
       previouslySelectedText = window.getSelection().getRangeAt(0);
+
       urlInput.focus();
     }, 150);
   }
@@ -500,31 +501,6 @@
 
       node = node.parentNode;
     }
-  }
-
-  function isCurrentNodeEditable() {
-    var i,
-        len,
-        activeEl = document.activeElement,
-        ancestorIsMenu = function(node) {
-          while (node.parentNode) {
-            if (/options/.test(node.className)) {
-              return true;
-            }
-
-            node = node.parentNode;
-          }
-
-          return false;
-        };
-
-    for (i = 0, len = editableNodes.length; i < len; i++) {
-			if (activeEl === editableNodes[i] || ancestorIsMenu(activeEl)) {
-				return true;
-			}
-		}
-
-		return false;
   }
 
   function getParentWithTag(node, nodeType) {
@@ -545,29 +521,26 @@
     return getParent(node, checkHref, returnHref);
   }
 
-  function isUrlInputActive() {
-    return !!textMenu.getElementsByClassName('url-mode').length;
-  }
-
   function triggerTextSelection() {
-    var selectedText = root.getSelection(),
-        range,
-        clientRectBounds;
+      var selectedText = root.getSelection(),
+          range,
+          clientRectBounds;
 
-		if ((isCurrentNodeEditable() || isUrlInputActive()) && !selectedText.isCollapsed) {
-			range = selectedText.getRangeAt(0);
-			clientRectBounds = range.getBoundingClientRect();
+      // The selected text is collapsed, push the menu out of the way
+      if (selectedText.isCollapsed) {
+        setTextMenuPosition(EDGE, EDGE);
+        textMenu.className = "text-menu hide";
+      } else {
+        range = selectedText.getRangeAt(0);
+        clientRectBounds = range.getBoundingClientRect();
 
-			// Every time we show the menu, reload the state
-			reloadMenuState();
-			setTextMenuPosition(
-				clientRectBounds.top - 5 + root.pageYOffset,
-				(clientRectBounds.left + clientRectBounds.right) / 2
-			);
-		} else {
-			setTextMenuPosition(EDGE, EDGE);
-			textMenu.className = "text-menu hide";
-		}
+        // Every time we show the menu, reload the state
+        reloadMenuState();
+        setTextMenuPosition(
+          clientRectBounds.top - 5 + root.pageYOffset,
+          (clientRectBounds.left + clientRectBounds.right) / 2
+        );
+      }
   }
 
   function setTextMenuPosition(top, left) {
