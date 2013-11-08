@@ -521,7 +521,12 @@
     return getParent(node, checkHref, returnHref);
   }
 
-  function triggerTextSelection() {
+  function triggerTextSelection(e) {
+      // The selected text is not editable
+      if (!e.srcElement.isContentEditable) {
+          return false;
+      }
+
       var selectedText = root.getSelection(),
           range,
           clientRectBounds;
