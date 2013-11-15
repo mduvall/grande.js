@@ -524,7 +524,7 @@
   function triggerTextSelection(e) {
       // The selected text is not editable
       if (!e.srcElement.isContentEditable) {
-          return false;
+          return;
       }
 
       var selectedText = root.getSelection(),
