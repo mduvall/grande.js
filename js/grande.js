@@ -1,4 +1,5 @@
 (function() {
+  /*jshint multistr:true */
   var EDGE = -999;
 
   var root = this,   // Root object, this is going to be the window for now
