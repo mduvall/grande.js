@@ -533,7 +533,8 @@
 
     // The selected text is not editable
     if (!target.isContentEditable) {
-        return;
+      reloadMenuState();
+      return;
     }
 
     // The selected text is collapsed, push the menu out of the way
