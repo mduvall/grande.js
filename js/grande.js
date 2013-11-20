@@ -220,14 +220,15 @@
     var textMenuButtons = document.querySelectorAll(".text-menu button"),
         i,
         len,
-        node;
+        node,
+        fnCallback = function(n) {
+          callback(n);
+        };
 
     for (i = 0, len = textMenuButtons.length; i < len; i++) {
       node = textMenuButtons[i];
 
-      (function(n) {
-        callback(n);
-      })(node);
+      fnCallback(node);
     }
   }
 
@@ -315,10 +316,12 @@
     prevSibling = parentParagraph.previousSibling;
     prevPrevSibling = prevSibling;
 
-    while(prevPrevSibling = prevPrevSibling.previousSibling) {
+    while (prevPrevSibling) {
       if (prevPrevSibling.nodeType != Node.TEXT_NODE) {
         break;
       }
+
+      prevPrevSibling = prevPrevSibling.previousSibling;
     }
 
     if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
