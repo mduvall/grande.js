@@ -526,30 +526,31 @@
   }
 
   function triggerTextSelection(e) {
-      // The selected text is not editable
-      if (!e.srcElement.isContentEditable) {
-          return;
-      }
+    var selectedText = root.getSelection(),
+        range,
+        clientRectBounds,
+        target = e.target || e.srcElement;
 
-      var selectedText = root.getSelection(),
-          range,
-          clientRectBounds;
+    // The selected text is not editable
+    if (!target.isContentEditable) {
+        return;
+    }
 
-      // The selected text is collapsed, push the menu out of the way
-      if (selectedText.isCollapsed) {
-        setTextMenuPosition(EDGE, EDGE);
-        textMenu.className = "text-menu hide";
-      } else {
-        range = selectedText.getRangeAt(0);
-        clientRectBounds = range.getBoundingClientRect();
+    // The selected text is collapsed, push the menu out of the way
+    if (selectedText.isCollapsed) {
+      setTextMenuPosition(EDGE, EDGE);
+      textMenu.className = "text-menu hide";
+    } else {
+      range = selectedText.getRangeAt(0);
+      clientRectBounds = range.getBoundingClientRect();
 
-        // Every time we show the menu, reload the state
-        reloadMenuState();
-        setTextMenuPosition(
-          clientRectBounds.top - 5 + root.pageYOffset,
-          (clientRectBounds.left + clientRectBounds.right) / 2
-        );
-      }
+      // Every time we show the menu, reload the state
+      reloadMenuState();
+      setTextMenuPosition(
+        clientRectBounds.top - 5 + root.pageYOffset,
+        (clientRectBounds.left + clientRectBounds.right) / 2
+      );
+    }
   }
 
   function setTextMenuPosition(top, left) {
