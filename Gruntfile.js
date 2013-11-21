@@ -8,8 +8,7 @@ module.exports = function(grunt) {
           src: ["js/grande.js"],
           instrumentedFiles: "temp/",
           htmlReport: "report/coverage",
-          coberturaReport: "report/",
-          linesThresholdPct: 85
+          coberturaReport: "report/"
         }
       },
       all: ["test/**.html"]

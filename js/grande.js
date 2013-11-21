@@ -1,9 +1,11 @@
 (function() {
+  /*jshint multistr:true */
   var EDGE = -999;
 
   var root = this,   // Root object, this is going to be the window for now
       document = this.document, // Safely store a document here for us to use
       editableNodes = document.querySelectorAll(".g-body article"),
+      editNode = editableNodes[0], // TODO: cross el support for imageUpload
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
       options = {
         animate: true
@@ -12,6 +14,9 @@
       optionsNode,
       urlInput,
       previouslySelectedText,
+      imageTooltip,
+      imageInput,
+      imageBound;
 
       grande = {
         bind: function(bindableNodes, opts) {
@@ -19,11 +24,11 @@
             editableNodes = bindableNodes;
           }
 
+          options = opts || options;
+
           attachToolbarTemplate();
           bindTextSelectionEvents();
           bindTextStylingEvents();
-
-          options = opts || options;
         },
         select: function() {
           triggerTextSelection();
@@ -53,15 +58,27 @@
               <input class='url-input' type='text' placeholder='Paste or type a link'/> \
             </span> \
           </span> \
-        </div>";
+        </div>",
+        imageTooltipTemplate = document.createElement("div"),
+        toolbarContainer = document.createElement("div");
+
+    toolbarContainer.className = "g-body";
+    document.body.appendChild(toolbarContainer);
+
+    imageTooltipTemplate.innerHTML = "<div class='pos-abs file-label'>Insert image</div> \
+                                        <input class='file-hidden pos-abs' type='file' id='files' name='files[]' accept='image/*' multiple/>";
+    imageTooltipTemplate.className = "image-tooltip hide";
 
     div.className = "text-menu hide";
     div.innerHTML = toolbarTemplate;
 
     if (document.querySelectorAll(".text-menu").length === 0) {
-      document.body.appendChild(div);
+      toolbarContainer.appendChild(div);
+      toolbarContainer.appendChild(imageTooltipTemplate);
     }
 
+    imageInput = document.querySelectorAll(".file-label + input")[0];
+    imageTooltip = document.querySelectorAll(".image-tooltip")[0];
     textMenu = document.querySelectorAll(".text-menu")[0];
     optionsNode = document.querySelectorAll(".text-menu .options")[0];
     urlInput = document.querySelectorAll(".text-menu .url-input")[0];
@@ -102,6 +119,12 @@
     urlInput.onblur = triggerUrlBlur;
     urlInput.onkeydown = triggerUrlSet;
 
+    if (options.allowImages) {
+      imageTooltip.onmousedown = triggerImageUpload;
+      imageInput.onchange = uploadImage;
+      document.onmousemove = triggerOverlayStyling;
+    }
+
     for (i = 0, len = editableNodes.length; i < len; i++) {
       node = editableNodes[i];
       node.contentEditable = true;
@@ -109,18 +132,103 @@
     }
   }
 
+  function triggerOverlayStyling(event) {
+    toggleImageTooltip(event, event.target);
+  }
+
+  function triggerImageUpload(event) {
+    // Cache the bound that was originally clicked on before the image upload
+    var childrenNodes = editNode.children,
+        editBounds = editNode.getBoundingClientRect();
+
+    imageBound = getHorizontalBounds(childrenNodes, editBounds);
+  }
+
+  function uploadImage(event) {
+    // Only allow uploading of 1 image for now, this is the first file
+    var file = this.files[0],
+        reader = new FileReader(),
+        figEl;
+
+    reader.onload = (function(f) {
+      return function(e) {
+        figEl = document.createElement("figure");
+        figEl.innerHTML = "<img src=\"" + e.target.result + "\"/>";
+        editNode.insertBefore(figEl, imageBound.bottomElement);
+      };
+    }(file));
+
+    reader.readAsDataURL(file);
+  }
+
+  function toggleImageTooltip(event, element) {
+    var childrenNodes = editNode.children,
+        editBounds = editNode.getBoundingClientRect(),
+        bound = getHorizontalBounds(childrenNodes, editBounds);
+
+    if (bound) {
+      imageTooltip.style.left = (editBounds.left - 90 ) + "px";
+      imageTooltip.style.top = (bound.top - 17) + "px";
+    } else {
+      imageTooltip.style.left = EDGE + "px";
+      imageTooltip.style.top = EDGE + "px";
+    }
+  }
+
+  function getHorizontalBounds(nodes, target) {
+    var bounds = [],
+        bound,
+        i,
+        len,
+        preNode,
+        postNode,
+        bottomBound,
+        topBound,
+        coordY;
+
+    // Compute top and bottom bounds for each child element
+    for (i = 0, len = nodes.length - 1; i < len; i++) {
+      preNode = nodes[i];
+      postNode = nodes[i+1] || null;
+
+      bottomBound = preNode.getBoundingClientRect().bottom - 5;
+      topBound = postNode.getBoundingClientRect().top;
+
+      bounds.push({
+        top: topBound,
+        bottom: bottomBound,
+        topElement: preNode,
+        bottomElement: postNode,
+        index: i+1
+      });
+    }
+
+    coordY = event.pageY - root.scrollY;
+
+    // Find if there is a range to insert the image tooltip between two elements
+    for (i = 0, len = bounds.length; i < len; i++) {
+      bound = bounds[i];
+      if (coordY < bound.top && coordY > bound.bottom) {
+        return bound;
+      }
+    }
+
+    return null;
+  }
+
   function iterateTextMenuButtons(callback) {
     var textMenuButtons = document.querySelectorAll(".text-menu button"),
         i,
         len,
-        node;
+        node,
+        fnCallback = function(n) {
+          callback(n);
+        };
 
     for (i = 0, len = textMenuButtons.length; i < len; i++) {
       node = textMenuButtons[i];
 
-      (function(n) {
-        callback(n);
-      })(node);
+      fnCallback(node);
     }
   }
 
@@ -207,9 +315,13 @@
 
     prevSibling = parentParagraph.previousSibling;
     prevPrevSibling = prevSibling;
-    
-    while(prevPrevSibling = prevPrevSibling.previousSibling){
-    	if (prevPrevSibling.nodeType != Node.TEXT_NODE) break;
+
+    while (prevPrevSibling) {
+      if (prevPrevSibling.nodeType != Node.TEXT_NODE) {
+        break;
+      }
+
+      prevPrevSibling = prevPrevSibling.previousSibling;
     }
 
     if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
@@ -261,7 +373,7 @@
     textProp = getTextProp(sel.anchorNode);
     subject = sel.anchorNode[textProp];
 
-    if (subject.match(/^-\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
+    if (subject.match(/^[-*]\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
       insertedNode = insertListOnSelection(sel, textProp, "ul");
     }
 
@@ -413,26 +525,33 @@
     return getParent(node, checkHref, returnHref);
   }
 
-  function triggerTextSelection() {
-      var selectedText = root.getSelection(),
-          range,
-          clientRectBounds;
+  function triggerTextSelection(e) {
+    var selectedText = root.getSelection(),
+        range,
+        clientRectBounds,
+        target = e.target || e.srcElement;
 
-      // The selected text is collapsed, push the menu out of the way
-      if (selectedText.isCollapsed) {
-        setTextMenuPosition(EDGE, EDGE);
-        textMenu.className = "text-menu hide";
-      } else {
-        range = selectedText.getRangeAt(0);
-        clientRectBounds = range.getBoundingClientRect();
+    // The selected text is not editable
+    if (!target.isContentEditable) {
+      reloadMenuState();
+      return;
+    }
 
-        // Every time we show the menu, reload the state
-        reloadMenuState();
-        setTextMenuPosition(
-          clientRectBounds.top - 5 + root.pageYOffset,
-          (clientRectBounds.left + clientRectBounds.right) / 2
-        );
-      }
+    // The selected text is collapsed, push the menu out of the way
+    if (selectedText.isCollapsed) {
+      setTextMenuPosition(EDGE, EDGE);
+      textMenu.className = "text-menu hide";
+    } else {
+      range = selectedText.getRangeAt(0);
+      clientRectBounds = range.getBoundingClientRect();
+
+      // Every time we show the menu, reload the state
+      reloadMenuState();
+      setTextMenuPosition(
+        clientRectBounds.top - 5 + root.pageYOffset,
+        (clientRectBounds.left + clientRectBounds.right) / 2
+      );
+    }
   }
 
   function setTextMenuPosition(top, left) {

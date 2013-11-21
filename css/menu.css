@@ -60,6 +60,19 @@
   }
 }
 
+.g-body .pos-abs {
+  position: absolute;
+}
+
+.g-body .file-hidden {
+  opacity: 0;
+  width: 90px;
+}
+
+.g-body .file-label {
+  width: 90px;
+}
+
 .g-body .text-menu {
   -webkit-transition: opacity 180ms, margin 180ms;
   -ms-transition: opacity 180ms, margin 180ms;
@@ -82,7 +95,11 @@
   font-family: 'icomoon' !important;
 }
 
-.text-menu.hide {
+.image-tooltip {
+  position: absolute;
+}
+
+.image-tooltip.hide, .text-menu.hide {
   left: -999px;
   top: -999px;
 }
