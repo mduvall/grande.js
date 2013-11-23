@@ -17,7 +17,8 @@
     "sinon": "*",
     "grunt": "~0.4.1",
     "qunitjs": "*",
-    "grunt-qunit-istanbul": "*"
+    "grunt-qunit-istanbul": "*",
+    "grunt-contrib-uglify": "*"
   },
   "keywords": [
     "ui",

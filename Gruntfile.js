@@ -12,10 +12,18 @@ module.exports = function(grunt) {
         }
       },
       all: ["test/**.html"]
+    },
+    uglify: {
+      all: {
+        files: {
+          'dist/grande.min.js': ['js/grande.js']
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks("grunt-qunit-istanbul");
+  grunt.loadNpmTasks("grunt-contrib-uglify");
   // @TODO: add lint hook here as well for eslint
   grunt.registerTask("travis", "qunit");
 };
