@@ -22,7 +22,7 @@ See the `index.html` in this repository for a functional example using the libra
 To get up and running simply...
 
 1. Include an `<article>` with `contenteditable`
-2. Include the `grande.js` file at the bottom of your `<body>`
+2. Include the `grande.min.js` file (in `dist/` directory) at the bottom of your `<body>`
 3. Bind the events on the `document` with `grande.init()`
 4. You are set!
 
