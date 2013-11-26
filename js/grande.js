@@ -498,6 +498,9 @@
   }
 
   function getParent(node, condition, returnCallback) {
+    if (node === null){
+      return;
+    }
     while (node.parentNode) {
       if (condition(node)) {
         return returnCallback(node);
