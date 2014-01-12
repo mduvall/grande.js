@@ -23,7 +23,7 @@ To get up and running simply...
 
 1. Include an `<article>` with `contenteditable`
 2. Include the `grande.min.js` file (in `dist/` directory) at the bottom of your `<body>`
-3. Bind the events on the `document` with `grande.init()`
+3. Bind the events on the `article` tags with `grande.bind(document.querySelectorAll("article"))`
 4. You are set!
 
 ### Included files
