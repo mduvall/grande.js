@@ -36,6 +36,16 @@ test("it should bind the same events to the editableNode mousedown,keyup,mouseup
     "mousedown, keyup, and mouseup should delegate to the same function");
 });
 
+test("it should bind onblur and onfocus when using placeholders", function () {
+  var editableNode = document.querySelectorAll(".g-body article")[0];
+  grande.bind([editableNode], {placeholder: 'Enter text'});
+
+  ok(typeof editableNode.onfocus === "function",
+    "editableNode.onfocus should be bound to a function.");
+  ok(typeof editableNode.onblur === "function",
+    "editableNode.onblur should be bound to a function.");
+});
+
 test("it should bind mousedown, mouseup, and keyup on the document", function() {
   ok(document.onmousedown === null,
     "document mousedown should be null");

@@ -8,7 +8,8 @@
       editNode = editableNodes[0], // TODO: cross el support for imageUpload
       isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
       options = {
-        animate: true
+        animate: true,
+        placeholder: null
       },
       textMenu,
       optionsNode,
@@ -27,6 +28,7 @@
           options = opts || options;
 
           attachToolbarTemplate();
+          initPlaceholder();
           bindTextSelectionEvents();
           bindTextStylingEvents();
         },
@@ -43,6 +45,30 @@
         "a": "url",
         "blockquote": "quote"
       };
+
+  function initPlaceholder() {
+    if (options.placeholder) {
+      var p, node;
+
+      for (i = 0, len = editableNodes.length; i < len; i++) {
+        node = editableNodes[i];
+        if (node[getTextProp(node)]) {
+          continue;
+        }
+
+        addPlaceholder(node, options.placeholder);
+        node.onblur = triggerContentBlur;
+        node.onfocus = triggerContentFocus;
+      }
+    };
+  }
+
+  function addPlaceholder(el, text) {
+    p = document.createElement("span");
+    p.innerText = text;
+    p.className = "g-placeholder";
+    el.appendChild(p);
+  }
 
   function attachToolbarTemplate() {
     var div = document.createElement("div"),
@@ -568,6 +594,29 @@
       } else {
         textMenu.className = "text-menu active";
       }
+    }
+  }
+
+  function triggerContentFocus(e) {
+    var el = e.target;
+    var p = el.getElementsByClassName('g-placeholder');
+    for (var i=0; i < p.length; i++) {
+      el.removeChild(p[i]);
+    }
+
+    // A hack to get the element to focus.
+    var range = document.createRange();
+    range.selectNodeContents(this);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function triggerContentBlur(e) {
+    var el = e.target;
+    var content = el[getTextProp(el)];
+    if (!content.trim()) {
+      addPlaceholder(el, options.placeholder);
     }
   }
 

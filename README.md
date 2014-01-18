@@ -41,6 +41,8 @@ The calling code can pass in a `NodeList` as the first parameter that will bind 
 
 The second parameter is an `options` object that accepts the following keys:
 
+- `placeholder`: if set, this will be the placeholder value of the element(s), when the user focus on the element the placeholder will be deleted and put back when blurred while the field is empty.
+
 - `animate`: if true, this will trigger the CSS animations (defaults to true). Useful to turn to false if `subpixel-antialised` is needed in Safari.
 
 ![image](http://f.cl.ly/items/0O1M1R1g2w1P213C0S3Z/Screen%20Shot%202013-08-21%20at%2011.53.55%20PM.png)
