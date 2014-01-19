@@ -13,7 +13,7 @@
     <a href="https://github.com/mduvall/grande.js"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
     <section>
-      <article class="content">
+      <article class="content rich-editor">
         <h1>Welcome, this is grande.js</h1>
         <blockquote>"Make every detail perfect and limit the number of details to perfect." - <span class="jack">Jack Dorsey</span></blockquote>
         <p>Style your text to how you <b>think</b> and put the <i>feeling</i> into your words. Just select any text and choose how you want it to look from the menu.</p>
@@ -33,12 +33,25 @@
     </section>
     <br/>
     <section>
-      <article></article>
+      <h1 class="inline-editor"></h1>
+      <article class="partial-editor"></article>
     </section>
 
     <script type="text/javascript" src="js/grande.js"></script>
     <script type="text/javascript">
-      grande.bind(document.querySelectorAll("article"), {placeholder: 'You can also set placeholders.'});
+      new Grande(document.querySelectorAll(".rich-editor"), {
+        placeholder: 'You can also set placeholders.'
+      });
+
+      new Grande(document.querySelectorAll(".inline-editor"), {
+        placeholder: 'Set content here.',
+        mode: 'inline'
+      });
+
+      new Grande(document.querySelectorAll(".partial-editor"), {
+        placeholder: 'Set content here.',
+        mode: 'partial'
+      });
     </script>
   </body>
 </html>

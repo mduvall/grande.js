@@ -1,21 +1,8 @@
 module("grande initialization");
 
 test("it should be available at the global scope", function() {
-  ok(typeof window.grande === "object",
-    "grande should be available at the window");
-});
-
-
-module("public api");
-
-test("it should provide bind as a method", function() {
-  ok(typeof window.grande.bind === "function",
-    "bind should be a public api method");
-});
-
-test("it should provide select as a method", function() {
-  ok(typeof window.grande.select === "function",
-    "select should be a public API method");
+  ok(typeof window.Grande === "function",
+    "Grande should be available at the window");
 });
 
 
@@ -28,7 +15,7 @@ module("event bindings", {
 test("it should bind the same events to the editableNode mousedown,keyup,mouseup", function() {
   var editableNode = document.querySelectorAll(".g-body article")[0];
 
-  grande.bind();
+  new Grande();
 
   ok(editableNode.onmousedown === editableNode.onkeyup,
     "mousedown, keyup, and mouseup should delegate to the same function");
@@ -38,7 +25,8 @@ test("it should bind the same events to the editableNode mousedown,keyup,mouseup
 
 test("it should bind onblur and onfocus when using placeholders", function () {
   var editableNode = document.querySelectorAll(".g-body article")[0];
-  grande.bind([editableNode], {placeholder: 'Enter text'});
+
+  new Grande([editableNode], {placeholder: 'Enter text'});
 
   ok(typeof editableNode.onfocus === "function",
     "editableNode.onfocus should be bound to a function.");
@@ -46,21 +34,22 @@ test("it should bind onblur and onfocus when using placeholders", function () {
     "editableNode.onblur should be bound to a function.");
 });
 
-test("it should bind mousedown, mouseup, and keyup on the document", function() {
-  ok(document.onmousedown === null,
+test("it should bind mousedown, mouseup, and keyup on the nodes", function() {
+  var editableNode = document.querySelectorAll(".g-body article")[0];
+  ok(editableNode.onmousedown === null,
     "document mousedown should be null");
-  ok(document.onmouseup === null,
+  ok(editableNode.onmouseup === null,
     "document mouseup should be null");
-  ok(document.onkeyup === null,
+  ok(editableNode.onkeyup === null,
     "document keyup should be null");
 
-  grande.bind();
+  new Grande();
 
-  ok(typeof document.onmousedown === "function",
+  ok(typeof editableNode.onmousedown === "function",
     "document mousedown should be bound to a function");
-  ok(typeof document.onmouseup === "function",
+  ok(typeof editableNode.onmouseup === "function",
     "document mouseup should be bound to a function");
-  ok(typeof document.onkeyup === "function",
+  ok(typeof editableNode.onkeyup === "function",
     "document keyup should be bound to a function");
 });
 
@@ -68,7 +57,7 @@ test("it should bind to the windows resize event", function() {
   ok(window.onresize === null,
     "window resize should be null");
 
-  grande.bind();
+  new Grande();
 
   ok(typeof window.onresize === "function",
     "window resize should be bound to a function");
@@ -78,7 +67,7 @@ test("it should attach the toolbar template to the DOM", function() {
   equal(document.querySelectorAll(".text-menu").length, 0,
     "text menu should not be defined on the dom");
 
-  grande.bind();
+  new Grande();
 
   equal(document.querySelectorAll(".text-menu").length, 1,
     "text menu should be defined on the dom");

@@ -21,7 +21,7 @@ body {
   margin-bottom: 15px;
 }
 
-.g-body article {
+.g-body article, .g-editor {
   outline-style: none;
 }
 
