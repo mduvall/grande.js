@@ -142,18 +142,16 @@
         node = editableNodes[i];
         node.contentEditable = true;
         node.className = node.className + " g-editor";
+
         // Trigger on both mousedown and mouseup so that the click on the menu
         // feels more instantaneously active
-        node.onmousedown = triggerTextSelection;
         node.onmouseup = function(event) {
           setTimeout(function() {
             triggerTextSelection(event);
           }, 1);
         };
-
         node.onkeydown = preprocessKeyDown;
-
-        node.onkeyup = function(event){
+        document.onkeyup = function(event){
           var sel = window.getSelection();
 
           // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
@@ -165,7 +163,7 @@
             }
           }
         };
-        node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
+        node.onmousedown = node.onkeyup = triggerTextSelection;
       }
     }
 
