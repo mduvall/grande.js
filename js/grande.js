@@ -12,7 +12,8 @@
         options = {
           animate: true,
           placeholder: null,
-          mode: "rich" // inline, rich, partial
+          mode: "rich", // inline, rich, partial
+          rtl: false
         },
         textMenu,
         optionsNode,
@@ -600,6 +601,10 @@
     }
 
     function setTextMenuPosition(top, left) {
+      // RTL Seems to have a problem with calculating the bounding client.
+      if (options.rtl) {
+        left += 200;
+      }
       textMenu.style.top = top + "px";
       textMenu.style.left = left + "px";
 
@@ -636,9 +641,11 @@
       if (!content.trim()) {
         addPlaceholder(el, options.placeholder);
       }
-      setTextMenuPosition(EDGE, EDGE);
-      textMenu.className = "text-menu hide";
-
+      // Unless the options are in url-mode. Hide the menu.
+      if (optionsNode.className.search("url-mode") === -1) {
+        setTextMenuPosition(EDGE, EDGE);
+        textMenu.className = "text-menu hide";
+      }
     }
 
     init(bindableNodes, userOpts);
