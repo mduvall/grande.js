@@ -543,7 +543,7 @@
     }
 
     // The selected text is collapsed, push the menu out of the way
-    if (selectedText.isCollapsed) {
+    if (selectedText.isCollapsed || selectedText.getRangeAt(0).toString().match(/^\s+$/g)) {
       setTextMenuPosition(EDGE, EDGE);
       textMenu.className = "text-menu hide";
     } else {
