@@ -537,7 +537,8 @@
 
     // The selected text is not editable
     if (!target.isContentEditable) {
-      reloadMenuState();
+      setTextMenuPosition(EDGE, EDGE);
+      textMenu.className = "text-menu hide";
       return;
     }
 
