@@ -235,7 +235,9 @@
   function bindTextStylingEvents() {
     iterateTextMenuButtons(function(node) {
       node.onmousedown = function(event) {
-        triggerTextStyling(node);
+        if (event.which == 1) {
+          triggerTextStyling(node);
+        }
       };
     });
   }
