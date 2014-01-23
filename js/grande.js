@@ -12,7 +12,8 @@
         options = {
           animate: true,
           placeholder: null,
-          mode: "rich" // inline, rich, partial
+          mode: "rich", // inline, rich, partial
+          rtl: false
         },
         textMenu,
         optionsNode,
@@ -141,18 +142,16 @@
         node = editableNodes[i];
         node.contentEditable = true;
         node.className = node.className + " g-editor";
+
         // Trigger on both mousedown and mouseup so that the click on the menu
         // feels more instantaneously active
-        node.onmousedown = triggerTextSelection;
         node.onmouseup = function(event) {
           setTimeout(function() {
             triggerTextSelection(event);
           }, 1);
         };
-
         node.onkeydown = preprocessKeyDown;
-
-        node.onkeyup = function(event){
+        document.onkeyup = function(event){
           var sel = window.getSelection();
 
           // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
@@ -164,7 +163,7 @@
             }
           }
         };
-        node.onmousedown = node.onkeyup = node.onmouseup = triggerTextSelection;
+        node.onmousedown = node.onkeyup = triggerTextSelection;
       }
     }
 
@@ -600,6 +599,10 @@
     }
 
     function setTextMenuPosition(top, left) {
+      // RTL Seems to have a problem with calculating the bounding client.
+      if (options.rtl) {
+        left += 200;
+      }
       textMenu.style.top = top + "px";
       textMenu.style.left = left + "px";
 
@@ -636,9 +639,11 @@
       if (!content.trim()) {
         addPlaceholder(el, options.placeholder);
       }
-      setTextMenuPosition(EDGE, EDGE);
-      textMenu.className = "text-menu hide";
-
+      // Unless the options are in url-mode. Hide the menu.
+      if (optionsNode.className.search("url-mode") === -1) {
+        setTextMenuPosition(EDGE, EDGE);
+        textMenu.className = "text-menu hide";
+      }
     }
 
     init(bindableNodes, userOpts);
