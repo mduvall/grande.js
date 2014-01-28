@@ -1,6 +1,7 @@
 (function(w, d) {
   /*jshint multistr:true */
   var EDGE = -999;
+  var IMAGE_URL_REGEX = /^https?:\/\/(.*)\.(jpg|png|gif|jpeg)(\?.*)?/i;
 
   var Grande = Grande || function (bindableNodes, userOpts) {
 
@@ -13,7 +14,8 @@
           animate: true,
           placeholder: null,
           mode: "rich", // inline, rich, partial
-          rtl: false
+          rtl: false,
+          imagesFromUrls: false // Convert images urls to <img>s. Must be "rich" mode.
         },
         textMenu,
         optionsNode,
@@ -151,7 +153,7 @@
           }, 1);
         };
         node.onkeydown = preprocessKeyDown;
-        document.onkeyup = function(event){
+        node.onkeyup = function(event){
           var sel = window.getSelection();
 
           // FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
@@ -163,7 +165,7 @@
             }
           }
         };
-        node.onmousedown = node.onkeyup = triggerTextSelection;
+        node.onmousedown = triggerTextSelection;
       }
     }
 
@@ -319,7 +321,8 @@
       if (event.keyCode === 13 && parentParagraph) {
         prevSibling = parentParagraph.previousSibling;
         isHr = prevSibling && prevSibling.nodeName === "HR" &&
-          !parentParagraph.textContent.length;
+          !(parentParagraph.textContent.length ||
+            parentParagraph.getElementsByTagName('img').length);
 
         // Stop enters from creating another <p> after a <hr> on enter
         if (isHr) {
@@ -364,7 +367,10 @@
         prevPrevSibling = prevPrevSibling.previousSibling;
       }
 
-      if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
+      if (prevSibling.nodeName === "P" &&
+          !prevSibling.textContent.length &&
+          !prevSibling.getElementsByTagName('img').length &&
+          prevPrevSibling.nodeName !== "HR") {
         hr = document.createElement("hr");
         hr.contentEditable = false;
         parentParagraph.parentNode.replaceChild(hr, prevSibling);
@@ -395,6 +401,13 @@
       return getParentWithTag(sel.anchorNode, listType);
     }
 
+    function insertImageOnSelection(sel, textProp) {
+      var path = sel.anchorNode[textProp];
+      sel.anchorNode[textProp] = '';
+      document.execCommand("InsertImage", false, path);
+      return getParentWithTag(sel.anchorNode, 'img');
+    }
+
     function triggerTextParse(event) {
       var sel = window.getSelection(),
           textProp,
@@ -419,6 +432,10 @@
 
       if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
         insertedNode = insertListOnSelection(sel, textProp, "ol");
+      }
+
+      if (options.mode === "rich" && options.imagesFromUrls && subject.match(IMAGE_URL_REGEX)) {
+        insertedNode = insertImageOnSelection(sel, textProp);
       }
 
       unwrap = insertedNode &&
