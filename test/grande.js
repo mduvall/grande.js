@@ -12,17 +12,6 @@ module("event bindings", {
   }
 });
 
-test("it should bind the same events to the editableNode mousedown,keyup,mouseup", function() {
-  var editableNode = document.querySelectorAll(".g-body article")[0];
-
-  new Grande();
-
-  ok(editableNode.onmousedown === editableNode.onkeyup,
-    "mousedown, keyup, and mouseup should delegate to the same function");
-  ok(editableNode.onmousedown === editableNode.onmouseup,
-    "mousedown, keyup, and mouseup should delegate to the same function");
-});
-
 test("it should bind onblur and onfocus when using placeholders", function () {
   var editableNode = document.querySelectorAll(".g-body article")[0];
 
@@ -37,20 +26,24 @@ test("it should bind onblur and onfocus when using placeholders", function () {
 test("it should bind mousedown, mouseup, and keyup on the nodes", function() {
   var editableNode = document.querySelectorAll(".g-body article")[0];
   ok(editableNode.onmousedown === null,
-    "document mousedown should be null");
+    "editableNode mousedown should be null");
   ok(editableNode.onmouseup === null,
-    "document mouseup should be null");
+    "editableNode mouseup should be null");
   ok(editableNode.onkeyup === null,
-    "document keyup should be null");
+    "editableNode keyup should be null");
+  ok(editableNode.onkeydown === null,
+    "editableNode keyup should be null");
 
   new Grande();
 
   ok(typeof editableNode.onmousedown === "function",
-    "document mousedown should be bound to a function");
+    "editableNode mousedown should be bound to a function");
   ok(typeof editableNode.onmouseup === "function",
-    "document mouseup should be bound to a function");
+    "editableNode mouseup should be bound to a function");
   ok(typeof editableNode.onkeyup === "function",
-    "document keyup should be bound to a function");
+    "editableNode keyup should be bound to a function");
+  ok(typeof editableNode.onkeydown === "function",
+    "editableNode keydown should be bound to a function");
 });
 
 test("it should bind to the windows resize event", function() {

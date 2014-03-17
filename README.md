@@ -47,6 +47,8 @@ The second parameter is an `options` object that accepts the following keys:
 
 - `animate`: if true, this will trigger the CSS animations (defaults to true). Useful to turn to false if `subpixel-antialised` is needed in Safari.
 
+- `imagesFromUrls`: if set to true, it'll replace images URLs with <img>s tags in "rich" mode.
+
 ![image](http://f.cl.ly/items/0O1M1R1g2w1P213C0S3Z/Screen%20Shot%202013-08-21%20at%2011.53.55%20PM.png)
 
 The following tag stylings are available: `<b>`, `<i>`, `<h1>`, `<h2>`, `<blockquote>`, `<a>`, `<ol>`, `<ul>`, `<hr>`
