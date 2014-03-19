@@ -39,9 +39,24 @@
 
     <script type="text/javascript" src="js/grande.js"></script>
     <script type="text/javascript">
+      var mockUpload = function(files, callback) {
+        var file = files[0],
+            reader = new FileReader();
+
+        reader.onload = (function(f) {
+          return function(e) {
+            callback(e.target.result);
+          };
+        }(file));
+
+        reader.readAsDataURL(file);
+      };
+
       new Grande(document.querySelectorAll(".rich-editor"), {
         placeholder: 'You can also set placeholders.',
-        imagesFromUrls: true
+        imagesFromUrls: true,
+        allowImages: true,
+        uploadCallback: mockUpload
       });
 
       new Grande(document.querySelectorAll(".inline-editor"), {

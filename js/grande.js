@@ -15,7 +15,14 @@
           placeholder: null,
           mode: "rich", // inline, rich, partial
           rtl: false,
-          imagesFromUrls: false // Convert images urls to <img>s. Must be "rich" mode.
+          imagesFromUrls: false, // Convert images urls to <img>s. Must be "rich" mode.
+          allowImages: false,
+          // This will be called when a user select an image to insert into the article.
+          // It should accept two params (filesList, insertImageCallback(imgurl)).
+          // filesList is going to be the list of files the user selected,
+          // and insertImageCallback needs to be called with the uploaded image url.
+          // The callback needs to take care of uploading the image to a host.
+          uploadCallback: null
         },
         textMenu,
         optionsNode,
@@ -134,16 +141,16 @@
       urlInput.onblur = triggerUrlBlur;
       urlInput.onkeydown = triggerUrlSet;
 
-      if (options.allowImages) {
-        imageTooltip.onmousedown = triggerImageUpload;
-        imageInput.onchange = uploadImage;
-        document.onmousemove = triggerOverlayStyling;
-      }
-
       for (i = 0, len = editableNodes.length; i < len; i++) {
         node = editableNodes[i];
         node.contentEditable = true;
         node.className = node.className + " g-editor";
+
+        if (options.allowImages && options.uploadCallback) {
+          imageTooltip.onmousedown = triggerImageUpload;
+          imageInput.onchange = uploadImage;
+          node.onmousemove = triggerOverlayStyling;
+        }
 
         // Trigger on both mousedown and mouseup so that the click on the menu
         // feels more instantaneously active
@@ -170,6 +177,9 @@
     }
 
     function triggerOverlayStyling(event) {
+      // Set the currently being hovered edit-traget.
+      // This is necessary for this to work on mutliple elements.
+      editNode = event.target;
       toggleImageTooltip(event, event.target);
     }
 
@@ -182,29 +192,26 @@
     }
 
     function uploadImage(event) {
-      // Only allow uploading of 1 image for now, this is the first file
-      var file = this.files[0],
-          reader = new FileReader(),
-          figEl;
-
-      reader.onload = (function(f) {
-        return function(e) {
-          figEl = document.createElement("figure");
-          figEl.innerHTML = "<img src=\"" + e.target.result + "\"/>";
+      if (options.uploadCallback) {
+        options.uploadCallback(this.files, function(imageSrc) {
+          var figEl = document.createElement("figure");
+          figEl.innerHTML = "<img src=\"" + imageSrc + "\"/>";
           editNode.insertBefore(figEl, imageBound.bottomElement);
-        };
-      }(file));
-
-      reader.readAsDataURL(file);
+        });
+      }
     }
 
     function toggleImageTooltip(event, element) {
-      var childrenNodes = editNode.children,
-          editBounds = editNode.getBoundingClientRect(),
+      var childrenNodes = element.children,
+          editBounds = element.getBoundingClientRect(),
           bound = getHorizontalBounds(childrenNodes, editBounds);
 
       if (bound) {
-        imageTooltip.style.left = (editBounds.left - 90 ) + "px";
+        if (!options.rtl) {
+          imageTooltip.style.left = (editBounds.left - 90 ) + "px";
+        } else {
+          imageTooltip.style.left = (editBounds.right + 90 ) + "px";
+        }
         imageTooltip.style.top = (bound.top - 17) + "px";
       } else {
         imageTooltip.style.left = EDGE + "px";
@@ -341,6 +348,13 @@
         // Enters should replace it's parent <div> with a <p>
         if (sel.anchorNode.nodeName === "DIV") {
           toggleFormatBlock("p");
+        }
+
+        // Replace figure elements on new line with a p and set focus on it.
+        if (sel.anchorNode.nodeName === "FIGURE") {
+          toggleFormatBlock("p");
+          sel.anchorNode.parentNode.innerHTML = '<span><br/></span>';
+          sel.anchorNode.childNodes[0].focus();
         }
 
         parentParagraph = getParentWithTag(sel.anchorNode, "p");
