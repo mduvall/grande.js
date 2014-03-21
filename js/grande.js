@@ -444,7 +444,7 @@
         insertedNode = insertListOnSelection(sel, textProp, "ul");
       }
 
-      if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
+      if (subject.match(/^(1|١)\.\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
         insertedNode = insertListOnSelection(sel, textProp, "ol");
       }
 
