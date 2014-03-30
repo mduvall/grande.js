@@ -418,8 +418,9 @@
     function insertImageOnSelection(sel, textProp) {
       var path = sel.anchorNode[textProp];
       sel.anchorNode[textProp] = '';
-      document.execCommand("InsertImage", false, path);
-      return getParentWithTag(sel.anchorNode, 'img');
+      var html = "<figure><img src=\"" + path + "\"/></figure>";
+      document.execCommand("insertHTML", false, html);
+      return getParentWithTag(sel.anchorNode, 'figure');
     }
 
     function triggerTextParse(event) {
