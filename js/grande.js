@@ -7,8 +7,8 @@
 
     var root = w,   // Root object, this is going to be the window for now
         document = d, // Safely store a document here for us to use
-        editableNodes = document.querySelectorAll(".g-body article"),
-        editNode = editableNodes[0], // TODO: cross el support for imageUpload
+        editableNodes = bindableNodes || document.querySelectorAll(".g-body article"),
+        editNode = bindableNodes[0], // TODO: cross el support for imageUpload
         isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
         options = {
           animate: true,
@@ -33,10 +33,6 @@
         imageBound,
 
         init = function(nodes, opts) {
-          if (nodes) {
-            editableNodes = nodes;
-          }
-
           options = extend(options, opts);
 
           attachToolbarTemplate();
@@ -177,9 +173,6 @@
     }
 
     function triggerOverlayStyling(event) {
-      // Set the currently being hovered edit-traget.
-      // This is necessary for this to work on mutliple elements.
-      editNode = event.target;
       toggleImageTooltip(event, event.target);
     }
 
@@ -257,7 +250,8 @@
         }
       }
 
-      return null;
+      // When no bounds is found return the first bound.
+      return bounds[0];
     }
 
     function iterateTextMenuButtons(callback) {
@@ -663,7 +657,7 @@
         sel.removeAllRanges();
         sel.addRange(range);
       }
-   }
+     }
 
     function triggerContentBlur(e) {
       var el = e.target;
