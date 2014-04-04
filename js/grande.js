@@ -186,11 +186,27 @@
 
     function uploadImage(event) {
       if (options.uploadCallback) {
-        options.uploadCallback(this.files, function(imageSrc) {
-          var figEl = document.createElement("figure");
-          figEl.innerHTML = "<img src=\"" + imageSrc + "\"/>";
-          editNode.insertBefore(figEl, imageBound.bottomElement);
-        });
+        // Prepare the figure and progress bar elements.
+        var figureEl = document.createElement("figure");
+        var progressEl = document.createElement("p")
+        progressEl.className = "g-progress-bar";
+        var progressIndicatorEl = document.createElement("span");
+        progressEl.appendChild(progressIndicatorEl);
+        figureEl.appendChild(progressEl);
+        editNode.insertBefore(figureEl, imageBound.bottomElement);
+
+        options.uploadCallback(this.files,
+          // Upload complete callback.
+          function(imageSrc) {
+            figureEl.innerHTML = "<img src=\"" + imageSrc + "\"/>";
+          },
+          // Upload progress event.
+          function (progress) {
+            progressIndicatorEl.style.width = progress + "%";
+          });
+
+        imageInput.innerHTML = imageInput.innerHTML;
+        imageInput.onchange = uploadImage;
       }
     }
 

@@ -94,3 +94,14 @@ body {
 .g-body .g-placeholder {
   color: #999;
 }
+
+p.g-progress-bar {
+  background-color: #dededc;
+  height: 5px;
+  margin-top: 36px !important;
+}
+.g-progress-bar span {
+  background-color: #60d778;
+  height: 5px;
+  display: block;
+}
