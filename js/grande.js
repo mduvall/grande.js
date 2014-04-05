@@ -51,6 +51,7 @@
           "h1": "header1",
           "h2": "header2",
           "a": "url",
+          "pre": "code",
           "blockquote": "quote"
         };
 
@@ -97,6 +98,7 @@
                 <button class='header2'>h2</button> \
                 <button class='quote'>&rdquo;</button> \
                 <button class='url useicons'>&#xe001;</button> \
+                <button class='code'>&lt;&gt;</button> \
                 <input class='url-input' type='text' placeholder='Paste or type a link'/> \
               </span> \
             </span> \
@@ -327,6 +329,7 @@
     function preprocessKeyDown(event) {
       var sel = window.getSelection(),
           parentParagraph = getParentWithTag(sel.anchorNode, "p"),
+          parentPre = getParentWithTag(sel.anchorNode, "pre"),
           p,
           isHr;
 
@@ -345,6 +348,12 @@
         if (isHr) {
           event.preventDefault();
         }
+      }
+      // When writing code, just insert a new line instead of a new pre element.
+      else if (event.keyCode === 13 && parentPre) {
+        document.execCommand("insertHtml", false, "\n");
+        event.preventDefault();
+        return false;
       }
     }
 
@@ -510,6 +519,7 @@
             case "h2":
             case "h3":
             case "blockquote":
+            case "pre":
               toggleFormatBlock(tag);
               return;
 
