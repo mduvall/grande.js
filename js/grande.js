@@ -2,6 +2,7 @@
   /*jshint multistr:true */
   var EDGE = -999;
   var IMAGE_URL_REGEX = /^https?:\/\/(.*)\.(jpg|png|gif|jpeg)(\?.*)?/i;
+  var YOUTUBE_URL_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/
 
   var Grande = Grande || function (bindableNodes, userOpts) {
 
@@ -442,6 +443,14 @@
       return getParentWithTag(sel.anchorNode, 'figure');
     }
 
+    function insertVideoOnSelection(sel, textProp) {
+      var path = sel.anchorNode[textProp];
+      sel.anchorNode[textProp] = '';
+      var html = "<figure><iframe width='560' height='315' src='http://www.youtube.com/embed/" + path + "'></iframe></figure>";
+      document.execCommand("insertHTML", false, html);
+      return getParentWithTag(sel.anchorNode, 'figure');
+    }    
+
     function triggerTextParse(event) {
       var sel = window.getSelection(),
           textProp,
@@ -471,6 +480,12 @@
       if (options.mode === "rich" && options.imagesFromUrls && subject.match(IMAGE_URL_REGEX)) {
         insertedNode = insertImageOnSelection(sel, textProp);
       }
+
+      if (subject.match(YOUTUBE_URL_REGEX)) {
+                console.debug('hiiii');
+
+        insertedNode = insertVideoOnSelection(sel, textProp);
+      }      
 
       unwrap = insertedNode &&
               ["ul", "ol"].indexOf(insertedNode.nodeName.toLocaleLowerCase()) >= 0 &&
