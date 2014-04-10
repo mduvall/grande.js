@@ -2,7 +2,7 @@
   /*jshint multistr:true */
   var EDGE = -999;
   var IMAGE_URL_REGEX = /^https?:\/\/(.*)\.(jpg|png|gif|jpeg)(\?.*)?/i;
-  var YOUTUBE_URL_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/
+  var YOUTUBE_URL_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/;
 
   var Grande = Grande || function (bindableNodes, userOpts) {
 
@@ -482,8 +482,6 @@
       }
 
       if (subject.match(YOUTUBE_URL_REGEX)) {
-                console.debug('hiiii');
-
         insertedNode = insertVideoOnSelection(sel, textProp);
       }      
 
