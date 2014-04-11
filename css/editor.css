@@ -17,11 +17,12 @@ body {
 .g-body p,
 .g-body blockquote,
 .g-body ol,
-.g-body ul {
+.g-body ul,
+.g-body pre {
   margin-bottom: 15px;
 }
 
-.g-body article {
+.g-body article, .g-editor {
   outline-style: none;
 }
 
@@ -46,6 +47,12 @@ body {
   border-left: 6px solid #60d778;
   padding-left: 20px;
   margin-left: -26px;
+}
+
+.g-body pre {
+  background-color: #333;
+  color: white;
+  padding: 20px;
 }
 
 .g-body a {
@@ -89,4 +96,19 @@ body {
   width: 20%;
   margin: 30px auto 20px auto;
   border: 1px solid #dededc;
+}
+
+.g-body .g-placeholder {
+  color: #999;
+}
+
+p.g-progress-bar {
+  background-color: #dededc;
+  height: 5px;
+  margin-top: 36px !important;
+}
+.g-progress-bar span {
+  background-color: #60d778;
+  height: 5px;
+  display: block;
 }
