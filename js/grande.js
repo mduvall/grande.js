@@ -141,7 +141,7 @@
     var childrenNodes = editNode.children,
         editBounds = editNode.getBoundingClientRect();
 
-    imageBound = getHorizontalBounds(childrenNodes, editBounds);
+    imageBound = getHorizontalBounds(childrenNodes, editBounds, event);
   }
 
   function uploadImage(event) {
@@ -164,7 +164,7 @@
   function toggleImageTooltip(event, element) {
     var childrenNodes = editNode.children,
         editBounds = editNode.getBoundingClientRect(),
-        bound = getHorizontalBounds(childrenNodes, editBounds);
+        bound = getHorizontalBounds(childrenNodes, editBounds, event);
 
     if (bound) {
       imageTooltip.style.left = (editBounds.left - 90 ) + "px";
@@ -175,7 +175,7 @@
     }
   }
 
-  function getHorizontalBounds(nodes, target) {
+  function getHorizontalBounds(nodes, target, event) {
     var bounds = [],
         bound,
         i,
