@@ -235,7 +235,9 @@
   function bindTextStylingEvents() {
     iterateTextMenuButtons(function(node) {
       node.onmousedown = function(event) {
-        triggerTextStyling(node);
+        if (event.which == 1) {
+          triggerTextStyling(node);
+        }
       };
     });
   }
@@ -535,14 +537,26 @@
         clientRectBounds,
         target = e.target || e.srcElement;
 
-    // The selected text is not editable
-    if (!target.isContentEditable) {
-      reloadMenuState();
+    // Check whether user clicks outside contenteditable AND outside menu
+    var isContentEditable = false;
+    var parentTarget = target;
+    while (parentTarget) {
+      if (parentTarget.isContentEditable || parentTarget === textMenu) {
+        isContentEditable = true;
+        break;
+      }
+      parentTarget = parentTarget.parentElement;
+    }
+
+    // The selected text is not editable and is neither the menu, so hide the menu
+    if (!isContentEditable) {
+      setTextMenuPosition(EDGE, EDGE);
+      textMenu.className = "text-menu hide";
       return;
     }
 
     // The selected text is collapsed, push the menu out of the way
-    if (selectedText.isCollapsed) {
+    if (selectedText.isCollapsed || selectedText.getRangeAt(0).toString().match(/^\s+$/g)) {
       setTextMenuPosition(EDGE, EDGE);
       textMenu.className = "text-menu hide";
     } else {
