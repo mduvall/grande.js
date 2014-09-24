@@ -7,8 +7,11 @@ window.Grande = {
 	isFirefox : navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
 	
 	options : {
-		animate: true
+		animate: true,
+		imageUpload : true
 	},
+
+	plugins : {}, // space for plugins
 	
 	tagClassMap : {
 		"b": "bold",
@@ -25,6 +28,8 @@ window.Grande = {
 	},
 
 	bind : function(bindableNodes, opts) {
+		if (this.bound) return;
+		this.bound = true;
 
 		// get nodes
 		this.editableNodes = bindableNodes || document.querySelectorAll(".g-body article");
@@ -37,12 +42,46 @@ window.Grande = {
 		
 		// add event listeners
 		this.addHooks();
+
+		// initialize registered plugins
+		this.addPlugins();
 		
 	},
 
 	unbind : function () {
+		if (!this.bound) return;
+		this.bound = false;
+
 		// remove event listeners
 		this.removeHooks();
+
+		// fire remove on plugins
+		this.removePlugins();
+	},
+
+	registerPlugin : function (plugin) {
+		if (!this.plugins[plugin.name]) {
+			this.plugins[plugin.name] = plugin;
+		} else {
+			var salt = Math.random().toString().slice(15);
+			this.plugins[plugin.name + salt] = plugin;
+		}
+	},
+
+	addPlugins : function () {
+		var plugins = this.plugins;
+		for (p in plugins) {
+			var plugin = plugins[p];
+			plugin.initialize();
+		}
+	},
+
+	removePlugins : function () {
+		var plugins = this.plugins;
+		for (p in plugins) {
+			var plugin = plugins[p];
+			plugin.destroy();
+		}
 	},
 
 	select: function() {
@@ -111,78 +150,47 @@ window.Grande = {
 	},
 
 	addHooks : function () {
+		this._setHooks('addEventListener');
+	},
+
+	removeHooks : function () {
+		this._setHooks('removeEventListener');
+	},
+
+	_setHooks : function (onoff) {
 
 		// bind interaction to document
-		document.addEventListener('mousedown', this.triggerTextSelection, false);
-		document.addEventListener('keydown', this.preprocessKeyDown, false);
-		document.addEventListener('keyup', this.handleKeyUp, false);
+		document[onoff]('mousedown', this.triggerTextSelection, false);
+		document[onoff]('keydown', this.preprocessKeyDown, false);
+		document[onoff]('keyup', this.handleKeyUp, false);
 
 		// bind resize to window
-		window.addEventListener('resize', this.triggerTextSelection, false);
+		window[onoff]('resize', this.triggerTextSelection, false);
 
 		// bind blur to urlInput
-		this.urlInput.addEventListener('blur', this.triggerUrlBlur, false);
-		this.urlInput.addEventListener('keydown', this.triggerUrlSet, false);
+		this.urlInput[onoff]('blur', this.triggerUrlBlur, false);
+		this.urlInput[onoff]('keydown', this.triggerUrlSet, false);
 
 		// bind image upload
 		if (this.options.allowImages) {
-			this.imageTooltip.addEventListener('mousedown', this.triggerImageUpload, false);
-			this.imageInput.addEventListener('change', this.uploadImage, false);
-			document.addEventListener('mousemove', this.triggerOverlayStyling, false);
+			this.imageTooltip[onoff]('mousedown', this.triggerImageUpload, false);
+			this.imageInput[onoff]('change', this.uploadImage, false);
+			document[onoff]('mousemove', this.triggerOverlayStyling, false);
 		}
 
 		// bind nodes
 		for (var i = 0, len = this.editableNodes.length; i < len; i++) {
 			var node = this.editableNodes[i];
 			node.contentEditable = true;
-			node.addEventListener('mousedown', this.triggerTextSelection, false);
-			node.addEventListener('mouseup', this.triggerTextSelection, false);
-			node.addEventListener('keyup', this.triggerTextSelection, false);
+			node[onoff]('mousedown', this.triggerTextSelection, false);
+			node[onoff]('mouseup', this.triggerTextSelection, false);
+			node[onoff]('keyup', this.triggerTextSelection, false);
 		}
 
 		// bind text styling events
 		var that = this;
 		this.iterateTextMenuButtons(function(node) {
-			node.addEventListener('mousedown', function(event) {
-				that.triggerTextStyling(node);
-			}, false);
-		});
-	},
-
-	removeHooks : function () {
-
-		// unbind interaction to document
-		document.removeEventListener('mousedown', this.triggerTextSelection, false);
-		document.removeEventListener('keydown', this.preprocessKeyDown, false);
-		document.removeEventListener('keyup', this.handleKeyUp, false);
-
-		// unbind resize to window
-		window.removeEventListener('resize', this.triggerTextSelection, false);
-
-		// unbind blur to urlInput
-		this.urlInput.removeEventListener('blur', this.triggerUrlBlur, false);
-		this.urlInput.removeEventListener('keydown', this.triggerUrlSet, false);
-
-		// unbind image upload
-		if (this.options.allowImages) {
-			this.imageTooltip.removeEventListener('mousedown', this.triggerImageUpload, false);
-			this.imageInput.removeEventListener('change', this.uploadImage, false);
-			document.removeEventListener('mousemove', this.triggerOverlayStyling, false);
-		}
-
-		// unbind nodes
-		for (var i = 0, len = this.editableNodes.length; i < len; i++) {
-			var node = this.editableNodes[i];
-			node.contentEditable = true;
-			node.removeEventListener('mousedown', this.triggerTextSelection, false);
-			node.removeEventListener('mouseup', this.triggerTextSelection, false);
-			node.removeEventListener('keyup', this.triggerTextSelection, false);
-		}
-
-		// unbind text styling events
-		var that = this;
-		this.iterateTextMenuButtons(function(node) {
-			node.removeEventListener('mousedown', function(event) {
+			node[onoff]('mousedown', function(event) {
 				that.triggerTextStyling(node);
 			}, false);
 		});
