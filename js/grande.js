@@ -1,4 +1,5 @@
-window.Grande = {
+// depends on grande.class.js
+G.Rande = G.Class.extend({
 
 	EDGE : -999,
 
@@ -27,15 +28,27 @@ window.Grande = {
 		change : function (e) { console.log('change event!', e); }
 	},
 
-	bind : function(bindableNodes, opts) {
-		if (this.bound) return;
-		this.bound = true;
+	initialize : function (options, nodes) {
 
-		// get nodes
-		this.editableNodes = bindableNodes || document.querySelectorAll(".g-body article");
+		// cheating
+		G.r = this;
 
 		// set options
-		this.options = opts || this.options;
+		G.setOptions(this, options);
+
+		// bind nodes
+		if (nodes) this.bind(nodes);
+		
+		return this;
+	},
+
+	bind : function(nodes) {
+
+		console.log('grande.js: bind()');
+
+
+		// get nodes
+		this.editableNodes = G.Util.castArray(nodes) || document.querySelectorAll(".g-body article");
 
 		// create toolbar
 		this.initToolbarLayout();
@@ -52,6 +65,8 @@ window.Grande = {
 		if (!this.bound) return;
 		this.bound = false;
 
+		console.log('grande.js: unbind()');
+
 		// remove event listeners
 		this.removeHooks();
 
@@ -61,18 +76,20 @@ window.Grande = {
 
 	registerPlugin : function (plugin) {
 		if (!this.plugins[plugin.name]) {
-			this.plugins[plugin.name] = plugin;
+			var plug = this.plugins[plugin.name] = plugin;
 		} else {
+			// name not tasty, add salt
 			var salt = Math.random().toString().slice(15);
-			this.plugins[plugin.name + salt] = plugin;
+			var plug = this.plugins[plugin.name + salt] = plugin;
 		}
+		return this;
 	},
 
 	addPlugins : function () {
 		var plugins = this.plugins;
 		for (p in plugins) {
 			var plugin = plugins[p];
-			plugin.initialize();
+			if (!plugin.initialized) plugin.initialize();
 		}
 	},
 
@@ -82,6 +99,18 @@ window.Grande = {
 			var plugin = plugins[p];
 			plugin.destroy();
 		}
+	},
+
+	addToolbarButton : function (button) {
+
+		// append button to toolbar
+		this.uiInputs.insertBefore(button, this.urlInput);
+
+		// register trigger
+
+
+		console.log('added: ', this.buttons);
+
 	},
 
 	select: function() {
@@ -132,11 +161,12 @@ window.Grande = {
 		this.textMenu 		= document.querySelectorAll(".text-menu")[0];
 		this.optionsNode 	= document.querySelectorAll(".text-menu .options")[0];
 		this.urlInput 		= document.querySelectorAll(".text-menu .url-input")[0];
-		this.buttons 		= document.querySelectorAll(".ui-inputs")[0].childNodes;
+		this.uiInputs 		= document.querySelectorAll(".ui-inputs")[0];
+		this.buttons 		= this.uiInputs.childNodes;
 	},
 
 	handleKeyUp : function (event) {
-		var that = Grande;
+		var that = G.r;
 		var sel = window.getSelection();
 
 		// FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
@@ -158,6 +188,7 @@ window.Grande = {
 	},
 
 	_setHooks : function (onoff) {
+		console.log('onoff: ', onoff);
 
 		// bind interaction to document
 		document[onoff]('mousedown', this.triggerTextSelection, false);
@@ -191,6 +222,8 @@ window.Grande = {
 		var that = this;
 		this.iterateTextMenuButtons(function(node) {
 			node[onoff]('mousedown', function(event) {
+				console.log('NONO:', node);
+				console.log('node:', node.target);
 				that.triggerTextStyling(node);
 			}, false);
 		});
@@ -295,13 +328,13 @@ window.Grande = {
 			}
 		}
 
-		this.triggerTextSelection();
+		// this.triggerTextSelection();
 	},
 
 	triggerUrlBlur : function (event) {
 
 		// set global scope, as 'this' is event context here
-		var that = Grande;
+		var that = G.r;
 
 		// get url
 		var url = that.urlInput.value;
@@ -329,18 +362,19 @@ window.Grande = {
 	},
 
 	triggerUrlSet : function (event) {
-		var that = Grande;
+		var that = G.r;
 		if (event.keyCode === 13) {
 			event.preventDefault();
 			event.stopPropagation();
-
 			that.urlInput.blur();
 		}
 	},
 
-	triggerTextSelection : function (e) {
+	triggerTextSelection : function (e, f) {
 
-		var that = Grande;
+		console.log('grande.js: triggerTextSelection', e, f);
+
+		var that = G.r;
 		var selectedText = window.getSelection(),
 		    range,
 		    clientRectBounds,
@@ -353,6 +387,7 @@ window.Grande = {
 			if (buttons[n] == target) return that.reloadMenuState();
 		}
 		
+
 		// if target is buttons wrapper, reload menu state
 		if (target == that.optionsNode) return that.reloadMenuState();
 		
@@ -530,10 +565,8 @@ window.Grande = {
 
 		if (this.options.animate) {
 			if (top === this.EDGE) {
-				console.log('HIIIDEE!!');
 				this.textMenu.className = "text-menu hide";
 			} else {
-				console.log('SHOW!!');
 				this.textMenu.className = "text-menu active";
 			}
 		}
@@ -589,6 +622,7 @@ window.Grande = {
 				reTag = new RegExp(tagClass);
 
 				if (reTag.test(className)) {
+					// console.log('if has parent etc: focusNode, tag', focusNode, tag);
 					if (that.hasParentWithTag(focusNode, tag)) {
 						node.className = tagClass + " active";
 					} else {
@@ -604,7 +638,7 @@ window.Grande = {
 
 	preprocessKeyDown : function (event) {
 
-		var that = Grande;
+		var that = G.r;
 		var sel = window.getSelection(),
 		    parentParagraph = that.getParentWithTag(sel.anchorNode, "p"),
 		    p,
@@ -662,4 +696,9 @@ window.Grande = {
 		reader.readAsDataURL(file);
 	},
 
-}; 
+}); 
+
+// shorthand for creating grande things
+G.rande = function (nodes, options) {
+	return new G.Rande(options, nodes);
+};
