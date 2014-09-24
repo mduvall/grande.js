@@ -1,6 +1,7 @@
 // depends on grande.class.js
 G.Rande = G.Class.extend({
 
+
 	EDGE : -999,
 
 	editNode : document.querySelectorAll(".g-body article")[0], // TODO: cross el support for imageUpload
@@ -697,8 +698,9 @@ G.Rande = G.Class.extend({
 	},
 
 }); 
+G.Plugins = {};
 
-// shorthand for creating grande things
+// shorthand for creating all kinds of layers
 G.rande = function (nodes, options) {
 	return new G.Rande(options, nodes);
 };
