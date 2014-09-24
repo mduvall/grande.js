@@ -1,32 +1,36 @@
-var GrandeAttachments = {
+// depends on grande.js (and grande.class.js)
+G.Plugins.Attachments = G.Rande.extend({
 
-	name : 'GrandeAttachments',
+	name : 'Attachments',
 
 	initialize : function () {
 		console.log('initialize GrandeAttachments');
 		console.log('this: ', this);
-
-		// set project
-		this.project = app.activeProject;
 
 		// create layout
 		this.initLayout();
 
 		// add hooks
 		this.addHooks();
+
+		// mark initialized
+		this.initialized = true;
 	},
 
 	initLayout : function () {
 
 		// get grande containers
 		var toolbar = this._toolbarContainer = Grande.toolbarContainer;
-		var ui = this._ui = toolbar.querySelectorAll('span.ui-inputs')[0];
+		// var ui = this._ui = toolbar.querySelectorAll('span.ui-inputs')[0];
 
 		// create button and append to ui container
 		var button = this._button = document.createElement('button');
 		button.className = 'attachment';
 		button.innerHTML = 'F';
-		ui.appendChild(button);
+		// ui.appendChild(button);
+
+		// attach to Grande
+		Grande.addToolbarButton(button);
 
 		// create filepane
 		this.filePane = {};
@@ -51,7 +55,8 @@ var GrandeAttachments = {
 
 	toggleButton : function (e, that) {
 		var button = e.target;
-		
+		Wu.DomEvent.stop(e);
+
 		if (button.active) {
 			that.closeFilepane();
 			button.active = false;
@@ -64,12 +69,46 @@ var GrandeAttachments = {
 	},
 
 	openFilepane : function () {
+
+		// get project
+		var project = app.activeProject;
+
 		console.log('openFilepane');
 		console.log('this: ', this);
 
-		var files = this.project.getFiles();
+		// select text
+		this.selectText();
+		var selectedText = window.getSelection();
+		var range = selectedText.getRangeAt(0);
+		var clientRectBounds = range.getBoundingClientRect();
+		console.log('free! ', selectedText, range, clientRectBounds);
+
+		// this.Grande.setTextMenuPosition(
+		// 	clientRectBounds.top - 5 + window.pageYOffset,
+		// 	(clientRectBounds.left + clientRectBounds.right) / 2
+		// );
+
+		
+		// create popup
+		this.createPopup(files);
+
+
+	},
+
+	createPopup : function (files) {
+
+		// get files
+		var files = project.getFiles();
 		console.log('files: ', files);
-		console.log(app.activeProject.getFiles());
+
+
+		var container = Wu.DomUtil.create('div', 'grande-files-container');
+		var topwrapper = Wu.DomUtil.create('div', 'grande-files-topwrap');
+
+
+
+
+
 	},
 
 	closeFilepane : function () {
@@ -83,7 +122,13 @@ var GrandeAttachments = {
 		this.removeHooks();
 	},
 
-}
+	// register plugin
+	register : function () {
+		this.Grande = Grande.registerPlugin(this);
+		console.log('regitered: ', this.Grande);
+	}
+
+});
 
 // register plugin
-Grande.registerPlugin(GrandeAttachments);
+// GrandeAttachments.register(GrandeAttachments);
