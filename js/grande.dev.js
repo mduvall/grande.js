@@ -23,7 +23,9 @@ G.Rande = G.Class.extend({
 	
 	events : {
 		// fired on changes to text. should be overridden by user, like G.rande.events.change = fn();
-		change : function (e) { console.log('change event!', e); }
+		change : function (e) { 
+			console.log('change event!', e); 
+		}
 	},
 
 	initialize : function (options, nodes) {
@@ -52,8 +54,7 @@ G.Rande = G.Class.extend({
 		this.editableNodes = G.Util.castArray(nodes) || document.querySelectorAll(".g-body article");
 		
 		// add event listeners
-		this.addHooks();
-		
+		this.addHooks();	
 	},
 
 	unbind : function () {
@@ -130,7 +131,7 @@ G.Rande = G.Class.extend({
 			node[on]('keyup', this.triggerTextSelection, false);
 		}
 
-		// bind text styling events
+		// bind text styling events, ie. toolbar button clicks
 		var that = this;
 		this.iterateTextMenuButtons(function(node) {
 			node[on]('mousedown', function(event) {
@@ -196,7 +197,6 @@ G.Rande = G.Class.extend({
 		// FF will return sel.anchorNode to be the parentNode when the triggered keyCode is 13
 		if (sel.anchorNode && sel.anchorNode.nodeName !== "ARTICLE") {
 			that.triggerNodeAnalysis(event);
-
 			if (sel.isCollapsed) {
 				that.triggerTextParse(event);
 			}
@@ -286,8 +286,9 @@ G.Rande = G.Class.extend({
 			reTag = new RegExp(tagClass);
 
 			if (reTag.test(className)) {
-
+				
 				switch(tag) {
+				
 					case "b": return document.execCommand(tagClass, false);
 					case "i": return document.execCommand(tagClass, false);
 					case "h1":
@@ -298,7 +299,9 @@ G.Rande = G.Class.extend({
 						this.toggleUrlInput();
 						this.optionsNode.className = "options url-mode";
 						return;
+				
 				}
+			
 			}
 		}
 
@@ -316,7 +319,7 @@ G.Rande = G.Class.extend({
 		that.optionsNode.className = "options";
 	
 		// return if no url
-		if (url === "") return false;
+		if (url === "") return that.removeLink();
 
 		// add http to links
 		if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
@@ -328,25 +331,7 @@ G.Rande = G.Class.extend({
 		that.urlInput.value = "";
 	},
 
-	createLink : function (url) {
-
-		// clear existing
-		this.removeLink();
-
-		
-		// create link
-		document.execCommand("createLink", false, url);
-	},
-
-	removeLink : function () {
-
-		// get text
-		window.getSelection().addRange(this.previouslySelectedText);
-
-		// clear prev link
-		document.execCommand("unlink", false);
-	},
-
+	
 	triggerUrlSet : function (event) {
 		var that = G.r;
 		if (event.keyCode === 13) {
@@ -356,14 +341,14 @@ G.Rande = G.Class.extend({
 		}
 	},
 
-	triggerTextSelection : function (e, f) {
 
+	// listen for text selection on every mousedown 
+	triggerTextSelection : function (e, f) {
 		var that = G.r;
 		var selectedText = window.getSelection(),
 		    range,
 		    clientRectBounds,
 		    target = e.target || e.srcElement;
-
 
 		// if target is one of buttons, reload menu state
 		var buttons = that.buttons;
@@ -376,12 +361,15 @@ G.Rande = G.Class.extend({
 		
 		// if target is anything not editable, hide buttons
 		if (!target.isContentEditable) {
+
 			that.setTextMenuPosition(this.EDGE, this.EDGE);
 			that.textMenu.className = "text-menu hide";
 			that.reloadMenuState();
 			
 			// fire change event
-			return that.events.change();
+			// return that.events.change();
+			console.log('that.events: ', that.events);
+			return;
 		}
 
 		// if selected text is collapsed, hide buttons
@@ -397,13 +385,33 @@ G.Rande = G.Class.extend({
 		clientRectBounds = range.getBoundingClientRect();
 		that.reloadMenuState();
 		that.setTextMenuPosition(
-			clientRectBounds.top - 5 + window.pageYOffset,
+			clientRectBounds.top - 45 + window.pageYOffset,
 			(clientRectBounds.left + clientRectBounds.right) / 2
 		);
 
 		// fire change event
-		return that.events.change();
-		
+		// return that.events.change();
+		console.log('that.events: ', that.events);
+		return;		
+	},
+
+	createLink : function (url) {
+
+		// clear existing
+		this.removeLink();
+
+		// create link
+		document.execCommand("createLink", false, url);
+	},
+
+	removeLink : function () {
+
+		// get text
+		var prev = this.previouslySelectedText;
+		window.getSelection().addRange(prev);
+
+		// clear prev link
+		document.execCommand("unlink", false);
 	},
 
 	getHorizontalBounds : function (nodes, target, event) {
@@ -482,14 +490,12 @@ G.Rande = G.Class.extend({
 	getParentWithTag : function (node, nodeType) {
 		var checkNodeType = function(node) { return node.nodeName.toLowerCase() === nodeType; }
 		var returnNode = function(node) { return node; };
-
 		return this.getParent(node, checkNodeType, returnNode);
 	},
 
 	getParentHref : function (node) {
 		var checkHref = function(node) { return typeof node.href !== "undefined"; };
 		var returnHref = function(node) { return node.href; };
-
 		return this.getParent(node, checkHref, returnHref);
 	},
 
@@ -514,12 +520,9 @@ G.Rande = G.Class.extend({
 
 			if (typeof url !== "undefined") {
 				that.urlInput.value = url;
-			} else {
-				document.execCommand("createLink", false, "/");
-			}
+			} 
 
 			that.previouslySelectedText = window.getSelection().getRangeAt(0);
-
 			that.urlInput.focus();
 		}, 150);
 	},
@@ -631,9 +634,7 @@ G.Rande = G.Class.extend({
 				!parentParagraph.textContent.length;
 
 			// Stop enters from creating another <p> after a <hr> on enter
-			if (isHr) {
-				event.preventDefault();
-			}
+			if (isHr) event.preventDefault();
 		}
 	},
 
