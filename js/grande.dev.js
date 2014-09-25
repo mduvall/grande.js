@@ -98,7 +98,6 @@ G.Rande = G.Class.extend({
 	initToolbarLayout : function () {
 
 		// create toolbar container
-
 		this.toolbarContainer = document.createElement("div");
 		this.toolbarContainer.className = "g-body";
 		document.body.appendChild(this.toolbarContainer);
@@ -144,7 +143,6 @@ G.Rande = G.Class.extend({
 		this.buttons 		= this.uiInputs.childNodes;
 
 		this.buttonsContainer = this.uiInputs;
-		console.log('fetching buttonsContainer', this.buttonsContainer);
 
 	},
 
@@ -196,8 +194,6 @@ G.Rande = G.Class.extend({
 		for (var i = 0, len = this.editableNodes.length; i < len; i++) {
 			var node = this.editableNodes[i];
 			node.contentEditable = true;
-			console.log('node: ', node);
-			console.log('editableNodes: ', this.editableNodes);
 			node[on]('mousedown', this.triggerTextSelection, false);
 			node[on]('mouseup', this.triggerTextSelection, false);
 			node[on]('keyup', this.triggerTextSelection, false);
@@ -207,8 +203,6 @@ G.Rande = G.Class.extend({
 		var that = this;
 		this.iterateTextMenuButtons(function(node) {
 			node[on]('mousedown', function(event) {
-				console.log('NONO:', node);
-				console.log('node:', node.target);
 				that.triggerTextStyling(node);
 			}, false);
 		});
@@ -326,23 +320,15 @@ G.Rande = G.Class.extend({
 
 		// clear url-mode
 		that.optionsNode.className = "options";
-		
-		// // get text
-		// window.getSelection().addRange(that.previouslySelectedText);
+	
+		// return if no url
+		if (url === "") return false;
 
-		// // clear prev link
-		// document.execCommand("unlink", false);
+		// add http to links
 		if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
-		that.createLink(url)
-
-		// // return if no url
-		// if (url === "") return false;
 		
-		// // add http to url
-		// if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
-
-		// // create link
-		// document.execCommand("createLink", false, url);
+		// create link
+		that.createLink(url)
 
 		// clear input
 		that.urlInput.value = "";
@@ -353,12 +339,7 @@ G.Rande = G.Class.extend({
 		// clear existing
 		this.removeLink();
 
-		// return if no url
-		if (url === "") return false;
 		
-		// add http to url
-		// if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
-
 		// create link
 		document.execCommand("createLink", false, url);
 	},
