@@ -1,6 +1,6 @@
 /*
  * G.Class powers the OOP facilities of the library.
- * — Class.js is part of Leaflet.js, written by Vladimir Agafonkin, @LeafletJS.
+ * — Taken straight from Leaflet.js by Vladimir Agafonkin.
  * https://github.com/Leaflet/Leaflet/blob/5a518194945813f4b578861799f23a94248b553e/src/core/Class.js
  */
 G = {};
@@ -133,9 +133,10 @@ G.Util = {
 
 	castArray : function (array) {
 		if (this.isArray(array)) return array;
-		if (!array) return false;
 		return [array];
-	}
+	},
+
+	
 }
 G.extend = G.Util.extend;
 G.setOptions = G.Util.setOptions;
