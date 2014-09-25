@@ -1,7 +1,6 @@
 // depends on grande.class.js
 G.Rande = G.Class.extend({
 
-
 	EDGE : -999,
 
 	editNode : document.querySelectorAll(".g-body article")[0], // TODO: cross el support for imageUpload
@@ -31,11 +30,17 @@ G.Rande = G.Class.extend({
 
 	initialize : function (options, nodes) {
 
-		// cheating
+		// cheatcode
 		G.r = this;
 
 		// set options
 		G.setOptions(this, options);
+
+		// create toolbar
+		this.initToolbarLayout();
+		
+		// init plugins
+		this.initPlugins();
 
 		// bind nodes
 		if (nodes) this.bind(nodes);
@@ -45,28 +50,15 @@ G.Rande = G.Class.extend({
 
 	bind : function(nodes) {
 
-		console.log('grande.js: bind()');
-
-
 		// get nodes
 		this.editableNodes = G.Util.castArray(nodes) || document.querySelectorAll(".g-body article");
-
-		// create toolbar
-		this.initToolbarLayout();
 		
 		// add event listeners
 		this.addHooks();
-
-		// initialize registered plugins
-		this.addPlugins();
 		
 	},
 
 	unbind : function () {
-		if (!this.bound) return;
-		this.bound = false;
-
-		console.log('grande.js: unbind()');
 
 		// remove event listeners
 		this.removeHooks();
@@ -75,52 +67,38 @@ G.Rande = G.Class.extend({
 		this.removePlugins();
 	},
 
-	registerPlugin : function (plugin) {
-		if (!this.plugins[plugin.name]) {
-			var plug = this.plugins[plugin.name] = plugin;
-		} else {
-			// name not tasty, add salt
-			var salt = Math.random().toString().slice(15);
-			var plug = this.plugins[plugin.name + salt] = plugin;
-		}
-		return this;
-	},
-
-	addPlugins : function () {
-		var plugins = this.plugins;
-		for (p in plugins) {
-			var plugin = plugins[p];
-			if (!plugin.initialized) plugin.initialize();
-		}
-	},
-
-	removePlugins : function () {
-		var plugins = this.plugins;
-		for (p in plugins) {
-			var plugin = plugins[p];
-			plugin.destroy();
-		}
-	},
 
 	addToolbarButton : function (button) {
-
-		// append button to toolbar
-		this.uiInputs.insertBefore(button, this.urlInput);
-
-		// register trigger
-
-
-		console.log('added: ', this.buttons);
-
+		// append next to last in buttonsContainer
+		this.buttonsContainer.insertBefore(button, this.buttonsContainer.lastChild);
 	},
 
+
+	initPlugins : function (fn, context) {
+		
+		// get plugins from options
+		this.plugins = this.options.plugins;
+
+		// plug in plugins
+		for (p in this.plugins) {
+			var plugin = this.plugins[p];
+			plugin.plugin(this);
+		}
+
+	},
+	
 	select: function() {
 		this.triggerTextSelection();
+	},
+
+	addToOptions : function (div) {
+		this.optionsNode.appendChild(div);
 	},
 
 	initToolbarLayout : function () {
 
 		// create toolbar container
+
 		this.toolbarContainer = document.createElement("div");
 		this.toolbarContainer.className = "g-body";
 		document.body.appendChild(this.toolbarContainer);
@@ -164,6 +142,10 @@ G.Rande = G.Class.extend({
 		this.urlInput 		= document.querySelectorAll(".text-menu .url-input")[0];
 		this.uiInputs 		= document.querySelectorAll(".ui-inputs")[0];
 		this.buttons 		= this.uiInputs.childNodes;
+
+		this.buttonsContainer = this.uiInputs;
+		console.log('fetching buttonsContainer', this.buttonsContainer);
+
 	},
 
 	handleKeyUp : function (event) {
@@ -181,48 +163,50 @@ G.Rande = G.Class.extend({
 	},
 
 	addHooks : function () {
-		this._setHooks('addEventListener');
+		this._setHooks(true);
 	},
 
 	removeHooks : function () {
-		this._setHooks('removeEventListener');
+		this._setHooks(false);
 	},
 
-	_setHooks : function (onoff) {
-		console.log('onoff: ', onoff);
+	_setHooks : function (on) {
+		on = (on) ? 'addEventListener' : 'removeEventListener';
 
 		// bind interaction to document
-		document[onoff]('mousedown', this.triggerTextSelection, false);
-		document[onoff]('keydown', this.preprocessKeyDown, false);
-		document[onoff]('keyup', this.handleKeyUp, false);
+		document[on]('mousedown', this.triggerTextSelection, false);
+		document[on]('keydown', this.preprocessKeyDown, false);
+		document[on]('keyup', this.handleKeyUp, false);
 
 		// bind resize to window
-		window[onoff]('resize', this.triggerTextSelection, false);
+		window[on]('resize', this.triggerTextSelection, false);
 
 		// bind blur to urlInput
-		this.urlInput[onoff]('blur', this.triggerUrlBlur, false);
-		this.urlInput[onoff]('keydown', this.triggerUrlSet, false);
+		this.urlInput[on]('blur', this.triggerUrlBlur, false);
+		this.urlInput[on]('keydown', this.triggerUrlSet, false);
 
 		// bind image upload
 		if (this.options.allowImages) {
-			this.imageTooltip[onoff]('mousedown', this.triggerImageUpload, false);
-			this.imageInput[onoff]('change', this.uploadImage, false);
-			document[onoff]('mousemove', this.triggerOverlayStyling, false);
+			this.imageTooltip[on]('mousedown', this.triggerImageUpload, false);
+			this.imageInput[on]('change', this.uploadImage, false);
+			document[on]('mousemove', this.triggerOverlayStyling, false);
 		}
 
 		// bind nodes
 		for (var i = 0, len = this.editableNodes.length; i < len; i++) {
 			var node = this.editableNodes[i];
 			node.contentEditable = true;
-			node[onoff]('mousedown', this.triggerTextSelection, false);
-			node[onoff]('mouseup', this.triggerTextSelection, false);
-			node[onoff]('keyup', this.triggerTextSelection, false);
+			console.log('node: ', node);
+			console.log('editableNodes: ', this.editableNodes);
+			node[on]('mousedown', this.triggerTextSelection, false);
+			node[on]('mouseup', this.triggerTextSelection, false);
+			node[on]('keyup', this.triggerTextSelection, false);
 		}
 
 		// bind text styling events
 		var that = this;
 		this.iterateTextMenuButtons(function(node) {
-			node[onoff]('mousedown', function(event) {
+			node[on]('mousedown', function(event) {
 				console.log('NONO:', node);
 				console.log('node:', node.target);
 				that.triggerTextStyling(node);
@@ -343,23 +327,49 @@ G.Rande = G.Class.extend({
 		// clear url-mode
 		that.optionsNode.className = "options";
 		
-		// get text
-		window.getSelection().addRange(that.previouslySelectedText);
+		// // get text
+		// window.getSelection().addRange(that.previouslySelectedText);
 
-		// clear prev link
-		document.execCommand("unlink", false);
+		// // clear prev link
+		// document.execCommand("unlink", false);
+		if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
+		that.createLink(url)
+
+		// // return if no url
+		// if (url === "") return false;
+		
+		// // add http to url
+		// if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
+
+		// // create link
+		// document.execCommand("createLink", false, url);
+
+		// clear input
+		that.urlInput.value = "";
+	},
+
+	createLink : function (url) {
+
+		// clear existing
+		this.removeLink();
 
 		// return if no url
 		if (url === "") return false;
 		
 		// add http to url
-		if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
+		// if (!url.match("^(http://|https://|mailto:)")) url = "http://" + url;
 
 		// create link
 		document.execCommand("createLink", false, url);
+	},
 
-		// clear input
-		that.urlInput.value = "";
+	removeLink : function () {
+
+		// get text
+		window.getSelection().addRange(this.previouslySelectedText);
+
+		// clear prev link
+		document.execCommand("unlink", false);
 	},
 
 	triggerUrlSet : function (event) {
@@ -589,6 +599,7 @@ G.Rande = G.Class.extend({
 			prevPrevSibling = prevPrevSibling.previousSibling;
 		}
 
+		if (!prevSibling || !prevPrevSibling) return;
 		if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
 			hr = document.createElement("hr");
 			hr.contentEditable = false;
@@ -699,6 +710,7 @@ G.Rande = G.Class.extend({
 
 }); 
 G.Plugins = {};
+
 
 // shorthand for creating all kinds of layers
 G.rande = function (nodes, options) {
