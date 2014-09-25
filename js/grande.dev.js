@@ -22,7 +22,7 @@ G.Rande = G.Class.extend({
 	},
 	
 	events : {
-		// fired on changes to text. should be overridden by user, like Grande.events.change = fn();
+		// fired on changes to text. should be overridden by user, like G.rande.events.change = fn();
 		change : function (e) { console.log('change event!', e); }
 	},
 
