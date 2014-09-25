@@ -21,14 +21,11 @@ G.Attachments = G.Class.extend({
 
 	},
 
-	
-
 	// hack cause i dont get it
 	plugin : function (grande) {
-
+		// attach grande
 		this.grande = grande;
 		this._initialize();
-
 	},
 
 	initLayout : function () {
@@ -79,11 +76,7 @@ G.Attachments = G.Class.extend({
 	},
 
 	closePopup : function () {
-		console.log('clsoePane!!!', this);
-
-		// unlink
-
-
+	
 		// remove popup
 		this.destroyPopup();
 
@@ -108,18 +101,15 @@ G.Attachments = G.Class.extend({
 
 		// get sources
 		var sources = this.source;
-		// var collections = this.project.getCollections();
 
-		console.log('sources: ', sources);
-
-
+		// create source div
 		var container = this._popup = Wu.DomUtil.create('div', 'grande-sources-container');
 		var topwrapper = Wu.DomUtil.create('div', 'grande-sources-topwrap', container);
-
 		sources.forEach(function (source) {
 			this._createSource(source, container);
 		}, this);
 
+		// add to options container
 		this.grande.addToOptions(container);
 
 	},
@@ -132,8 +122,16 @@ G.Attachments = G.Class.extend({
 		var icon = Wu.DomUtil.create('div', 'grande-sources-source-icon', wrap);
 		var name = Wu.DomUtil.create('div', 'grande-sources-source-title', wrap, title);
 
+		// add icon to source
 		Wu.DomUtil.addClass(icon, source.type);
 		
+		if (source.thumbnail) {
+
+			// add thumbnail if available
+			var thumb = Wu.DomUtil.create('img', 'grande-sources-source-thumb', wrap);
+			thumb.src = source.thumbnail;
+
+
 		// if (source.type == 'image') {
 		// 	var size = '?width=50&height=50';
 		// 	var url = '/pixels/' + source.uuid + size;
@@ -141,7 +139,9 @@ G.Attachments = G.Class.extend({
 		// 	var thumb = Wu.DomUtil.create('img', 'grande-sources-source-thumb', wrap);
 		// 	thumb.src = url;
 		// 	console.log('thumb: ', thumb);
-		// } 
+		
+
+		} 
 
 		Wu.DomEvent.on(wrap, 'mousedown', function () {
 			this.selectSource(source);
@@ -156,13 +156,11 @@ G.Attachments = G.Class.extend({
 	selectSource : function (source) {
 		console.log('selected source!', source);
 
-		// what to do when source is selected
-		// add link go text selection
+		// add link to text selection
 		var url = source.uuid;
 
 		// create link
 		this.grande.createLink(url);
-
 		
 	},
 
@@ -173,10 +171,8 @@ G.Attachments = G.Class.extend({
 		}
 	},
 
-
-	// fired on Grande.unbind()
+	// fired on G.Rande.unbind();
 	destroy : function () {
-		console.log('destroy');
 		this.removeHooks();
 	},
 

@@ -11,8 +11,6 @@ G.Rande = G.Class.extend({
 		animate: true,
 		imageUpload : true
 	},
-
-	// plugins : {}, // space for plugins
 	
 	tagClassMap : {
 		"b": "bold",
@@ -141,8 +139,7 @@ G.Rande = G.Class.extend({
 		this.urlInput 		= document.querySelectorAll(".text-menu .url-input")[0];
 		this.uiInputs 		= document.querySelectorAll(".ui-inputs")[0];
 		this.buttons 		= this.uiInputs.childNodes;
-
-		this.buttonsContainer = this.uiInputs;
+		this.buttonsContainer   = this.uiInputs;
 
 	},
 
@@ -307,7 +304,6 @@ G.Rande = G.Class.extend({
 			}
 		}
 
-		// this.triggerTextSelection();
 	},
 
 	triggerUrlBlur : function (event) {
@@ -364,8 +360,6 @@ G.Rande = G.Class.extend({
 
 	triggerTextSelection : function (e, f) {
 
-		console.log('grande.js: triggerTextSelection', e, f);
-
 		var that = G.r;
 		var selectedText = window.getSelection(),
 		    range,
@@ -379,11 +373,9 @@ G.Rande = G.Class.extend({
 			if (buttons[n] == target) return that.reloadMenuState();
 		}
 		
-
 		// if target is buttons wrapper, reload menu state
 		if (target == that.optionsNode) return that.reloadMenuState();
 		
-
 		// if target is anything not editable, hide buttons
 		if (!target.isContentEditable) {
 			that.setTextMenuPosition(this.EDGE, this.EDGE);
@@ -394,7 +386,6 @@ G.Rande = G.Class.extend({
 			return that.events.change();
 		}
 
-
 		// if selected text is collapsed, hide buttons
 		if (selectedText.isCollapsed) {
 			that.setTextMenuPosition(this.EDGE, this.EDGE);
@@ -402,7 +393,6 @@ G.Rande = G.Class.extend({
 			that.reloadMenuState();		
 			return;
 		}
-
 		
 		// get selected text and move menu
 		range = selectedText.getRangeAt(0);
@@ -690,10 +680,8 @@ G.Rande = G.Class.extend({
 	},
 
 }); 
-// G.Plugins = {};
 
-
-// shorthand for creating all kinds of layers
+// grande shorthand
 G.rande = function (nodes, options) {
 	return new G.Rande(options, nodes);
 };
