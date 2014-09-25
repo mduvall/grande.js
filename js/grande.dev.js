@@ -65,12 +65,10 @@ G.Rande = G.Class.extend({
 		this.removePlugins();
 	},
 
-
 	addToolbarButton : function (button) {
 		// append next to last in buttonsContainer
 		this.buttonsContainer.insertBefore(button, this.buttonsContainer.lastChild);
 	},
-
 
 	initPlugins : function (fn, context) {
 		
@@ -91,6 +89,54 @@ G.Rande = G.Class.extend({
 
 	addToOptions : function (div) {
 		this.optionsNode.appendChild(div);
+	},
+
+	addHooks : function () {
+		this._setHooks(true);
+	},
+
+	removeHooks : function () {
+		this._setHooks(false);
+	},
+
+	_setHooks : function (on) {
+		on = (on) ? 'addEventListener' : 'removeEventListener';
+
+		// bind interaction to document
+		document[on]('mousedown', this.triggerTextSelection, false);
+		document[on]('keydown', this.preprocessKeyDown, false);
+		document[on]('keyup', this.handleKeyUp, false);
+
+		// bind resize to window
+		window[on]('resize', this.triggerTextSelection, false);
+
+		// bind blur to urlInput
+		this.urlInput[on]('blur', this.triggerUrlBlur, false);
+		this.urlInput[on]('keydown', this.triggerUrlSet, false);
+
+		// bind image upload
+		if (this.options.allowImages) {
+			this.imageTooltip[on]('mousedown', this.triggerImageUpload, false);
+			this.imageInput[on]('change', this.uploadImage, false);
+			document[on]('mousemove', this.triggerOverlayStyling, false);
+		}
+
+		// bind nodes
+		for (var i = 0, len = this.editableNodes.length; i < len; i++) {
+			var node = this.editableNodes[i];
+			node.contentEditable = true;
+			node[on]('mousedown', this.triggerTextSelection, false);
+			node[on]('mouseup', this.triggerTextSelection, false);
+			node[on]('keyup', this.triggerTextSelection, false);
+		}
+
+		// bind text styling events
+		var that = this;
+		this.iterateTextMenuButtons(function(node) {
+			node[on]('mousedown', function(event) {
+				that.triggerTextStyling(node);
+			}, false);
+		});
 	},
 
 	initToolbarLayout : function () {
@@ -155,54 +201,6 @@ G.Rande = G.Class.extend({
 				that.triggerTextParse(event);
 			}
 		}
-	},
-
-	addHooks : function () {
-		this._setHooks(true);
-	},
-
-	removeHooks : function () {
-		this._setHooks(false);
-	},
-
-	_setHooks : function (on) {
-		on = (on) ? 'addEventListener' : 'removeEventListener';
-
-		// bind interaction to document
-		document[on]('mousedown', this.triggerTextSelection, false);
-		document[on]('keydown', this.preprocessKeyDown, false);
-		document[on]('keyup', this.handleKeyUp, false);
-
-		// bind resize to window
-		window[on]('resize', this.triggerTextSelection, false);
-
-		// bind blur to urlInput
-		this.urlInput[on]('blur', this.triggerUrlBlur, false);
-		this.urlInput[on]('keydown', this.triggerUrlSet, false);
-
-		// bind image upload
-		if (this.options.allowImages) {
-			this.imageTooltip[on]('mousedown', this.triggerImageUpload, false);
-			this.imageInput[on]('change', this.uploadImage, false);
-			document[on]('mousemove', this.triggerOverlayStyling, false);
-		}
-
-		// bind nodes
-		for (var i = 0, len = this.editableNodes.length; i < len; i++) {
-			var node = this.editableNodes[i];
-			node.contentEditable = true;
-			node[on]('mousedown', this.triggerTextSelection, false);
-			node[on]('mouseup', this.triggerTextSelection, false);
-			node[on]('keyup', this.triggerTextSelection, false);
-		}
-
-		// bind text styling events
-		var that = this;
-		this.iterateTextMenuButtons(function(node) {
-			node[on]('mousedown', function(event) {
-				that.triggerTextStyling(node);
-			}, false);
-		});
 	},
 
 	triggerOverlayStyling : function (event) {
