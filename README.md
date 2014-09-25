@@ -1,5 +1,49 @@
 [![Build Status](https://travis-ci.org/mduvall/grande.js.png)](https://travis-ci.org/mduvall/grande.js)
 
+
+
+
+grande.js fork with plugins:
+
+Usage:
+
+
+
+	// set data sources, array of key/value pairs
+	var sources = [{
+		title : 'Attachment 1', // title
+		thumbnail : '', 	// optional. url to image
+		click : function () {}, // optional. event listener on source click
+		uuid : ''		// optional
+	}];
+	
+	// get textarea nodes for grande
+	var nodes = this._textarea;
+	
+	// create Grande with attachment plugin
+	this.grande = G.rande(nodes, {
+		plugins : {
+	
+			// self-assigned plugin name as key
+			attachments : new G.Attachments(sources)
+		
+		},
+		events : {
+	
+			// add change event listener
+			change : this.textChange()
+		}
+	});
+	
+	// add change event listener dynamically
+	this.grande.events.change = this.textChange();
+
+
+
+
+
+
+
 grande.js
 =========
 
