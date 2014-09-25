@@ -41,11 +41,6 @@ G.Attachments = G.Class.extend({
 
 	},
 
-	// createPopup : function () {
-	// 	this._container = document.createElement('div');
-	// 	this._inner = document.createElement('div');
-	// },
-
 	createButton : function () {
 		var button = document.createElement('button');
 		button.className = 'attachment';
