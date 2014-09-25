@@ -60,7 +60,6 @@ G.Attachments = G.Class.extend({
 	},
 
 	toggleButton : function (e, that) {
-
 		var button = e.target;
 		Wu.DomEvent.stop(e);
 
