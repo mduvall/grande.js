@@ -91,11 +91,10 @@ G.Attachments = G.Class.extend({
 
 	openPopup : function () {
 
-		// select text
-		var selectedText = window.getSelection();
-		var range = selectedText.getRangeAt(0);
-		var clientRectBounds = range.getBoundingClientRect();
-		// console.log('free! ', selectedText, range, clientRectBounds);
+		// // select text
+		// var selectedText = window.getSelection();
+		// var range = selectedText.getRangeAt(0);
+		// var clientRectBounds = range.getBoundingClientRect();
 		
 		// create popup
 		this.createPopup();
@@ -161,6 +160,7 @@ G.Attachments = G.Class.extend({
 		// add link go text selection
 		var url = source.uuid;
 
+		// create link
 		this.grande.createLink(url);
 
 		
@@ -181,6 +181,3 @@ G.Attachments = G.Class.extend({
 	},
 
 });
-
-// register plugin
-// GrandeAttachments.register(GrandeAttachments);

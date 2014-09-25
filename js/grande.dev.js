@@ -12,7 +12,7 @@ G.Rande = G.Class.extend({
 		imageUpload : true
 	},
 
-	plugins : {}, // space for plugins
+	// plugins : {}, // space for plugins
 	
 	tagClassMap : {
 		"b": "bold",
@@ -690,7 +690,7 @@ G.Rande = G.Class.extend({
 	},
 
 }); 
-G.Plugins = {};
+// G.Plugins = {};
 
 
 // shorthand for creating all kinds of layers
