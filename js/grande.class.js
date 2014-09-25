@@ -1,7 +1,7 @@
 /*
  * G.Class powers the OOP facilities of the library.
- * — Taken straight from Leaflet.js by Vladimir Agafonkin.
- * https://github.com/Leaflet/Leaflet/blob/5a518194945813f4b578861799f23a94248b553e/src/core/Class.js
+ * — Taken from Class.js in Leaflet.js by Vladimir Agafonkin.
+ * https://github.com/Leaflet/Leaflet/tree/master/src/core
  */
 G = {};
 G.Class = function () {};
