@@ -1,6 +1,5 @@
 // depends on grande.js (and grande.class.js)
 G.Attachments = G.Class.extend({
-// G.Attachments = G.Class.extend({
 
 	name : 'Attachments',
 
