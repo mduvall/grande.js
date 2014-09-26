@@ -19,16 +19,15 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//
-//
-//
+
+
+
+
 // _______grande.js____________________________________________________________________________ 
-//
+
 // This is a small Javascript library that implements features from Medium's editing experience.
 // Dependencies: grande.class.js
-//
-//
+
 G.Rande = G.Class.extend({
 
 	EDGE : -999,
