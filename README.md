@@ -8,6 +8,10 @@ New features:
 
 — Plugin: Attachments, Embed Images
 
+— OOP facilities - easy to create new plugins.
+
+
+5.5KB minified and gzipped! :)
 
 
 Usage:
