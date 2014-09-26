@@ -9,7 +9,7 @@
 + Fixed some bugs regarding Toolbar not closing properly.<br>
 + Added plugin powers!<br>
 <br>
-<i>5.5KB minified and gzipped!</i><br>
+<i>5.5KB minified and gzipped.</i><br>
 
 
 <h2>Usage:</h2>
