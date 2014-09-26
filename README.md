@@ -7,18 +7,18 @@ New features:
 
 Usage:
 
-
+```javascript
 		// get textarea nodes for grande
 		var nodes = [node, node];	// [] of nodes
 
 		// create sources in this format
 		var sources = [{
 			
-			    	title     : name, 	// title
+				title     : name, 	// title
 				url       : url		// url to be inserted as link
-			    	thumbnail : thumbnail,  // optional. url to thumbnail
-			    	uuid      : uuid,      	// optional. for id'ing
-				type      : type, 	// optional, image/file. default 'file'. 
+				thumbnail : thumbnail,	// optional. url to thumbnail
+				uuid      : uuid,	// optional. for id'ing
+				type      : type,	// optional, image/file. default 'file'. 
 			}]
 
 		// set grande options
@@ -27,13 +27,13 @@ Usage:
 
 		        	// file attachments
 			        attachments : new G.Attachments(sources, {	// depends on grande.attachments.js plugin
-			        	icon : 'fileAttachment.png',
+			       		icon : 'fileAttachment.png',
 			        }),
 
 			        // image attachments
 			        images :  new G.Attachments(sources, {
 			        	icon : 'imageAttachment.png',
-			        	embedImage : true 			// embed image in text! 
+			        	embedImage : true 			// embed image in text
 			        }),
 
 			},
@@ -52,7 +52,7 @@ Usage:
 		
 
 
-
+```
 
 
 
