@@ -3,9 +3,16 @@ G.Attachments = G.Class.extend({
 
 	name : 'Attachments',
 
-	initialize : function (source) {
+	initialize : function (source, options) {
+
+		// set options
+		G.setOptions(this, options);
+
+		// set source
 		this.source = source;
-		console.log('intilaisie: ', this.source, this);
+		
+
+		console.log("ASDDSADSA::: soiurce ", source, this.options);
 	},
 
 	_initialize : function () {
@@ -23,6 +30,7 @@ G.Attachments = G.Class.extend({
 
 	// hack cause i dont get it
 	plugin : function (grande) {
+		
 		// attach grande
 		this.grande = grande;
 		this._initialize();
@@ -83,11 +91,6 @@ G.Attachments = G.Class.extend({
 
 	openPopup : function () {
 
-		// // select text
-		// var selectedText = window.getSelection();
-		// var range = selectedText.getRangeAt(0);
-		// var clientRectBounds = range.getBoundingClientRect();
-		
 		// create popup
 		this.createPopup();
 
@@ -116,47 +119,49 @@ G.Attachments = G.Class.extend({
 
 	_createSource : function (source, container) {
 
-		var title = source.name;
+		// create divs
+		var title = source.title;
 		var wrap = Wu.DomUtil.create('div', 'grande-sources-source', container);
 		var icon = Wu.DomUtil.create('div', 'grande-sources-source-icon', wrap);
 		var name = Wu.DomUtil.create('div', 'grande-sources-source-title', wrap, title);
 
-		// add icon to source
+		// set icon
 		Wu.DomUtil.addClass(icon, source.type);
 		
+		// add thumbnail if available
 		if (source.thumbnail) {
-
-			// add thumbnail if available
 			var thumb = Wu.DomUtil.create('img', 'grande-sources-source-thumb', wrap);
 			thumb.src = source.thumbnail;
-
-
-		// if (source.type == 'image') {
-		// 	var size = '?width=50&height=50';
-		// 	var url = '/pixels/' + source.uuid + size;
-		// 	console.log('url: ', url);
-		// 	var thumb = Wu.DomUtil.create('img', 'grande-sources-source-thumb', wrap);
-		// 	thumb.src = url;
-		// 	console.log('thumb: ', thumb);
-		
-
 		} 
 
+		// add select event
 		Wu.DomEvent.on(wrap, 'mousedown', function () {
-			this.selectSource(source);
+			if (this.options.embedImage) {
+				
+				this.embedImage(source.url);
+			} else {
+				this.selectSource(source);
+			}
+			
 		}, this);
 	},
 
 	destroyPopup : function () {
+		if (!this._popup) return;
 		this._remove(this._popup);
 		this._popup = null;		// events should now be gc'd. todo: check
 	},
 
+	embedImage : function (image) {
+
+
+
+	},
+
 	selectSource : function (source) {
-		console.log('selected source!', source);
 
 		// add link to text selection
-		var url = source.uuid;
+		var url = source.url;
 
 		// create link
 		this.grande.createLink(url);
@@ -173,6 +178,12 @@ G.Attachments = G.Class.extend({
 	// fired on G.Rande.unbind();
 	destroy : function () {
 		this.removeHooks();
+	},
+
+
+	// listeners
+	onToolbarHide : function () {
+		this.closePopup();
 	},
 
 });

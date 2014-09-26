@@ -346,8 +346,8 @@ G.Rande = G.Class.extend({
 	triggerTextSelection : function (e, f) {
 		var that = G.r;
 		var selectedText = window.getSelection(),
-		    range,
-		    clientRectBounds,
+		    // range,
+		    // clientRectBounds,
 		    target = e.target || e.srcElement;
 
 		// if target is one of buttons, reload menu state
@@ -362,7 +362,8 @@ G.Rande = G.Class.extend({
 		// if target is anything not editable, hide buttons
 		if (!target.isContentEditable) {
 
-			that.setTextMenuPosition(this.EDGE, this.EDGE);
+			// that.setTextMenuPosition(this.EDGE, this.EDGE);
+			that.hideToolbar();
 			that.textMenu.className = "text-menu hide";
 			that.reloadMenuState();
 			
@@ -374,25 +375,63 @@ G.Rande = G.Class.extend({
 
 		// if selected text is collapsed, hide buttons
 		if (selectedText.isCollapsed) {
-			that.setTextMenuPosition(this.EDGE, this.EDGE);
+			// that.setTextMenuPosition(this.EDGE, this.EDGE);
+			that.hideToolbar();
 			that.textMenu.className = "text-menu hide";	
 			that.reloadMenuState();		
 			return;
 		}
 		
 		// get selected text and move menu
-		range = selectedText.getRangeAt(0);
-		clientRectBounds = range.getBoundingClientRect();
+		that.showToolbar(selectedText);
+
+		// refresh buttons
 		that.reloadMenuState();
-		that.setTextMenuPosition(
-			clientRectBounds.top - 45 + window.pageYOffset,
-			(clientRectBounds.left + clientRectBounds.right) / 2
-		);
 
 		// fire change event
 		// return that.events.change();
 		console.log('that.events: ', that.events);
 		return;		
+	},
+
+	showToolbar : function (selectedText) {
+		var range = selectedText.getRangeAt(0);
+		var clientRectBounds = range.getBoundingClientRect();
+		this.setTextMenuPosition(
+			clientRectBounds.top - 45 + window.pageYOffset,
+			(clientRectBounds.left + clientRectBounds.right) / 2
+		);
+
+		// bool
+		this.toolbarOpen = true;
+	},
+
+	hideToolbar : function () {
+
+		// bool
+		if (!this.toolbarOpen) return;
+		this.toolbarOpen = false;
+
+		// hide toolbar
+		this.setTextMenuPosition(this.EDGE, this.EDGE);
+		
+		// fire hide event to plugins
+		this._fireHiddenToolbar();
+		
+	},
+
+	_fireHiddenToolbar : function () {
+
+		// get plugins from options
+		var plugins = this.plugins;
+
+		// plug in plugins
+		for (p in plugins) {
+			var plugin = plugins[p];
+			plugin.onToolbarHide();
+		}
+
+
 	},
 
 	createLink : function (url) {
@@ -406,8 +445,11 @@ G.Rande = G.Class.extend({
 
 	removeLink : function () {
 
-		// get text
+		// get previosly selected text
 		var prev = this.previouslySelectedText;
+		if (!prev) return;
+
+		// get selection
 		window.getSelection().addRange(prev);
 
 		// clear prev link
