@@ -1,42 +1,64 @@
-[![Build Status](https://travis-ci.org/mduvall/grande.js.png)](https://travis-ci.org/mduvall/grande.js)
 
-
-
-
-grande.js fork with plugins:
+grande.js fork — 
+New features:
+— Unbind events
+— Add plugins
+— Plugin: Attachments, Embed Images
 
 Usage:
 
 
+		// get textarea nodes for grande
+		var nodes = [node, node];	// [] of nodes
 
-	// set data sources, array of key/value pairs
-	var sources = [{
-		title : 'Attachment 1', // title
-		thumbnail : '', 	// optional. url to image
-		click : function () {}, // optional. event listener on source click
-		uuid : ''		// optional
-	}];
-	
-	// get textarea nodes for grande
-	var nodes = this._textarea;
-	
-	// create Grande with attachment plugin
-	this.grande = G.rande(nodes, {
-		plugins : {
-	
-			// self-assigned plugin name as key
-			attachments : new G.Attachments(sources)
-		
-		},
-		events : {
-	
-			// add change event listener
-			change : this.textChange()
+		// create sources in this format
+		var sources = [{
+			
+			    	title     : name, 	// title
+				url       : url		// url to be inserted as link
+			    	thumbnail : thumbnail,  // optional. url to thumbnail
+			    	uuid      : uuid,      	// optional. for id'ing
+				type      : type, 	// optional, image/file. default 'file'. 
+			}]
+
+		// set grande options
+		var options = {
+			plugins : {
+
+		        	// file attachments
+			        attachments : new G.Attachments(sources, {	// depends on grande.attachments.js plugin
+			        	icon : 'fileAttachment.png',
+			        }),
+
+			        // image attachments
+			        images :  new G.Attachments(sources, {
+			        	icon : 'imageAttachment.png',
+			        	embedImage : true 			// embed image in text! 
+			        }),
+
+			},
+			events : {
+
+				// add change event listener to be fired on each text change (useful for saving, etc.)
+				change : this.textChange
+			}
 		}
-	});
-	
-	// add change event listener dynamically
-	this.grande.events.change = this.textChange();
+
+		// create Grande with attachment and image plugin
+		this.grande = G.rande(nodes, options);
+
+		// add change event listener dynamically, will overwrite event provided in options.
+		this.grande.options.events.change = this.anotherTextChange;
+		
+
+
+
+
+
+
+
+
+
 
 
 
