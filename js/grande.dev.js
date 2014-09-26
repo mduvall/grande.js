@@ -301,11 +301,10 @@ G.Rande = G.Class.extend({
 						return;
 				
 				}
-			
 			}
 		}
-
 	},
+
 
 	triggerUrlBlur : function (event) {
 
@@ -346,8 +345,6 @@ G.Rande = G.Class.extend({
 	triggerTextSelection : function (e, f) {
 		var that = G.r;
 		var selectedText = window.getSelection(),
-		    // range,
-		    // clientRectBounds,
 		    target = e.target || e.srcElement;
 
 		// if target is one of buttons, reload menu state
@@ -362,7 +359,6 @@ G.Rande = G.Class.extend({
 		// if target is anything not editable, hide buttons
 		if (!target.isContentEditable) {
 
-			// that.setTextMenuPosition(this.EDGE, this.EDGE);
 			that.hideToolbar();
 			that.textMenu.className = "text-menu hide";
 			that.reloadMenuState();
@@ -375,7 +371,7 @@ G.Rande = G.Class.extend({
 
 		// if selected text is collapsed, hide buttons
 		if (selectedText.isCollapsed) {
-			// that.setTextMenuPosition(this.EDGE, this.EDGE);
+
 			that.hideToolbar();
 			that.textMenu.className = "text-menu hide";	
 			that.reloadMenuState();		
@@ -425,10 +421,11 @@ G.Rande = G.Class.extend({
 		// get plugins from options
 		var plugins = this.plugins;
 
-		// plug in plugins
+		// fire event on plugins
 		for (p in plugins) {
 			var plugin = plugins[p];
-			plugin.onToolbarHide();
+			var event = plugin.onToolbarHide;
+			if (event) event();
 		}
 
 

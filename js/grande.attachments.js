@@ -11,8 +11,6 @@ G.Attachments = G.Class.extend({
 		// set source
 		this.source = source;
 		
-
-		console.log("ASDDSADSA::: soiurce ", source, this.options);
 	},
 
 	_initialize : function () {
@@ -175,13 +173,14 @@ G.Attachments = G.Class.extend({
 		}
 	},
 
-	// fired on G.Rande.unbind();
+
+	// fired on grande.unbind();
 	destroy : function () {
 		this.removeHooks();
 	},
 
 
-	// listeners
+	// fired on grande.hideToolbar();
 	onToolbarHide : function () {
 		this.closePopup();
 	},
