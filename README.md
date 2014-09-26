@@ -3,8 +3,12 @@ __________grande.js fork___________________________________________
 New features:
 
 — Unbind events
+
 — Add plugins
+
 — Plugin: Attachments, Embed Images
+
+
 
 Usage:
 
