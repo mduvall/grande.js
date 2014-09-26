@@ -9,7 +9,14 @@ G.Rande = G.Class.extend({
 	
 	options : {
 		animate: true,
-		imageUpload : true
+		imageUpload : true,
+		events : {
+			// fired on changes to text. should be overridden by user, like G.rande.events.change = fn();
+			change : function (e) { 
+				console.log('change options.event!', e); 
+			}
+		}
+
 	},
 	
 	tagClassMap : {
@@ -364,9 +371,8 @@ G.Rande = G.Class.extend({
 			that.reloadMenuState();
 			
 			// fire change event
-			// return that.events.change();
-			console.log('that.events: ', that.events);
-			return;
+			return that.options.events.change();
+			
 		}
 
 		// if selected text is collapsed, hide buttons
@@ -385,9 +391,7 @@ G.Rande = G.Class.extend({
 		that.reloadMenuState();
 
 		// fire change event
-		// return that.events.change();
-		console.log('that.events: ', that.events);
-		return;		
+		return that.options.events.change();		
 	},
 
 	showToolbar : function (selectedText) {
@@ -424,8 +428,7 @@ G.Rande = G.Class.extend({
 		// fire event on plugins
 		for (p in plugins) {
 			var plugin = plugins[p];
-			var event = plugin.onToolbarHide;
-			if (event) event();
+			plugin.onToolbarHide();
 		}
 
 
@@ -612,6 +615,7 @@ G.Rande = G.Class.extend({
 
 		if (!prevSibling || !prevPrevSibling) return;
 		if (prevSibling.nodeName === "P" && !prevSibling.textContent.length && prevPrevSibling.nodeName !== "HR") {
+
 			hr = document.createElement("hr");
 			hr.contentEditable = false;
 			parentParagraph.parentNode.replaceChild(hr, prevSibling);
@@ -626,6 +630,19 @@ G.Rande = G.Class.extend({
 		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(nodeOffset);
 
 		return this.getParentWithTag(sel.anchorNode, listType);
+	},
+
+	insertImage : function (url) {
+
+		var image = document.createElement('img');
+		image.src = url;
+		image.style.width = '200px';
+		image.style.height = 'auto';
+
+		var range = window.getSelection().getRangeAt(0);
+		range.collapse(true);
+		range.insertNode(image);
+
 	},
 
 	reloadMenuState : function () {

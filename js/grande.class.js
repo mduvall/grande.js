@@ -365,5 +365,4 @@ proto.removeEventListener = proto.clearAllEventListeners = proto.off;
 proto.addOneTimeEventListener = proto.once;
 proto.fireEvent = proto.fire;
 proto.hasEventListeners = proto.listens;
-
 G.Mixin = {Events: proto};

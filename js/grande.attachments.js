@@ -151,9 +151,7 @@ G.Attachments = G.Class.extend({
 	},
 
 	embedImage : function (image) {
-
-
-
+		this.grande.insertImage(image);
 	},
 
 	selectSource : function (source) {
@@ -178,7 +176,6 @@ G.Attachments = G.Class.extend({
 	destroy : function () {
 		this.removeHooks();
 	},
-
 
 	// fired on grande.hideToolbar();
 	onToolbarHide : function () {
