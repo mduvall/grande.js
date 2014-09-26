@@ -2,7 +2,7 @@
 + Added addEventListeners for all events.<br>
 + Added removeEventListeners for all events.<br>
 + Added unbind() method to clear listeners.<br>
-+ Refactored into global Grande namespace.<br>
++ Refactored with OOP capabilites into global G namespace.<br>
 + Added event that fires on changes, which can be listened to by others.<br>
 + Renamed some functions and organized in groups.<br>
 + Documented some lines.<br>
