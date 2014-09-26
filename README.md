@@ -1,26 +1,24 @@
-__________grande.js fork___________________________________________
-
-New features:
-
-— Unbind events
-
-— Add plugins
-
-— Plugin: Attachments, Embed Images
-
-— OOP facilities - easy to create new plugins.
-
-
-5.5KB minified and gzipped! :)
+<h2>New features:</h2>
++ Added addEventListeners for all events.<br>
++ Added removeEventListeners for all events.<br>
++ Added unbind() method to clear listeners.<br>
++ Refactored into global Grande namespace.<br>
++ Added event that fires on changes, which can be listened to by others.<br>
++ Renamed some functions and organized in groups.<br>
++ Documented some lines.<br>
++ Fixed some bugs regarding Toolbar not closing properly.<br>
++ Added plugin powers!<br>
+<br>
+<i>5.5KB minified and gzipped!</i><br>
 
 
-Usage:
-
+<h2>Usage:</h2>
+<h4>Create instance of grande.js with File and Image attachment plugin:</h4>
 ```javascript
 		// get textarea nodes for grande
 		var nodes = [node, node];	// [] of nodes
 
-		// create sources in this format
+		// create sources for attachments-plugin in this format:
 		var sources = [{
 			
 				title     : name, 	// title
@@ -59,7 +57,6 @@ Usage:
 		// add change event listener dynamically, will overwrite event provided in options.
 		this.grande.options.events.change = this.anotherTextChange;
 		
-
 
 ```
 
