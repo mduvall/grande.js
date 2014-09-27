@@ -13,6 +13,14 @@
 
 
 <h2>Usage:</h2>
+
+```html
+Add grande.js to HTML
+<script src="grande.min.js"></script>
+
+Add grande.attachments.js plugin:
+<script src="grande.attachments.min.js"></script>
+```
 <h4>Create instance of grande.js with File and Image attachment plugin:</h4>
 ```javascript
 		// get textarea nodes for grande
