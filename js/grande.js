@@ -21,10 +21,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-
-
 // _______grande.js____________________________________________________________________________ 
-
 // This is a small Javascript library that implements features from Medium's editing experience.
 // Dependencies: grande.class.js
 

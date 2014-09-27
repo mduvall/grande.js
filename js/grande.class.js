@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2013 Vladimir Agafonkin. Original: https://github.com/Leaflet/Leaflet/tree/master/src/core
+// Copyright (c) 2014 Vladimir Agafonkin. Original: https://github.com/Leaflet/Leaflet/tree/master/src/core
 // Copyright (c) 2014 @kosjoli            Fork: https://github.com/knutole/grande.js/
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,16 +19,12 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//
-//
-//
+
+
 // _______grande.js____________________________________________________________________________ 
-//
-// G.Class powers the OOP facilities of the library. Taken from Class.js in Leaflet.js by Vladimir Agafonkin, @LeafletJS
-// Dependencies: grande.js
-//
-//
+// G.Class powers the OOP facilities of the library. 
+// Taken from Class.js in Leaflet.js by Vladimir Agafonkin, @LeafletJS
+
 G = {};
 G.Class = function () {};
 G.Class.extend = function (props) {

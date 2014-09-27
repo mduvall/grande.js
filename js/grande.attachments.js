@@ -18,16 +18,12 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//
-//
-//
+
+
 // _______grande.js attachments plugin_________________________________________________________ 
-//
 // Adds possibility to create link from list of files, or to embed images into text.
-//
 // Dependencies: grande.js, grande.class.js
-//
+
 G.Attachments = G.Class.extend({
 
 	name : 'Attachments',
