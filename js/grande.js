@@ -63,6 +63,8 @@ G.Rande = G.Class.extend({
 
 	initialize : function (options, nodes) {
 
+		console.log('init grande', options);
+
 		// cheatcode
 		G.r = this;
 
@@ -97,6 +99,19 @@ G.Rande = G.Class.extend({
 
 		// fire remove on plugins
 		this.removePlugins();
+
+	},
+
+	destroy : function () {
+		console.log('destroy!');
+		this.unbind();
+		Wu.DomUtil.remove(this.buttonsContainer);
+		Wu.DomUtil.remove(this.toolbarContainer);
+		Wu.DomUtil.remove(this.imageTooltipTemplate);
+		Wu.DomUtil.remove(this.toolbarWrapper);
+
+		delete this;
+		delete G.r;
 	},
 
 	addToolbarButton : function (button) {
@@ -112,9 +127,20 @@ G.Rande = G.Class.extend({
 		// plug in plugins
 		for (p in this.plugins) {
 			var plugin = this.plugins[p];
-			plugin.plugin(this);
+			plugin.plug(this);
 		}
 
+	},
+
+	removePlugins : function () {
+		// get plugins from options
+		this.plugins = this.options.plugins;
+
+		// plug in plugins
+		for (p in this.plugins) {
+			var plugin = this.plugins[p];
+			plugin.unplug(this);
+		}
 	},
 	
 	select: function() {
@@ -201,7 +227,7 @@ G.Rande = G.Class.extend({
 		</div>";
 		
 		// create toolbar wrapper
-		var div = document.createElement("div");
+		var div = this.toolbarWrapper = document.createElement("div");
 		div.className = "text-menu hide";
 		div.innerHTML = this.toolbarTemplate;
 
@@ -286,11 +312,11 @@ G.Rande = G.Class.extend({
 		subject = sel.anchorNode[textProp];
 
 		if (subject.match(/^[-*]\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
-			insertedNode = insertListOnSelection(sel, textProp, "ul");
+			insertedNode = this.insertListOnSelection(sel, textProp, "ul");
 		}
 
 		if (subject.match(/^1\.\s/) && sel.anchorNode.parentNode.nodeName !== "LI") {
-			insertedNode = insertListOnSelection(sel, textProp, "ol");
+			insertedNode = this.insertListOnSelection(sel, textProp, "ol");
 		}
 
 		unwrap = insertedNode &&
@@ -319,7 +345,8 @@ G.Rande = G.Class.extend({
 			reTag = new RegExp(tagClass);
 
 			if (reTag.test(className)) {
-				
+				console.log('LETS DO THE ');
+				this._fireOtherClick();	// works for native buttons
 				switch(tag) {
 				
 					case "b": return document.execCommand(tagClass, false);
@@ -417,7 +444,7 @@ G.Rande = G.Class.extend({
 		that.reloadMenuState();
 
 		// fire change event
-		return that.options.events.change();		
+		that.options.events.change();		
 	},
 
 	showToolbar : function (selectedText) {
@@ -456,8 +483,18 @@ G.Rande = G.Class.extend({
 			var plugin = plugins[p];
 			plugin.onToolbarHide();
 		}
+	},
 
+	_fireOtherClick : function (exception) {
 
+		// get plugins from options
+		var plugins = this.plugins;
+
+		// fire event on plugins
+		for (p in plugins) {
+			var plugin = plugins[p];
+			if (plugin != exception) plugin.onToolbarClick();
+		}
 	},
 
 	createLink : function (url) {
@@ -688,6 +725,7 @@ G.Rande = G.Class.extend({
 				reTag = new RegExp(tagClass);
 
 				if (reTag.test(className)) {
+					// console.log('DREAMING!!'); // fire 30 times on click
 					// console.log('if has parent etc: focusNode, tag', focusNode, tag);
 					if (that.hasParentWithTag(focusNode, tag)) {
 						node.className = tagClass + " active";
@@ -725,7 +763,9 @@ G.Rande = G.Class.extend({
 		    i,
 		    len,
 		    node,
+		    that = this,
 		    fnCallback = function(n) {
+		    	// that._clicked();	// fired 40 times on one click
 		    	callback(n);
 		    };
     

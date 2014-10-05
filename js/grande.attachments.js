@@ -30,8 +30,11 @@ G.Attachments = G.Class.extend({
 
 	initialize : function (source, options) {
 
+		console.log('init grande attachments, ', options);
+
 		// set options
 		G.setOptions(this, options);
+		this.options.className = this.options.className + ' grande-plugin';
 
 		// set source
 		this.source = source;
@@ -52,11 +55,16 @@ G.Attachments = G.Class.extend({
 	},
 
 	// hack cause i dont get it
-	plugin : function (grande) {
-		
+	plug : function (grande) {
+		console.log('plug!');
 		// attach grande
 		this.grande = grande;
 		this._initialize();
+	},
+
+	unplug : function (grande) {
+		console.log('unplug!', this);
+		this.removeHooks();
 	},
 
 	initLayout : function () {
@@ -71,8 +79,18 @@ G.Attachments = G.Class.extend({
 
 	createButton : function () {
 		var button = document.createElement('button');
-		button.className = 'attachment';
-		button.innerHTML = 'F';
+		button.className = this.options.className;
+
+		var white = "url('" + this.options.icon[0] + "')";
+		var green = "url('" + this.options.icon[1] + "')";
+
+		// set icon
+		if (this.options.icon) {
+			button.style.backgroundImage = white;
+		} else {
+			button.innerHTML = this.options.placeholder;
+		}
+
 		return button;
 	},
 
@@ -91,24 +109,26 @@ G.Attachments = G.Class.extend({
 	},
 
 	toggleButton : function (e, that) {
-		var button = e.target;
+		// var button = e.target;
+		var button = that.button;
+
 		Wu.DomEvent.stop(e);
 
-		if (button.active) {
-			that.closePopup();
-			button.active = false;
-			button.className = 'attachment';
-		} else {
-			that.openPopup();
-			button.active = true;
-			button.className = 'attachment active';
-		}
+		// toggle
+		button.active ? that.closePopup() : that.openPopup();
+
+		this.grande._fireOtherClick(that);
+		
 	},
 
 	closePopup : function () {
 	
 		// remove popup
 		this.destroyPopup();
+		this.button.active = false;
+		this.button.className = this.options.className;
+		var white = "url('" + this.options.icon[0] + "')";
+		this.button.style.backgroundImage = white;
 
 	},
 
@@ -116,6 +136,10 @@ G.Attachments = G.Class.extend({
 
 		// create popup
 		this.createPopup();
+		this.button.active = true;
+		this.button.className = this.options.className + ' active';
+		var green = "url('" + this.options.icon[1] + "')";
+		this.button.style.backgroundImage = green;
 
 	},
 
@@ -126,6 +150,8 @@ G.Attachments = G.Class.extend({
 
 		// get sources
 		var sources = this.source;
+
+		console.log('CREATE: ', this.source);
 
 		// create source div
 		var container = this._popup = Wu.DomUtil.create('div', 'grande-sources-container');
@@ -204,6 +230,11 @@ G.Attachments = G.Class.extend({
 
 	// fired on grande.hideToolbar();
 	onToolbarHide : function () {
+		this.closePopup();
+	},
+
+	onToolbarClick : function () {
+		console.log('ONTOOLBAR!');
 		this.closePopup();
 	},
 
