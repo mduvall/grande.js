@@ -38,9 +38,7 @@ G.Rande = G.Class.extend({
 		imageUpload : true,
 		events : {
 			// fired on changes to text. should be overridden by user, like G.rande.events.change = fn();
-			change : function (e) { 
-				console.log('change options.event!', e); 
-			}
+			change : function (e) {}
 		}
 
 	},
@@ -56,14 +54,10 @@ G.Rande = G.Class.extend({
 	
 	events : {
 		// fired on changes to text. should be overridden by user, like G.rande.events.change = fn();
-		change : function (e) { 
-			console.log('change event!', e); 
-		}
+		change : function (e) {}
 	},
 
 	initialize : function (options, nodes) {
-
-		console.log('init grande', options);
 
 		// cheatcode
 		G.r = this;
@@ -103,7 +97,7 @@ G.Rande = G.Class.extend({
 	},
 
 	destroy : function () {
-		console.log('destroy!');
+		// console.log('destroy!');
 		this.unbind();
 		Wu.DomUtil.remove(this.buttonsContainer);
 		Wu.DomUtil.remove(this.toolbarContainer);
@@ -345,7 +339,7 @@ G.Rande = G.Class.extend({
 			reTag = new RegExp(tagClass);
 
 			if (reTag.test(className)) {
-				console.log('LETS DO THE ');
+				// console.log('LETS DO THE ');
 				this._fireOtherClick();	// works for native buttons
 				switch(tag) {
 				

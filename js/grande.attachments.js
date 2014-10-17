@@ -30,7 +30,7 @@ G.Attachments = G.Class.extend({
 
 	initialize : function (source, options) {
 
-		console.log('init grande attachments, ', options);
+		// console.log('init grande attachments, ', options);
 
 		// set options
 		G.setOptions(this, options);
@@ -56,14 +56,14 @@ G.Attachments = G.Class.extend({
 
 	// hack cause i dont get it
 	plug : function (grande) {
-		console.log('plug!');
+		// console.log('plug!');
 		// attach grande
 		this.grande = grande;
 		this._initialize();
 	},
 
 	unplug : function (grande) {
-		console.log('unplug!', this);
+		// console.log('unplug!', this);
 		this.removeHooks();
 	},
 
@@ -151,7 +151,7 @@ G.Attachments = G.Class.extend({
 		// get sources
 		var sources = this.source;
 
-		console.log('CREATE: ', this.source);
+		// console.log('CREATE: ', this.source);
 
 		// create source div
 		var container = this._popup = Wu.DomUtil.create('div', 'grande-sources-container');
@@ -234,7 +234,7 @@ G.Attachments = G.Class.extend({
 	},
 
 	onToolbarClick : function () {
-		console.log('ONTOOLBAR!');
+		// console.log('ONTOOLBAR!');
 		this.closePopup();
 	},
 
