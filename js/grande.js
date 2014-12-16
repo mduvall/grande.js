@@ -418,7 +418,7 @@ G.Rande = G.Class.extend({
 			that.reloadMenuState();
 			
 			// fire change event
-			return that.options.events.change();
+			return that.options.events.change(false);
 			
 		}
 
@@ -438,10 +438,12 @@ G.Rande = G.Class.extend({
 		that.reloadMenuState();
 
 		// fire change event
-		that.options.events.change();		
+		that.options.events.change(true);		
 	},
 
 	showToolbar : function (selectedText) {
+		console.log('showtoolbar');
+
 		var range = selectedText.getRangeAt(0);
 		var clientRectBounds = range.getBoundingClientRect();
 		this.setTextMenuPosition(
@@ -642,6 +644,10 @@ G.Rande = G.Class.extend({
 
 	setTextMenuPosition : function (top, left) {
 
+		// wu hack to prevent menu going outside viewport	
+		if (left < 130) left = 130;
+
+		// set position
 		this.textMenu.style.top = top + "px";
 		this.textMenu.style.left = left + "px";
 
@@ -653,6 +659,7 @@ G.Rande = G.Class.extend({
 			}
 		}
 	},
+
 
 	insertHorizontalRule : function (parentParagraph) {
 		var prevSibling,
