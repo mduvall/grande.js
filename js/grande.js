@@ -690,7 +690,7 @@ G.Rande = G.Class.extend({
 		var execListCommand = listType === "ol" ? "insertOrderedList" : "insertUnorderedList",
 		    nodeOffset = listType === "ol" ? 3 : 2;
 
-		document.execCommand(this[execListCommand]);
+		document.execCommand(execListCommand);
 		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(nodeOffset);
 
 		return this.getParentWithTag(sel.anchorNode, listType);
