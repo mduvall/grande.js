@@ -1,4 +1,84 @@
-[![Build Status](https://travis-ci.org/mduvall/grande.js.png)](https://travis-ci.org/mduvall/grande.js)
+<h2>New features:</h2>
++ Added addEventListeners for all events.<br>
++ Added removeEventListeners for all events.<br>
++ Added unbind() method to clear listeners.<br>
++ Refactored with OOP capabilites into global G namespace.<br>
++ Added event that fires on changes, which can be listened to by others.<br>
++ Renamed some functions and organized in groups.<br>
++ Documented some lines.<br>
++ Fixed some bugs regarding Toolbar not closing properly.<br>
++ Added plugin powers!<br>
+<br>
+<i>5.5KB minified and gzipped.</i><br>
+
+
+<h2>Usage:</h2>
+
+```html
+Add grande.js to HTML
+<script src="grande.min.js"></script>
+
+Add grande.attachments.js plugin:
+<script src="grande.attachments.min.js"></script>
+```
+<h4>Create instance of grande.js with File and Image attachment plugin:</h4>
+```javascript
+		// get textarea nodes for grande
+		var nodes = [node, node];	// [] of nodes
+
+		// create sources for attachments-plugin in this format:
+		var sources = [{
+			
+				title     : name, 	// title
+				url       : url		// url to be inserted as link
+				thumbnail : thumbnail,	// optional. url to thumbnail
+				uuid      : uuid,	// optional. for id'ing
+				type      : type,	// optional, image/file. default 'file'. 
+			}]
+
+		// set grande options
+		var options = {
+			plugins : {
+
+		        	// file attachments
+			        attachments : new G.Attachments(sources, {	// depends on grande.attachments.js plugin
+			       		icon : 'fileAttachment.png',
+			        }),
+
+			        // image attachments
+			        images :  new G.Attachments(sources, {
+			        	icon : 'imageAttachment.png',
+			        	embedImage : true 			// embed image in text
+			        }),
+
+			},
+			events : {
+
+				// add change event listener to be fired on each text change (useful for saving, etc.)
+				change : this.textChange
+			}
+		}
+
+		// create Grande with attachment and image plugin
+		this.grande = G.rande(nodes, options);
+
+		// add change event listener dynamically, will overwrite event provided in options.
+		this.grande.options.events.change = this.anotherTextChange;
+		
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 grande.js
 =========

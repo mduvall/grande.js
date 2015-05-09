@@ -1,0 +1,63 @@
+/*grande plugin attachments*/
+.grande-sources-container {
+	position: absolute;
+	width: 300px;
+	top: 30px;
+	background: black;
+	border-radius: 5px;
+}
+
+.grande-sources-topwrap {
+	height: 0px;
+	width: 100%;
+
+}
+
+.grande-sources-source {
+	position: relative;
+	height: 50px;
+	border-top: 1px solid #0C4818;
+	width: 100%;
+	overflow: hidden;
+}
+
+.grande-sources-container div:nth-child(2) {
+	border-radius: 5px 5px 0px 0px;
+}
+
+.grande-sources-container div:last-child {
+	border-radius: 0px 0px 5px 5px;
+}
+
+.grande-sources-source:hover {
+	background: #60d778;
+}
+
+.grande-sources-source-icon {
+	width: 30px;
+	height: 30px;
+}
+
+.grande-sources-source-title {
+	color: white;
+	position: absolute;
+	top: 0px;
+	left: 34px;
+	font-size: 110%;
+	padding: 2px;
+
+}
+
+.grande-sources-source-thumb {
+	position: absolute;
+	width: 30px;
+	height: 100%;
+	right: 0px;
+	top: 0px;
+}
+
+/*widen toolbar manually. todo!*/
+.text-menu .options {
+	padding-top: 1px !important;
+	width: 245px !important;
+}
