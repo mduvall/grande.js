@@ -112,7 +112,7 @@ G.Attachments = G.Class.extend({
 		// var button = e.target;
 		var button = that.button;
 
-		Wu.DomEvent.stop(e);
+		G.DomEvent.stop(e);
 
 		// toggle
 		button.active ? that.closePopup() : that.openPopup();
@@ -154,8 +154,8 @@ G.Attachments = G.Class.extend({
 		// console.log('CREATE: ', this.source);
 
 		// create source div
-		var container = this._popup = Wu.DomUtil.create('div', 'grande-sources-container');
-		var topwrapper = Wu.DomUtil.create('div', 'grande-sources-topwrap', container);
+		var container = this._popup = G.DomUtil.create('div', 'grande-sources-container');
+		var topwrapper = G.DomUtil.create('div', 'grande-sources-topwrap', container);
 		sources.forEach(function (source) {
 			this._createSource(source, container);
 		}, this);
@@ -170,21 +170,21 @@ G.Attachments = G.Class.extend({
 
 		// create divs
 		var title = source.title;
-		var wrap = Wu.DomUtil.create('div', 'grande-sources-source', container);
-		var icon = Wu.DomUtil.create('div', 'grande-sources-source-icon', wrap);
-		var name = Wu.DomUtil.create('div', 'grande-sources-source-title', wrap, title);
+		var wrap = G.DomUtil.create('div', 'grande-sources-source', container);
+		var icon = G.DomUtil.create('div', 'grande-sources-source-icon', wrap);
+		var name = G.DomUtil.create('div', 'grande-sources-source-title', wrap, title);
 
 		// set icon
-		Wu.DomUtil.addClass(icon, source.type);
+		G.DomUtil.addClass(icon, source.type);
 		
 		// add thumbnail if available
 		if (source.thumbnail) {
-			var thumb = Wu.DomUtil.create('img', 'grande-sources-source-thumb', wrap);
+			var thumb = G.DomUtil.create('img', 'grande-sources-source-thumb', wrap);
 			thumb.src = source.thumbnail;
 		} 
 
 		// add select event
-		Wu.DomEvent.on(wrap, 'mousedown', function () {
+		G.DomEvent.on(wrap, 'mousedown', function () {
 			if (this.options.embedImage) {
 				
 				this.embedImage(source.url);

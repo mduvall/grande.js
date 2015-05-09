@@ -38,9 +38,9 @@ G.Rande = G.Class.extend({
 		imageUpload : true,
 		events : {
 			// fired on changes to text. should be overridden by user, like G.rande.events.change = fn();
-			change : function (e) {}
-		}
+			change : function (e) {},
 
+		}
 	},
 	
 	tagClassMap : {
@@ -93,17 +93,18 @@ G.Rande = G.Class.extend({
 
 		// fire remove on plugins
 		this.removePlugins();
-
 	},
 
 	destroy : function () {
-		// console.log('destroy!');
-		this.unbind();
-		Wu.DomUtil.remove(this.buttonsContainer);
-		Wu.DomUtil.remove(this.toolbarContainer);
-		Wu.DomUtil.remove(this.imageTooltipTemplate);
-		Wu.DomUtil.remove(this.toolbarWrapper);
 
+		this.unbind();
+
+		G.DomUtil.remove(this.buttonsContainer);
+		G.DomUtil.remove(this.toolbarContainer);
+		G.DomUtil.remove(this.imageTooltipTemplate);
+		G.DomUtil.remove(this.toolbarWrapper);
+
+		G.r = null;
 		delete this;
 		delete G.r;
 	},
@@ -644,7 +645,7 @@ G.Rande = G.Class.extend({
 
 	setTextMenuPosition : function (top, left) {
 
-		// wu hack to prevent menu going outside viewport	
+		// hack to prevent menu going outside viewport	
 		if (left < 130) left = 130;
 
 		// set position
@@ -690,7 +691,7 @@ G.Rande = G.Class.extend({
 		var execListCommand = listType === "ol" ? "insertOrderedList" : "insertUnorderedList",
 		    nodeOffset = listType === "ol" ? 3 : 2;
 
-		document.execCommand(this[execListCommand]);
+		document.execCommand(execListCommand);
 		sel.anchorNode[textProp] = sel.anchorNode[textProp].substring(nodeOffset);
 
 		return this.getParentWithTag(sel.anchorNode, listType);
