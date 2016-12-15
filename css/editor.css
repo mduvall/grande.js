@@ -90,3 +90,7 @@ body {
   margin: 30px auto 20px auto;
   border: 1px solid #dededc;
 }
+
+.g-body .g-placeholder {
+  color: #999;
+}
